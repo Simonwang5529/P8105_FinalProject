@@ -1,0 +1,29 @@
+---
+title: "P8105 Final Project Proposal"
+author:
+  - Xiling Wang
+  - [Teammate 2 Name]
+  - [Teammate 3 Name]
+  - [Teammate 4 Name]
+  - [Teammate 5 Name]
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: readable
+    toc: false
+    highlight: tango
+---
+
+# Project Motivation and Background
+
+
+# Research Questions
+
+
+# Data Sources
+
+
+# Planned Analyses
+
+
+# Team Roles
