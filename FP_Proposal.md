@@ -1,14 +1,118 @@
 P8105 Final Project Proposal
 ================
-Xiling WangHaixin Jin
-2025-11-04
+Xiling WangHaixin JinSijda AhmedRuicheng YangMaryam Khalid
+2025-11-07
 
-# Project Motivation and Background
+# Project Title
+
+**Assessing the Role of Personality in Drug Usage**
+
+------------------------------------------------------------------------
 
 # Research Questions
 
+Is there an association between the usage of illegal and legal drugs and
+a user’s personality, measured quantitatively through “approved”
+clinical scores?
+
+------------------------------------------------------------------------
+
+# Motivation
+
+Identifying which personality traits are associated with higher drug use
+can provide valuable insight for physicians, psychiatrists, and social
+workers in assessing patient risk and designing therapeutic
+interventions. Such understanding may improve both **clinical
+diagnostics** and **rehabilitation strategies**.
+
+Additionally, examining differences across **age, ethnicity, and country
+of origin**, as well as contrasting **legal** versus **illegal** drug
+use, can offer a broader view of the social and psychological patterns
+behind substance use behavior.
+
+------------------------------------------------------------------------
+
 # Data Sources
+
+We will use the **Drug Consumption** dataset from *Fehrman et al.,
+2015*, available via Kaggle:  
+[https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci](https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci?resource=download)
+
+This dataset includes **1,885 participants** with 12 quantified
+attributes: - **Demographics:** age, gender, education, country, and
+ethnicity  
+- **Personality measures:** OCEAN (openness, conscientiousness,
+extraversion, agreeableness, neuroticism), impulsivity, and sensation
+seeking  
+- **Self-reported drug use:** 18 drugs (both legal and illegal)
+
+These features enable a comprehensive examination of how psychological
+traits relate to different types of substance use.
+
+------------------------------------------------------------------------
 
 # Planned Analyses
 
+### **Data Cleaning**
+
+- Recode drug-use levels (CL0–CL6) as binary (User vs Non-user) and
+  numeric (0–6) when relevant.  
+- Categorize substances as **legal** (alcohol, nicotine, caffeine,
+  chocolate) vs **illegal** (cannabis, cocaine, LSD, heroin, etc.).  
+- Ensure consistent encoding and labeling of categorical variables.
+
+### **Descriptive Summaries**
+
+- Summarize demographics (age, gender, education, country) and
+  personality traits (OCEAN, impulsivity, sensation seeking).  
+- Present initial exploratory tables and distribution plots.
+
+### **Statistical Analyses**
+
+- **Chi-square tests**: assess associations between demographic factors
+  (education, country) and drug-use status.  
+- **ANOVA tests**: compare mean personality traits between users and
+  non-users, and between legal vs illegal drug groups.  
+- **Correlation analyses**: evaluate relationships between trait scores
+  and quantitative consumption levels.
+
+### **Visualizations**
+
+- Histograms for OCEAN and impulsivity traits.  
+- Boxplots of personality traits by user status.  
+- Stacked bar charts comparing legal vs illegal drug use.  
+- Heatmap of correlations between traits and drug-use levels.
+
+### **Coding Challenges**
+
+- Re-encoding 18 categorical variables consistently.  
+- Balancing binary and ordinal outcomes.  
+- Avoiding clutter in multi-variable plots.  
+- Maintaining reproducibility and clear variable documentation.
+
+------------------------------------------------------------------------
+
+# Project Timeline
+
+| Date          | Milestone                                           |
+|---------------|-----------------------------------------------------|
+| **Nov 7**     | Complete project proposal                           |
+| **Nov 10–14** | Project review meeting via Zoom                     |
+| **Nov 21**    | Finish data cleaning and webpage setup              |
+| **Nov 28**    | Complete main data analyses                         |
+| **Dec 1**     | Draft written report                                |
+| **Dec 3**     | Finalize written report and project deliverables    |
+| **Dec 6**     | Submit written report, webpage, and peer assessment |
+| **Dec 11**    | In-class discussion                                 |
+
+------------------------------------------------------------------------
+
 # Team Roles
+
+| Member | Responsibilities |
+|----|----|
+| **Maryam Khalid** | Data cleaning, screencast recording, and first draft of final report |
+| **Sijda Ahmed & Ruicheng Yang** | Statistical analysis, data visualization, and interpretation |
+| **Xiling Wang & Haixin Jin** | Webpage development, documentation, and editing the final report |
+
+------------------------------------------------------------------------
