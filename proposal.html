@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Proposal — Personality × Drug Use</title>
+  <meta name="description" content="Project proposal: team roles, title, research question, motivation, products, data source, analyses, visualizations, challenges, timeline, and references." />
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Personality × Drug Use</a>
+    <nav class="nav inline">
+      <a href="proposal.html" aria-current="page">Proposal</a>
+      <a href="dataset.html">Dataset</a>
+      <a href="visualizations.html">Visualizations</a>
+      <a href="results.html">Results</a>
+    </nav>
+  </header>
+
+  <main class="container doc">
+    <h1>Project Proposal</h1>
+
+    <section class="glass pad">
+      <h2>Group Members &amp; Roles</h2>
+      <ul>
+        <li><strong>Maryam Khalid (mk4992):</strong> Clean dataset, screenshots, first draft of final report</li>
+        <li><strong>Sijda Ahmed (sa4007), Ruicheng Yang (ry2539):</strong> Analyze dataset, make plots</li>
+        <li><strong>Xiling Wang (xw3107), Haixin Jin (hj2735):</strong> Build webpage, edit report draft</li>
+      </ul>
+    </section>
+
+    <section class="glass pad">
+      <h2>Tentative Title</h2>
+      <p><strong>Assessing the Role of Personality in Drug Usage</strong></p>
+      <h3>Research Question</h3>
+      <p>Is there an association between the usage of illegal &amp; legal drugs and a user’s personality, measured quantitatively through ‘approved’ clinical scores?</p>
+    </section>
+
+    <section class="glass pad">
+      <h2>Motivation</h2>
+      <p>Identifying what personality traits may be associated with higher drug use can inform clinicians and social workers in assessing risk and designing interventions. We also explore differences across age, ethnicity, and country, and contrast legal vs. illegal drug risk profiles.</p>
+    </section>
+
+    <section class="glass pad">
+      <h2>Intended Final Products</h2>
+      <ul>
+        <li>Comprehensive EDA report (R Markdown → HTML on GitHub)</li>
+        <li>Tables &amp; figures: correlations between personality traits and drug use frequency</li>
+        <li>Comparison of legal vs. illegal drug usage by personality &amp; demographics</li>
+        <li>Statistical summaries (correlations, group means, significance tests)</li>
+      </ul>
+    </section>
+
+    <section class="glass pad">
+      <h2>Anticipated Data Source</h2>
+      <p>Fehrman et&nbsp;al., 2015 — Drug Consumption dataset (Kaggle). 1,885 participants; demographics (age, gender, education, country, ethnicity) and personality scores (OCEAN, impulsivity, sensation seeking); usage of 18 legal/illegal drugs.</p>
+      <p><em>Link:</em> Kaggle — Drug Consumptions (UCI)</p>
+    </section>
+
+    <section class="glass pad">
+      <h2>Analyses</h2>
+      <ul>
+        <li>Recode usage levels (CL0–CL6) → binary user/non-user and/or ordinal 0–6</li>
+        <li>Group drugs: legal (alcohol, nicotine, caffeine, chocolate) vs illegal (cannabis, cocaine, LSD, heroin, ...)</li>
+        <li>Summarize demographics &amp; personality traits</li>
+        <li>Chi-square: education/country vs. use</li>
+        <li>ANOVA: mean traits between users &amp; non-users; legal vs. illegal groups</li>
+        <li>Correlations: trait scores vs. consumption levels</li>
+      </ul>
+    </section>
+
+    <section class="glass pad">
+      <h2>Visualizations</h2>
+      <ul>
+        <li>Histograms of OCEAN &amp; impulsivity</li>
+        <li>Boxplots of traits by user status</li>
+        <li>Stacked bars for legal vs. illegal use</li>
+        <li>Heatmap: traits × usage levels</li>
+      </ul>
+    </section>
+
+    <section class="glass pad">
+      <h2>Coding Challenges</h2>
+      <ul>
+        <li>Consistent re-encoding for 18 categorical outcomes</li>
+        <li>Balancing binary vs. ordinal analyses</li>
+        <li>Decluttering multi-variable plots</li>
+        <li>Reproducible scripts &amp; clear variable labels</li>
+      </ul>
+    </section>
+
+    <section class="glass pad">
+      <h2>Timeline</h2>
+      <ul class="timeline">
+        <li><strong>11/7</strong> Proposal complete</li>
+        <li><strong>11/10–11/14</strong> Project review meeting (Zoom)</li>
+        <li><strong>11/21</strong> Data cleaning &amp; webpage setup</li>
+        <li><strong>11/28</strong> Data analysis complete</li>
+        <li><strong>12/3</strong> Final draft complete</li>
+        <li><strong>12/6</strong> Submit report, site, peer assessment</li>
+        <li><strong>12/11</strong> In-class discussion</li>
+      </ul>
+    </section>
+
+    <section class="glass pad">
+      <h2>Personality Trait Sources</h2>
+      <ul>
+        <li>Big Five Personality Traits and Illicit Drug Use</li>
+        <li>Big Five traits predict illegal drug use in young people</li>
+        <li>How Does Substance Use Affect Personality Development? (2021)</li>
+        <li>Five-Factor Model personality profiles of drug users</li>
+        <li>Associations between Big Five and non-medical use of prescription drugs</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="index.html">← Back to Home</a></p>
+  </footer>
+
+  <script src="script.js?v=1" defer></script>
+</body>
+</html>
