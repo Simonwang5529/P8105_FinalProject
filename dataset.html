@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dataset — Personality × Drug Use</title>
+  <meta name="description" content="Dataset overview, key variables, access, and reproducible workflow notes." />
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Personality × Drug Use</a>
+    <nav class="nav inline">
+      <a href="proposal.html">Proposal</a>
+      <a href="dataset.html" aria-current="page">Dataset</a>
+      <a href="visualizations.html">Visualizations</a>
+      <a href="results.html">Results</a>
+    </nav>
+  </header>
+
+  <main class="container doc">
+    <h1>Dataset</h1>
+
+    <section class="glass pad">
+      <h2>Source</h2>
+      <p>Fehrman et&nbsp;al. (2015), Drug Consumption (UCI). 1,885 respondents; demographics, OCEAN, impulsivity (BIS-11), sensation seeking (ImpSS), and self-reported usage for 18 drugs.</p>
+      <p><em>Access:</em> Kaggle — Drug Consumptions (UCI)</p>
+    </section>
+
+    <section class="glass pad">
+      <h2>Key Variables</h2>
+      <ul class="cols-2">
+        <li>Age, Gender, Education, Country, Ethnicity</li>
+        <li>OCEAN scores (NEO-FFI-R)</li>
+        <li>Impulsivity (BIS-11), Sensation Seeking (ImpSS)</li>
+        <li>Drug usage (18 items), levels CL0–CL6</li>
+      </ul>
+    </section>
+
+    <section class="glass pad">
+      <h2>Preparation</h2>
+      <ol>
+        <li>Recode CL0–CL6 to binary user/non-user and ordinal 0–6</li>
+        <li>Define drug groups: legal vs. illegal</li>
+        <li>Clean labels, factor levels, and codebook alignment</li>
+        <li>Create reproducible R scripts for wrangling and EDA</li>
+      </ol>
+    </section>
+
+    <section class="glass pad">
+      <h2>Reproducibility Notes</h2>
+      <ul>
+        <li>R Project with <code>data/</code>, <code>code/</code>, <code>figs/</code>, <code>docs/</code></li>
+        <li>R Markdown report rendered to <code>docs/final_report.html</code> (linked from Results)</li>
+        <li>Use relative paths, set seed, and session info</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="index.html">← Back to Home</a></p>
+  </footer>
+
+  <script src="script.js?v=1" defer></script>
+</body>
+</html>
