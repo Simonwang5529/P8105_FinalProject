@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visualizations — Personality × Drug Use</title>
+  <meta name="description" content="Gallery for EDA plots: histograms, boxplots, stacked bars, heatmaps." />
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Personality × Drug Use</a>
+    <nav class="nav inline">
+      <a href="proposal.html">Proposal</a>
+      <a href="dataset.html">Dataset</a>
+      <a href="visualizations.html" aria-current="page">Visualizations</a>
+      <a href="results.html">Results</a>
+    </nav>
+  </header>
+
+  <main class="container doc">
+    <h1>Visualizations</h1>
+
+    <section class="glass pad">
+      <h2>Trait Distributions</h2>
+      <p>Histograms of OCEAN, BIS-11 (impulsivity), and ImpSS (sensation seeking).</p>
+      <div class="gallery">
+        <!-- Replace placeholders with actual plot images -->
+        <figure><img src="figs/hist_ocean.png" alt="Histogram of OCEAN scores"><figcaption>OCEAN</figcaption></figure>
+        <figure><img src="figs/hist_impulsivity.png" alt="Histogram of impulsivity"><figcaption>Impulsivity</figcaption></figure>
+        <figure><img src="figs/hist_impSS.png" alt="Histogram of sensation seeking"><figcaption>Sensation Seeking</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="glass pad">
+      <h2>Traits by User Status</h2>
+      <p>Boxplots comparing personality scores between users and non-users.</p>
+      <div class="gallery">
+        <figure><img src="figs/box_ocean_user.png" alt="Boxplots of OCEAN by user status"><figcaption>OCEAN × User</figcaption></figure>
+        <figure><img src="figs/box_impulsivity_user.png" alt="Boxplots of impulsivity by user status"><figcaption>Impulsivity × User</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="glass pad">
+      <h2>Legal vs. Illegal</h2>
+      <p>Stacked bars of consumption categories and a heatmap of trait–usage correlations.</p>
+      <div class="gallery">
+        <figure><img src="figs/stacked_legal_illegal.png" alt="Stacked bars: legal vs illegal"><figcaption>Legal vs Illegal</figcaption></figure>
+        <figure><img src="figs/heatmap_traits_usage.png" alt="Heatmap of correlations"><figcaption>Traits × Usage Heatmap</figcaption></figure>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="index.html">← Back to Home</a></p>
+  </footer>
+
+  <script src="script.js?v=1" defer></script>
+</body>
+</html>
