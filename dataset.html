@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dataset — Personality × Drug Use</title>
-  <meta name="description" content="Dataset overview, key variables, access, and reproducible workflow notes." />
+  <meta name="description" content="Detailed description of the Fehrman et al. Drug Consumption dataset: structure, variables, coding scheme, and project-specific cleaning choices." />
   <link rel="stylesheet" href="style.css?v=1" />
 </head>
 <body>
@@ -21,43 +21,173 @@
   <main class="container doc">
     <h1>Dataset</h1>
 
+    <!-- Overview / Source -->
     <section class="glass pad">
-      <h2>Source</h2>
-      <p>Fehrman et&nbsp;al. (2015), Drug Consumption (UCI). 1,885 respondents; demographics, OCEAN, impulsivity (BIS-11), sensation seeking (ImpSS), and self-reported usage for 18 drugs.</p>
-      <p><em>Access:</em> Kaggle — Drug Consumptions (UCI), 
-        <a href="https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci" target="_blank">
-          https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci
+      <h2>Overview &amp; Source</h2>
+      <p>
+        Our project uses the <strong>Drug Consumption</strong> dataset compiled by
+        <strong>Fehrman et&nbsp;al. (2015)</strong>. The database contains records for
+        <strong>1,885 respondents</strong>. For each person we observe:
+      </p>
+      <ul>
+        <li>Demographics: age band, gender, education level, country, ethnicity</li>
+        <li>Personality measurements: Big Five (NEO-FFI-R), impulsivity (BIS-11), and sensation seeking (ImpSS)</li>
+        <li>Self-reported use of <strong>18 legal and illegal drugs</strong> plus one fictitious control drug (Semeron)</li>
+      </ul>
+      <p>
+        All input attributes were originally categorical and then <strong>quantified</strong> so that they can be treated
+        as real-valued features. In the version we use (<code>Drug_Consumption.csv</code>), some variables have been converted
+        back into readable categories (for example, age bands like “18–24” and education levels).
+      </p>
+      <p>
+        <em>External link:</em>
+        <a href="https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci" target="_blank" rel="noopener">
+          Kaggle — Drug Consumptions (UCI)
         </a>
       </p>
     </section>
 
+    <!-- Structure & Variables -->
     <section class="glass pad">
-      <h2>Key Variables</h2>
+      <h2>Structure of the Data</h2>
+      <p>
+        Each row corresponds to a single respondent. The main groups of variables are:
+      </p>
+
+      <div class="cols-2">
+        <div>
+          <h3>Demographics</h3>
+          <ul>
+            <li><strong>ID</strong> — record identifier (cannot be linked back to the participant)</li>
+            <li><strong>Age</strong> — categorical age band (e.g., 18–24, 25–34, …, 65+)</li>
+            <li><strong>Gender</strong> — male / female</li>
+            <li><strong>Education</strong> — highest educational attainment</li>
+            <li><strong>Country</strong> — country of residence</li>
+            <li><strong>Ethnicity</strong> — self-reported ethnicity</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Personality Traits</h3>
+          <ul>
+            <li><strong>Nscore</strong> — Neuroticism (NEO-FFI-R)</li>
+            <li><strong>Escore</strong> — Extraversion (NEO-FFI-R)</li>
+            <li><strong>Oscore</strong> — Openness to experience (NEO-FFI-R)</li>
+            <li><strong>AScore</strong> — Agreeableness (NEO-FFI-R)</li>
+            <li><strong>Cscore</strong> — Conscientiousness (NEO-FFI-R)</li>
+            <li><strong>Impulsive</strong> — Impulsivity (BIS-11)</li>
+            <li><strong>SS</strong> — Sensation seeking (ImpSS)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Drug Use Outcomes</h3>
+      <p>
+        For each substance, respondents indicate how recently they used it. The dataset includes:
+      </p>
       <ul class="cols-2">
-        <li>Age, Gender, Education, Country, Ethnicity</li>
-        <li>OCEAN scores (NEO-FFI-R)</li>
-        <li>Impulsivity (BIS-11), Sensation Seeking (ImpSS)</li>
-        <li>Drug usage (18 items), levels CL0–CL6</li>
+        <li><strong>Alcohol</strong></li>
+        <li><strong>Amphet</strong> (amphetamines)</li>
+        <li><strong>Amyl</strong> (amyl nitrite)</li>
+        <li><strong>Benzos</strong> (benzodiazepines)</li>
+        <li><strong>Caff</strong> (caffeine)</li>
+        <li><strong>Cannabis</strong> (marijuana)</li>
+        <li><strong>Choc</strong> (chocolate)</li>
+        <li><strong>Coke</strong> (cocaine)</li>
+        <li><strong>Crack</strong> (crack cocaine)</li>
+        <li><strong>Ecstasy</strong></li>
+        <li><strong>Heroin</strong></li>
+        <li><strong>Ketamine</strong></li>
+        <li><strong>Legalh</strong> (legal highs)</li>
+        <li><strong>LSD</strong></li>
+        <li><strong>Meth</strong> (methadone)</li>
+        <li><strong>Mushroom</strong> (magic mushrooms)</li>
+        <li><strong>Nicotine</strong></li>
+        <li><strong>VSA</strong> (volatile substance abuse)</li>
+        <li><strong>Semer</strong> — fictitious drug “Semeron” used as a control for over-reporting</li>
       </ul>
     </section>
 
+    <!-- Coding of Drug Use -->
     <section class="glass pad">
-      <h2>Preparation</h2>
-      <ol>
-        <li>Recode CL0–CL6 to binary user/non-user and ordinal 0–6</li>
-        <li>Define drug groups: legal vs. illegal</li>
-        <li>Clean labels, factor levels, and codebook alignment</li>
-        <li>Create reproducible R scripts for wrangling and EDA</li>
-      </ol>
-    </section>
-
-    <section class="glass pad">
-      <h2>Reproducibility Notes</h2>
+      <h2>Coding of Drug Use (CL0–CL6)</h2>
+      <p>
+        Drug use is recorded on an ordered seven-level scale. In the raw data these appear as
+        <code>CL0</code>–<code>CL6</code>:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Interpretation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>CL0</td><td>Never used</td></tr>
+          <tr><td>CL1</td><td>Used over a decade ago</td></tr>
+          <tr><td>CL2</td><td>Used in the last decade</td></tr>
+          <tr><td>CL3</td><td>Used in the last year</td></tr>
+          <tr><td>CL4</td><td>Used in the last month</td></tr>
+          <tr><td>CL5</td><td>Used in the last week</td></tr>
+          <tr><td>CL6</td><td>Used in the last day</td></tr>
+        </tbody>
+      </table>
+      <p>
+        For our project we frequently:
+      </p>
       <ul>
-        <li>R Project with <code>data/</code>, <code>code/</code>, <code>figs/</code>, <code>docs/</code></li>
-        <li>R Markdown report rendered to <code>docs/final_report.html</code> (linked from Results)</li>
-        <li>Use relative paths, set seed, and session info</li>
+        <li>Recode this scale to <strong>ordinal scores</strong> (0–6) when treating recency as a severity measure, and</li>
+        <li>Collapse levels into a <strong>binary user vs. non-user</strong> indicator (e.g., CL0–CL1 as “non-user”, CL2–CL6 as “user”).</li>
       </ul>
+    </section>
+
+    <!-- Our Project Version / Cleaning -->
+    <section class="glass pad">
+      <h2>Project-Specific Data Preparation</h2>
+      <p>
+        The <code>Drug_Consumption.csv</code> file included with this site is the working dataset we use in our analyses.
+        It is adapted from the original quantified data with the following aims:
+      </p>
+      <ul>
+        <li>Keep personality scores (<strong>Nscore</strong>, <strong>Escore</strong>, <strong>Oscore</strong>, <strong>AScore</strong>, <strong>Cscore</strong>, <strong>Impulsive</strong>, <strong>SS</strong>) as real-valued features.</li>
+        <li>Present demographics such as <strong>Age</strong>, <strong>Education</strong>, <strong>Country</strong>, and <strong>Ethnicity</strong> in human-readable categories.</li>
+        <li>Preserve the original CL0–CL6 labels for each drug so that we can flexibly derive both binary and ordinal outcomes.</li>
+        <li>Standardize variable names and labels to align with our codebook and figures.</li>
+      </ul>
+      <p>
+        Because all personality traits are numeric and drug outcomes can be expressed as ordered or binary variables,
+        the dataset is well-suited to:
+      </p>
+      <ul>
+        <li>Descriptive statistics and group comparisons (e.g., users vs. non-users)</li>
+        <li>Correlation and association analyses between traits and usage</li>
+        <li>Exploratory modeling of risk profiles (although this project focuses on EDA rather than predictive modeling)</li>
+      </ul>
+    </section>
+
+    <!-- Acknowledgements / Citation / Inspiration -->
+    <section class="glass pad">
+      <h2>Acknowledgements &amp; Citation</h2>
+      <p>
+        The dataset and quantification process are described in:
+      </p>
+      <p>
+        <em>E. Fehrman, A. K. Muhammad, E. M. Mirkes, V. Egan, and A. N. Gorban (2015).
+        “The Five Factor Model of personality and evaluation of drug consumption risk.” arXiv preprint.</em>
+      </p>
+      <p>
+        Key contributors and contacts include:
+      </p>
+      <ul>
+        <li><strong>Elaine Fehrman</strong>, Rampton Hospital, Nottinghamshire, UK</li>
+        <li><strong>Vincent Egan</strong>, University of Nottingham, UK</li>
+        <li><strong>Evgeny M. Mirkes</strong>, University of Leicester, UK</li>
+      </ul>
+      <p>
+        Original data are distributed via the UCI Machine Learning Repository and mirrored on Kaggle.
+        Our project uses this dataset strictly for educational purposes to explore how personality traits
+        and demographics relate to patterns of legal and illegal drug use.
+      </p>
     </section>
   </main>
 
