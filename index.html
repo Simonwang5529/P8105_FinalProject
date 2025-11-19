@@ -11,13 +11,17 @@
   <meta property="og:title" content="Assessing the Role of Personality in Drug Usage — Project Hub" />
   <meta property="og:description" content="Overview, data, approaches, visualizations, results, and full report." />
   <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#2563eb" />
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.8em' font-size='80'>🧪</text></svg>">
   <link rel="stylesheet" href="style.css?v=1" />
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">Personality × Drug Use</a>
+    <a class="brand" href="index.html">
+      <span class="brand-mark">🧪</span>
+      <span class="brand-text">Personality × Drug Use</span>
+    </a>
 
     <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">
       <span class="sr-only">Toggle menu</span>☰
@@ -25,7 +29,7 @@
 
     <nav id="main-nav" class="nav">
       <details class="nav-accordion">
-        <summary aria-controls="submenu">Menu</summary>
+        <summary aria-controls="submenu">Sections</summary>
         <ul id="submenu" class="submenu">
           <li><a href="proposal.html">Proposal</a></li>
           <li><a href="dataset.html">Dataset</a></li>
@@ -38,39 +42,104 @@
   </header>
 
   <main class="container">
+    <!-- HERO -->
     <section class="hero glass">
-      <h1>Assessing the Role of Personality in Drug Usage</h1>
-      <p class="lead">
-        Is there an association between the usage of legal and illegal drugs and quantitatively measured personality traits?
-        Explore our scope, data, approach, visualizations, and results below.
-      </p>
-      <div class="meta">
-        <strong>Team:</strong> Maryam Khalid (mk4992), Sijda Ahmed (sa4007), Ruicheng Yang (ry2539), Xiling Wang (xw3107), Haixin Jin (hj2735)
+      <div class="hero-main">
+        <p class="eyebrow">P8105 · Final Project</p>
+        <h1 class="hero-title">
+          Assessing the Role of <span class="gradient-text">Personality</span>
+          in Drug Usage
+        </h1>
+        <p class="lead">
+          Is there an association between the usage of legal and illegal drugs
+          and quantitatively measured personality traits? We combine a large
+          survey dataset with clinical personality scores to explore how traits
+          like openness, impulsivity, and sensation seeking relate to drug use.
+        </p>
+
+        <div class="meta">
+          <strong>Team:</strong> Maryam Khalid (mk4992), Sijda Ahmed (sa4007),
+          Ruicheng Yang (ry2539), Xiling Wang (xw3107), Haixin Jin (hj2735)
+        </div>
+
+        <div class="hero-actions">
+          <a class="button" href="visualizations.html">View Visualizations</a>
+          <a class="button ghost subtle" href="dataset.html">See the Dataset</a>
+        </div>
+
+        <ul class="hero-tags">
+          <li>Big Five (OCEAN)</li>
+          <li>Impulsivity &amp; Sensation Seeking</li>
+          <li>Legal vs. Illegal Drug Use</li>
+          <li>1,885 Respondents</li>
+        </ul>
       </div>
+
+      <div class="hero-aside">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <span class="stat-label">Participants</span>
+            <span class="stat-value">1,885</span>
+            <span class="stat-note">Multi-country survey</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Drugs</span>
+            <span class="stat-value">18</span>
+            <span class="stat-note">Legal &amp; illegal</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Personality</span>
+            <span class="stat-value">7</span>
+            <span class="stat-note">OCEAN + BIS-11 + ImpSS</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Deliverables</span>
+            <span class="stat-value">4</span>
+            <span class="stat-note">Proposal · Data · Plots · Report</span>
+          </div>
+        </div>
+        <p class="hero-aside-note">
+          Use the cards below or the top navigation to jump into any part of
+          the project.
+        </p>
+      </div>
+    </section>
+
+    <!-- LINK GRID -->
+    <section class="section-intro">
+      <h2 class="section-title">Explore the Project</h2>
+      <p class="section-subtitle">
+        Start with the proposal, dive into the dataset, then explore our
+        visualizations and statistical results.
+      </p>
     </section>
 
     <section class="grid">
       <a class="card glass linkcard" href="proposal.html">
         <h2>Proposal</h2>
         <p>Scope, research question, motivation, products, sources, and timeline.</p>
+        <span class="chip">Start here</span>
         <span class="arrow">→</span>
       </a>
 
       <a class="card glass linkcard" href="dataset.html">
         <h2>Dataset</h2>
-        <p>Fehrman et&nbsp;al. (2015) Drug Consumption dataset: structure, variables, and access.</p>
+        <p>Fehrman et&nbsp;al. (2015) Drug Consumption: structure, variables, and access.</p>
+        <span class="chip">Data overview</span>
         <span class="arrow">→</span>
       </a>
 
       <a class="card glass linkcard" href="visualizations.html">
         <h2>Visualizations</h2>
         <p>Histograms, boxplots, stacked bars, and trait × usage heatmaps.</p>
+        <span class="chip">EDA plots</span>
         <span class="arrow">→</span>
       </a>
 
       <a class="card glass linkcard" href="results.html">
         <h2>Results</h2>
         <p>Analytical findings, statistical tests, and interpretation; link to full report.</p>
+        <span class="chip">Key findings</span>
         <span class="arrow">→</span>
       </a>
     </section>
