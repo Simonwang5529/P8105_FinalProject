@@ -1,0 +1,107 @@
+---
+title: "data_cleaning"
+author: "cindyjin"
+date: "2025-11-30"
+output: github_document
+---
+
+```{r}
+# data cleaning
+# Gender will be recode into: male = 0, female = 1
+# age band will be recode into ordinal numeric levels
+# all drug use will be recode into numbers below
+# 0: never used
+# 1: Used over a Decade Ago
+# 2: Used in Last Decade
+# 3: Used in Last Year
+# 4: Used in Last Month
+# 5: Used in Last Week
+# 6: Used in Last Day
+
+# since we are not using education, country, and ethnicity, these valuable are unchanged
+
+```
+
+```{r}
+library(tidyverse)
+
+# Load raw dataset
+raw = read_csv("data/Drug_Consumption.csv")
+
+# Recode gender
+raw = raw |>
+  mutate(Gender = if_else(Gender == "M", 0,
+                          if_else(Gender == "F", 1, NA_real_)))
+
+# Recode age bands → ordinal numeric levels
+age_levels = c(
+  "18-24" = 1,
+  "25-34" = 2,
+  "35-44" = 3,
+  "45-54" = 4,
+  "55-64" = 5,
+  "65+"   = 6
+)
+
+raw <- raw |>
+  mutate(Age = age_levels[Age] |> as.numeric())
+
+# Identify drug-use variables (all columns that start with CL-values)
+drug_vars = names(raw)[sapply(raw, function(x) any(grepl("^CL[0-6]", x)))]
+
+# Remove "CL" prefix from all drug-use variables and convert to numeric
+cleaned <- raw |>
+  mutate(across(all_of(drug_vars),
+                ~ str_remove(.x, "CL") |> as.numeric()))
+
+# Save cleaned dataset
+write_csv(cleaned, "data/cleaned_drug_data.csv")
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
