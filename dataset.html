@@ -168,7 +168,37 @@
         <li>Exploratory modeling of risk profiles (although this project focuses on EDA rather than predictive modeling)</li>
       </ul>
     </section>
+    <section class="glass pad">
+      <h2>Cleaned Analysis Dataset</h2>
+      <p>
+        For all figures and summaries in this project we use a cleaned analysis file,
+        <code>cleaned_drug_data.csv</code>. This dataset keeps the full sample of
+        <strong>1,884 respondents</strong> and <strong>32 variables</strong>, but
+        standardizes the coding to make analysis easier.
+      </p>
 
+      <p>
+        📄 <strong>Download cleaned dataset:</strong><br>
+        <a href="https://github.com/Simonwang5529/P8105_FinalProject/blob/main/data/cleaned_drug_data.csv"
+           target="_blank" rel="noopener">
+          cleaned_drug_data.csv (GitHub)
+        </a>
+      </p>
+
+      <ul>
+        <li>Age and gender are stored as <strong>numeric codes</strong> representing ordered age bands and gender categories.</li>
+        <li>Each drug outcome is recorded as an <strong>integer 0–6</strong>, corresponding to the original CL0–CL6 recency scale.</li>
+        <li>Personality traits remain <strong>continuous scores</strong> on their original scales.</li>
+        <li>Demographic fields such as education, country, and ethnicity are kept as readable categorical labels.</li>
+        <li>The cleaned file contains <strong>no missing values</strong>, so all respondents are retained for EDA.</li>
+      </ul>
+
+      <p>
+        This cleaned version is the starting point for all descriptive statistics,
+        cross-tabulations, and visualizations shown on the other pages of the site.
+      </p>
+    </section>
+    
     <!-- Acknowledgements / Citation / Inspiration -->
     <section class="glass pad">
       <h2>Acknowledgements &amp; Citation</h2>
@@ -194,26 +224,6 @@
       </p>
     </section>
 
-    <section class="glass pad">
-      <h2>Cleaned Analysis Dataset</h2>
-      <p>
-        For all figures and summaries in this project we use a cleaned analysis file,
-        <code>cleaned_drug_data.csv</code>. This dataset keeps the full sample of
-        <strong>1,884 respondents</strong> and <strong>32 variables</strong>, but
-        standardizes the coding to make analysis easier.
-      </p>
-      <ul>
-        <li>Age and gender are stored as <strong>numeric codes</strong> representing ordered age bands and gender categories.</li>
-        <li>Each drug outcome is recorded as an <strong>integer 0–6</strong>, corresponding to the original CL0–CL6 recency scale.</li>
-        <li>Personality traits remain <strong>continuous scores</strong> on their original scales.</li>
-        <li>Demographic fields such as education, country, and ethnicity are kept as readable category labels.</li>
-        <li>The cleaned file contains <strong>no missing values</strong>, so all respondents can be used in our exploratory analyses.</li>
-      </ul>
-      <p>
-        This cleaned version is the starting point for all descriptive statistics,
-        cross-tabulations, and visualizations shown on the other pages of the site.
-      </p>
-    </section>
   </main>
 
   <footer class="site-footer">
