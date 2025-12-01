@@ -174,7 +174,7 @@ OCEAN_boxplot = usage_data |>
     y = "Scores",
     fill = "Drug User Status",
     title = "Boxplot of OCEAN by User Status",
-    caption = "Drug user defined as those who have used any drug in the past decade excluding caffeine and chocolate."
+    caption = "Note: Drug user defined as those who have used any drug in the past decade excluding caffeine and chocolate."
   ) +
   scale_fill_manual(values = c("non-user" = "#D8BFD8", "user" = "#DA70D6")) +
   scale_x_discrete(labels = c("Openness to Experience (O)", "Conscientiousness (C)", "Extraversion (E)",
@@ -188,6 +188,20 @@ ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
 
 Boxplot of impulsivity by user status
 ```{r}
+impulsivity_boxplot = usage_data |> 
+  ggplot(aes(x = user_status, y = Impulsive)) + 
+  geom_boxplot() +
+  labs(
+    x = "Drug User Status",
+    y = "Impulsivity Scores",
+    title = "Boxplot of Impulsivity by User Status",
+    caption = "Note: Drug user defined as those who have used any drug in the past decade excluding caffeine and chocolate."
+  ) +
+  scale_fill_manual(values = c("non-user" = "#9400D3", "user" = "#BA55D3")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+impulsivity_boxplot
+ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
 
 ```
 
