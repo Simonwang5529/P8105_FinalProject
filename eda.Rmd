@@ -105,7 +105,7 @@ OCEAN_hist = (O_hist + C_hist + E_hist) / (A_hist + N_hist) +
     title = "Distribution of NEO-FFI-R OCEAN Scores"
   )
 
-ggsave("figs/hist_ocean.png", OCEAN_hist, width = 8, height = 6)
+ggsave("figs/hist_ocean.png", OCEAN_hist, width = 9, height = 7)
 
 ```
 
@@ -120,7 +120,7 @@ impulsivity_hist = drug_data |>
     title = "Distribution of Impulsivity Scores"
   ) 
 
-ggsave("figs/hist_impulsivity.png", impulsivity_hist)
+ggsave("figs/hist_impulsivity.png", impulsivity_hist, width = 5, height = 7)
 
 ```
 
@@ -135,7 +135,7 @@ SS_hist = drug_data |>
     title = "Distribution of SS Scores"
   ) 
 
-ggsave("figs/hist_impSS.png", SS_hist)
+ggsave("figs/hist_impSS.png", SS_hist, width = 5, height = 7)
 
 ```
 
