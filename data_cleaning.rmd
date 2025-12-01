@@ -33,7 +33,8 @@ raw = read_csv("data/Drug_Consumption.csv")
 # Recode gender
 raw = raw |>
   mutate(Gender = if_else(Gender == "M", 0,
-                          if_else(Gender == "F", 1, NA_real_)))
+                          if_else(Gender == "F", 1, NA_real_)),
+         Gender = as.factor(Gender))
 
 # Recode age bands → ordinal numeric levels
 age_levels = c(
