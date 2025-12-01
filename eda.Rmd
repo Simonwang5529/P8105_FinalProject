@@ -245,7 +245,7 @@ I_stacked = legalusage_data |>
     y = "Percentage", 
     fill = "Legal vs Illegal User Status"
     ) +
-  scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#191970")) +
+  scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#ADD8E6")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 I_stacked
 
@@ -257,7 +257,7 @@ SS_stacked = legalusage_data |>
     y = "Percentage",
     caption = "Note: Only Alcohol, Caffeine, Chocolate, and Nicotine are considered legal drugs."
     ) +
-  scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#191970")) +
+  scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#ADD8E6")) +
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 SS_stacked
@@ -282,7 +282,7 @@ corr_heatmap = pheatmap(correlation_matrix,
                         display_numbers = TRUE,
                         cluster_rows = TRUE,
                         cluster_cols = TRUE,
-                        main = "Heatmap of Personality Trait x Drug Usage Correlations")
+                        main = "Heatmap of Personality Traits x Drug Usage Correlations")
 
 corr_heatmap
 ggsave("figs/heatmap_traits_usage.png", corr_heatmap)
