@@ -28,10 +28,11 @@ output: github_document
 library(tidyverse)
 
 # Load raw dataset
+# Starting number of rows is 1884
 raw = read_csv("data/Drug_Consumption.csv")
 
 # Recode gender
-raw = raw |>
+cleaned = raw |>
   mutate(Gender = if_else(Gender == "M", 0,
                           if_else(Gender == "F", 1, NA_real_)),
          Gender = as.factor(Gender))
@@ -46,20 +47,25 @@ age_levels = c(
   "65+"   = 6
 )
 
-raw <- raw |>
+cleaned <- cleaned |>
   mutate(Age = age_levels[Age] |> as.numeric())
 
 # Identify drug-use variables (all columns that start with CL-values)
 drug_vars = names(raw)[sapply(raw, function(x) any(grepl("^CL[0-6]", x)))]
 
 # Remove "CL" prefix from all drug-use variables and convert to numeric
-cleaned <- raw |>
+cleaned <- cleaned |>
   mutate(across(all_of(drug_vars),
                 ~ str_remove(.x, "CL") |> as.numeric()))
 
 # Rename "AScore" column to "Ascore" to match the names of the other OCEAN columns
 cleaned <- cleaned |>
   dplyr::rename(Ascore = AScore)
+
+# Remove individuals who responded with anything other than 0 (never used) to the fictitious drug (Semeron) which was introduced to identify over-claimers
+# Now the number of rows is 1876
+cleaned <- cleaned |>
+  filter(Semer == 0)
 
 # Save cleaned dataset
 write_csv(cleaned, "data/cleaned_drug_data.csv")
