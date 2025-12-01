@@ -30,8 +30,22 @@ scale_fill_discrete = scale_fill_viridis_d
 
 
 ```{r}
-# Read in dataset
-drug_data = read_csv("data/cleaned_drug_data.csv")
+# Read in cleaned dataset
+drug_data = read_csv("data/cleaned_drug_data.csv") |>
+  mutate(
+    Gender = as.factor(Gender))
+
+# Create version of the dataset where we collapse drug levels across all drug use columns into a binary user vs. non-user indicator "user_status"
+# 0-1: non-user
+# 2–6: user
+usage_data = drug_data |>
+  mutate(across(14:31, ~ factor(ifelse(.x %in% 0:1, "non-user",
+                         ifelse(.x %in% 2:6, "user", NA)),
+                        levels = c("non-user", "user"))),
+         # define user as those who have used any drug in the past decade excluding chocolate and caffeine
+         user_status = factor(if_else(rowSums(across(c(14:31, -18, -20)) == "user", na.rm = TRUE) > 0, 
+                                          "user", "non-user"),
+                          levels = c("non-user", "user")))
 
 # Gender
 # 0: male
@@ -102,9 +116,10 @@ N_hist = drug_data |>
 
 OCEAN_hist = (O_hist + C_hist + E_hist) / (A_hist + N_hist) + 
   plot_annotation(
-    title = "Distribution of NEO-FFI-R OCEAN Scores"
+    title = "Distribution of OCEAN Scores"
   )
 
+OCEAN_hist
 ggsave("figs/hist_ocean.png", OCEAN_hist)
 
 ```
@@ -120,6 +135,7 @@ impulsivity_hist = drug_data |>
     title = "Distribution of Impulsivity Scores"
   ) 
 
+impulsivity_hist
 ggsave("figs/hist_impulsivity.png", impulsivity_hist)
 
 ```
@@ -135,6 +151,7 @@ SS_hist = drug_data |>
     title = "Distribution of SS Scores"
   ) 
 
+SS_hist
 ggsave("figs/hist_impSS.png", SS_hist)
 
 ```
@@ -144,6 +161,28 @@ ggsave("figs/hist_impSS.png", SS_hist)
 
 Boxplot of OCEAN by user status
 ```{r}
+OCEAN_boxplot = usage_data |> 
+  pivot_longer(
+    Nscore:Cscore,
+    names_to = "OCEAN", 
+    values_to = "Score") |> 
+  mutate(OCEAN = fct_relevel(OCEAN, c("Oscore", "Cscore", "Escore", "Ascore", "Nscore"))) |>
+  ggplot(aes(x = OCEAN, y = Score, fill = user_status)) + 
+  geom_boxplot() +
+  labs(
+    x = "OCEAN",
+    y = "Scores",
+    fill = "Drug User Status",
+    title = "Boxplot of OCEAN by User Status",
+    caption = "Drug user defined as those who have used any drug in the past decade excluding caffeine and chocolate."
+  ) +
+  scale_fill_manual(values = c("non-user" = "#D8BFD8", "user" = "#DA70D6")) +
+  scale_x_discrete(labels = c("Openness to Experience (O)", "Conscientiousness (C)", "Extraversion (E)",
+                              "Agreeableness (A)", "Neuroticism (N)")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+OCEAN_boxplot
+ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
 
 ```
 
