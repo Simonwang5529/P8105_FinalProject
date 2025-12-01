@@ -1,14 +1,15 @@
 ---
 title: "data_cleaning"
-author: "cindyjin"
-date: "2025-11-30"
 output: github_document
 ---
 
 ```{r}
-# data cleaning
+# Data cleaning
+
 # Gender will be recode into: male = 0, female = 1
+
 # age band will be recode into ordinal numeric levels
+
 # all drug use will be recode into numbers below
 # 0: never used
 # 1: Used over a Decade Ago
@@ -23,6 +24,7 @@ output: github_document
 ```
 
 ```{r}
+# Load in neccessary libraries
 library(tidyverse)
 
 # Load raw dataset
@@ -54,54 +56,14 @@ cleaned <- raw |>
   mutate(across(all_of(drug_vars),
                 ~ str_remove(.x, "CL") |> as.numeric()))
 
+# Rename "AScore" column to "Ascore" to match the names of the other OCEAN columns
+cleaned <- cleaned |>
+  dplyr::rename(Ascore = AScore)
+
 # Save cleaned dataset
 write_csv(cleaned, "data/cleaned_drug_data.csv")
 
 ```
 
-```{r}
 
-```
 
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
