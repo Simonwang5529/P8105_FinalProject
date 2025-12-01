@@ -1,7 +1,5 @@
 ---
 title: "eda"
-author: "Sijda Ahmed"
-date: "2025-11-30"
 output: github_document
 ---
 
@@ -67,14 +65,14 @@ O_hist = drug_data |>
   ggplot(aes(x = Oscore)) + 
   geom_histogram(fill = "#F4C2C2", color = "white", binwidth = 0.4) +
   labs(
-    x = "Openness to Experience (O) Scores",
+    x = "Openness to Experience (O)",
     y = "Count"
   ) 
 C_hist = drug_data |> 
   ggplot(aes(x = Cscore)) + 
   geom_histogram(fill = "#FFB6C1", color = "white", binwidth = 0.4) +
   labs(
-    x = "Conscientiousness (C) Scores",
+    x = "Conscientiousness (C)",
     y = "Count"
   ) 
 
@@ -82,7 +80,7 @@ E_hist = drug_data |>
   ggplot(aes(x = Escore)) + 
   geom_histogram(fill = "#FFA6C9", color = "white", binwidth = 0.4) +
   labs(
-    x = "Extraversion (E) Scores",
+    x = "Extraversion (E)",
     y = "Count"
   ) 
 
@@ -90,7 +88,7 @@ A_hist = drug_data |>
   ggplot(aes(x = Ascore)) + 
   geom_histogram(fill = "#FF1493", color = "white", binwidth = 0.4) +
   labs(
-    x = "Agreeableness (A) Scores",
+    x = "Agreeableness (A)",
     y = "Count"
   ) 
 
@@ -98,7 +96,7 @@ N_hist = drug_data |>
   ggplot(aes(x = Nscore)) + 
   geom_histogram(fill = "#F9429E", color = "white", binwidth = 0.4) +
   labs(
-    x = "Neuroticism (N) Scores",
+    x = "Neuroticism (N)",
     y = "Count"
   ) 
 
@@ -107,7 +105,7 @@ OCEAN_hist = (O_hist + C_hist + E_hist) / (A_hist + N_hist) +
     title = "Distribution of NEO-FFI-R OCEAN Scores"
   )
 
-ggsave("figs/hist_ocean.png", OCEAN_hist)
+ggsave("figs/hist_ocean.png", OCEAN_hist, width = 8, height = 6)
 
 ```
 
