@@ -115,7 +115,7 @@ impulsivity_hist = drug_data |>
   ggplot(aes(x = Impulsive)) + 
   geom_histogram(fill = "#FFE4E1", color = "white", binwidth = 0.4) +
   labs(
-    x = "Impulsivity Scores",
+    x = "Impulsivity",
     y = "Count",
     title = "Distribution of Impulsivity Scores"
   ) 
@@ -130,7 +130,7 @@ SS_hist = drug_data |>
   ggplot(aes(x = SS)) + 
   geom_histogram(fill = "#FFB7C5", color = "white", binwidth = 0.3) +
   labs(
-    x = "Sensation Seeking Scores",
+    x = "Sensation Seeking (SS)",
     y = "Count",
     title = "Distribution of SS Scores"
   ) 
