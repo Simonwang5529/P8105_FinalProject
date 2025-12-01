@@ -24,7 +24,7 @@ output: github_document
 ```
 
 ```{r}
-# Load in neccessary libraries
+# Load in necessary libraries
 library(tidyverse)
 
 # Load raw dataset

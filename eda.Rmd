@@ -1,0 +1,176 @@
+---
+title: "eda"
+author: "Sijda Ahmed"
+date: "2025-11-30"
+output: github_document
+---
+
+
+```{r}
+# Load in relevant libraries
+library(tidyverse)
+library(patchwork)
+
+# default options
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+```
+
+
+```{r}
+# Read in dataset
+drug_data = read_csv("data/cleaned_drug_data.csv")
+
+# Gender
+# 0: male
+# 1: female
+
+# Drug use
+# 0: never used
+# 1: used over a Decade Ago
+# 2: used in Last Decade
+# 3: used in Last Year
+# 4: used in Last Month
+# 5: used in Last Week
+# 6: used in Last Day
+
+# Age
+# 1: 18-24
+# 2: 25-34
+# 3: 35-44
+# 4: 45-54
+# 5: 55-64
+# 6: 65+
+
+```
+
+
+# Trait distributions
+
+Histogram of OCEAN Scores
+```{r}
+O_hist = drug_data |> 
+  ggplot(aes(x = Oscore)) + 
+  geom_histogram(fill = "#F4C2C2", color = "white", binwidth = 0.4) +
+  labs(
+    x = "Openness to Experience (O) Scores",
+    y = "Count"
+  ) 
+C_hist = drug_data |> 
+  ggplot(aes(x = Cscore)) + 
+  geom_histogram(fill = "#FFB6C1", color = "white", binwidth = 0.4) +
+  labs(
+    x = "Conscientiousness (C) Scores",
+    y = "Count"
+  ) 
+
+E_hist = drug_data |> 
+  ggplot(aes(x = Escore)) + 
+  geom_histogram(fill = "#FFA6C9", color = "white", binwidth = 0.4) +
+  labs(
+    x = "Extraversion (E) Scores",
+    y = "Count"
+  ) 
+
+A_hist = drug_data |> 
+  ggplot(aes(x = Ascore)) + 
+  geom_histogram(fill = "#FF1493", color = "white", binwidth = 0.4) +
+  labs(
+    x = "Agreeableness (A) Scores",
+    y = "Count"
+  ) 
+
+N_hist = drug_data |> 
+  ggplot(aes(x = Nscore)) + 
+  geom_histogram(fill = "#F9429E", color = "white", binwidth = 0.4) +
+  labs(
+    x = "Neuroticism (N) Scores",
+    y = "Count"
+  ) 
+
+OCEAN_hist = (O_hist + C_hist + E_hist) / (A_hist + N_hist) + 
+  plot_annotation(
+    title = "Distribution of NEO-FFI-R OCEAN Scores"
+  )
+
+ggsave("figs/hist_ocean.png", OCEAN_hist)
+
+```
+
+Histogram of impulsivity
+```{r}
+impulsivity_hist = drug_data |> 
+  ggplot(aes(x = Impulsive)) + 
+  geom_histogram(fill = "#FFE4E1", color = "white", binwidth = 0.4) +
+  labs(
+    x = "Impulsivity Scores",
+    y = "Count",
+    title = "Distribution of Impulsivity Scores"
+  ) 
+
+ggsave("figs/hist_impulsivity.png", impulsivity_hist)
+
+```
+
+Histogram of sensation seeking
+```{r}
+SS_hist = drug_data |> 
+  ggplot(aes(x = SS)) + 
+  geom_histogram(fill = "#FFB7C5", color = "white", binwidth = 0.3) +
+  labs(
+    x = "Sensation Seeking Scores",
+    y = "Count",
+    title = "Distribution of SS Scores"
+  ) 
+
+ggsave("figs/hist_impSS.png", SS_hist)
+
+```
+
+
+# Traits by User Status
+
+Boxplot of OCEAN by user status
+```{r}
+
+```
+
+Boxplot of impulsivity by user status
+```{r}
+
+```
+
+
+# Legal vs Illegal Usage
+
+Stacked barplot of legal vs illegal usage
+```{r}
+
+```
+
+Heatmap of correlations
+```{r}
+
+```
+
+
+
+
+
+
+
+
