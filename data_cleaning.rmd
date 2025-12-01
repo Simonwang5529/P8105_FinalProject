@@ -28,7 +28,7 @@ output: github_document
 library(tidyverse)
 
 # Load raw dataset
-# Starting number of rows is 1884
+# Starting number of rows is 1884 and columns is 32
 raw = read_csv("data/Drug_Consumption.csv")
 
 # Recode gender
@@ -59,13 +59,14 @@ cleaned <- cleaned |>
                 ~ str_remove(.x, "CL") |> as.numeric()))
 
 # Rename "AScore" column to "Ascore" to match the names of the other OCEAN columns
-cleaned <- cleaned |>
+cleaned = cleaned |>
   dplyr::rename(Ascore = AScore)
 
-# Remove individuals who responded with anything other than 0 (never used) to the fictitious drug (Semeron) which was introduced to identify over-claimers
-# Now the number of rows is 1876
-cleaned <- cleaned |>
-  filter(Semer == 0)
+# Remove individuals who responded with anything other than 0 (never used) to the fictitious drug (Semeron) which was introduced to identify over-claimers and then remove the Semer column
+# Now the number of rows is 1876 and columns is 31
+cleaned = cleaned |>
+  filter(Semer == 0) |> 
+  select(-Semer)
 
 # Save cleaned dataset
 write_csv(cleaned, "data/cleaned_drug_data.csv")
