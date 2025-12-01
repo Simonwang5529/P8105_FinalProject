@@ -8,6 +8,8 @@ output: github_document
 # Load in relevant libraries
 library(tidyverse)
 library(patchwork)
+library(ggplot2)
+library(pheatmap)
 
 # default options
 knitr::opts_chunk$set(
@@ -35,17 +37,42 @@ drug_data = read_csv("data/cleaned_drug_data.csv") |>
   mutate(
     Gender = as.factor(Gender))
 
-# Create version of the dataset where we collapse drug levels across all drug use columns into a binary user vs. non-user indicator "user_status"
+# Create version of the dataset where we collapse drug use levels into binary values (drug user or non-user)
 # 0-1: non-user
 # 2–6: user
 usage_data = drug_data |>
   mutate(across(14:31, ~ factor(ifelse(.x %in% 0:1, "non-user",
                          ifelse(.x %in% 2:6, "user", NA)),
-                        levels = c("non-user", "user"))),
-         # define user as those who have used any drug in the past decade excluding chocolate and caffeine
-         user_status = factor(if_else(rowSums(across(c(14:31, -18, -20)) == "user", na.rm = TRUE) > 0, 
-                                          "user", "non-user"),
-                          levels = c("non-user", "user")))
+                         levels = c("non-user", "user"))),
+         # define harmful user as those who have used any drug in the past decade excluding chocolate and caffeine
+         harmfuluser_status = factor(if_else(rowSums(across(c(14:31, -Caff, -Choc)) == "user", 
+                                                     na.rm = TRUE) > 0, "user", "non-user"),
+                              levels = c("non-user", "user")),
+         # define user as those who have used any drug in the past decade
+         user_status = factor(if_else(rowSums(across(c(14:31)) == "user", 
+                                                     na.rm = TRUE) > 0, "user", "non-user"),
+                              levels = c("non-user", "user")))
+
+# Create version of the dataset where I remove non-users and create a binary legal user vs. illegal user indicator "legaluser_status"
+# Alcohol, Caff, Choc, Nicotine considered legal drugs, everything else illegal
+legalusage_data = usage_data |>
+  filter(user_status == "user") |>
+  select(-harmfuluser_status, -user_status) |> 
+  mutate(# define legal user as those who used any legal drug in the past decade, illegal otherwise
+    legaluser_status = factor(if_else(rowSums(across(c(14:31, -Alcohol, -Caff, -Choc, -Nicotine)) == "user", 
+                                              na.rm = TRUE) > 0, "illegal", "legal"),
+                              levels = c("illegal", "legal")))
+
+# Create version of the dataset where I remove non-users and create a binary legal user vs. illegal user indicator "legaluser_status" but keep all the drug levels as ordinal
+legalusage_ordinal_data = drug_data |>
+  mutate(
+    user_status = usage_data$user_status
+  ) |> 
+  filter(user_status == "user") |>
+  select(-user_status) |>
+  mutate(
+    legaluser_status = legalusage_data$legaluser_status
+  )
 
 # Gender
 # 0: male
@@ -167,7 +194,7 @@ OCEAN_boxplot = usage_data |>
     names_to = "OCEAN", 
     values_to = "Score") |> 
   mutate(OCEAN = fct_relevel(OCEAN, c("Oscore", "Cscore", "Escore", "Ascore", "Nscore"))) |>
-  ggplot(aes(x = OCEAN, y = Score, fill = user_status)) + 
+  ggplot(aes(x = OCEAN, y = Score, fill = harmfuluser_status)) + 
   geom_boxplot() +
   labs(
     x = "OCEAN",
@@ -179,7 +206,7 @@ OCEAN_boxplot = usage_data |>
   scale_fill_manual(values = c("non-user" = "#D8BFD8", "user" = "#DA70D6")) +
   scale_x_discrete(labels = c("Openness to Experience (O)", "Conscientiousness (C)", "Extraversion (E)",
                               "Agreeableness (A)", "Neuroticism (N)")) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 40, hjust = 1))
 
 OCEAN_boxplot
 ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
@@ -189,7 +216,7 @@ ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
 Boxplot of impulsivity by user status
 ```{r}
 impulsivity_boxplot = usage_data |> 
-  ggplot(aes(x = user_status, y = Impulsive)) + 
+  ggplot(aes(x = harmfuluser_status, y = Impulsive, fill = harmfuluser_status)) + 
   geom_boxplot() +
   labs(
     x = "Drug User Status",
@@ -197,11 +224,11 @@ impulsivity_boxplot = usage_data |>
     title = "Boxplot of Impulsivity by User Status",
     caption = "Note: Drug user defined as those who have used any drug in the past decade excluding caffeine and chocolate."
   ) +
-  scale_fill_manual(values = c("non-user" = "#9400D3", "user" = "#BA55D3")) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  scale_fill_manual(values = c("non-user" = "#E6E6FA", "user" = "#BA55D3")) +
+  theme(legend.position = "none")
 
 impulsivity_boxplot
-ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
+ggsave("figs/box_impulsivity_user.png", impulsivity_boxplot)
 
 ```
 
@@ -210,18 +237,57 @@ ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
 
 Stacked barplot of legal vs illegal usage
 ```{r}
+I_stacked = legalusage_data |> 
+  ggplot(aes(x = factor(Impulsive), fill = legaluser_status)) +
+  geom_bar(position = "fill", color = "white") +
+  labs(
+    x = "Impulsitivty Scores", 
+    y = "Percentage", 
+    fill = "Legal vs Illegal User Status"
+    ) +
+  scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#191970")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+I_stacked
+
+SS_stacked = legalusage_data |> 
+  ggplot(aes(x = factor(SS), fill = legaluser_status)) +
+  geom_bar(position = "fill", color = "white") +
+  labs(
+    x = "Sensation Seeking (SS) Scores", 
+    y = "Percentage",
+    caption = "Note: Only Alcohol, Caffeine, Chocolate, and Nicotine are considered legal drugs."
+    ) +
+  scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#191970")) +
+  theme(legend.position = "none") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+SS_stacked
+
+Imp_SS_stacked = (I_stacked + SS_stacked) +
+  plot_annotation(
+    title = "Proportion of Legal vs Illegal Drug Use Across Impulsivity and SS Scores"
+  )
+
+Imp_SS_stacked
+ggsave("figs/stacked_legal_illegal.png", Imp_SS_stacked)
 
 ```
 
 Heatmap of correlations
 ```{r}
+correlation_matrix = cor(legalusage_ordinal_data[7:13], legalusage_ordinal_data[14:31])
+
+corr_heatmap = pheatmap(correlation_matrix,
+                        color = colorRampPalette(c("pink", "purple"))(50),
+                        number_color = "black",
+                        display_numbers = TRUE,
+                        cluster_rows = TRUE,
+                        cluster_cols = TRUE,
+                        main = "Heatmap of Personality Trait x Drug Usage Correlations")
+
+corr_heatmap
+ggsave("figs/heatmap_traits_usage.png", corr_heatmap)
 
 ```
-
-
-
-
-
 
 
 
