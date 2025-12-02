@@ -1,6 +1,14 @@
 Exploratory Data Analysis
 ================
 
+Description: This document contains the workflow for our exploratory
+data analysis process including creating visualizations showing the
+distribution of personality trait scores, comparing these scores across
+drug users and non drug users, comparing the proportion of illegal and
+legal drug users across scoring types, and finding correlations between
+personality trait scores and ordinal drug usage, along with our
+observations.
+
 ``` r
 # Load in relevant libraries
 library(tidyverse)
