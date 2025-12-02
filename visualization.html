@@ -25,15 +25,35 @@
   <main class="container doc">
     <h1>Visualizations</h1>
 
-    <!-- EDA subsection -->
-    <section class="glass pad" style="margin-top:-10px;">
-      <h2>Full EDA</h2>
+    <!-- EDA summary section -->
+    <section class="glass pad">
+      <h2>Exploratory Data Analysis (EDA)</h2>
       <p>
-        For a complete exploratory data analysis including summaries, tables, and diagnostics,
-        see the full EDA page:
+        Our exploratory data analysis (EDA) begins by transforming the cleaned Fehrman et&nbsp;al.
+        dataset into several analysis-ready versions. We collapse the original seven-level
+        CL0–CL6 drug-use scale into binary indicators of <strong>user vs. non-user</strong>, define
+        a <strong>harmful user</strong> indicator that excludes caffeine and chocolate, and classify
+        users as <strong>legal-only</strong> vs. <strong>illegal</strong> based on whether they report
+        using drugs beyond alcohol, caffeine, chocolate, and nicotine.
       </p>
       <p>
-        👉 <a href="eda.html"><strong>Open Full EDA</strong></a>
+        Using these derived variables, we:
+      </p>
+      <ul>
+        <li>Visualize the distributions of the Big Five (OCEAN) personality scores, impulsivity, and sensation seeking.</li>
+        <li>Compare personality scores between non-users and users (and harmful users) using boxplots.</li>
+        <li>Examine how the proportion of legal vs. illegal users changes across levels of impulsivity and sensation seeking.</li>
+        <li>Compute a correlation matrix between personality traits and ordinal drug-usage levels and display it as a heatmap.</li>
+      </ul>
+      <p>
+        Overall, the EDA suggests that while Big Five scores for users and non-users overlap substantially,
+        higher <strong>sensation seeking</strong>, <strong>impulsivity</strong>, and <strong>openness</strong> are moderately associated
+        with greater usage of several mostly illegal drugs (such as cannabis, legal highs, ecstasy, LSD, and mushrooms),
+        whereas higher <strong>conscientiousness</strong> tends to be weakly associated with lower cannabis and legal-high usage.
+      </p>
+      <p>
+        👉 For the full R Markdown workflow, including code and all intermediate plots, see:
+        <a href="eda.html"><strong>Full EDA</strong></a>
       </p>
     </section>
 
@@ -41,9 +61,18 @@
       <h2>Trait Distributions</h2>
       <p>Histograms of OCEAN, BIS-11 (impulsivity), and ImpSS (sensation seeking).</p>
       <div class="gallery">
-        <figure><img src="figs/hist_ocean.png" alt="Histogram of OCEAN scores"><figcaption>NEO-FFI-R OCEAN Scores</figcaption></figure>
-        <figure><img src="figs/hist_impulsivity.png" alt="Histogram of impulsivity"><figcaption>BIS-11 Impulsiveness Scores</figcaption></figure>
-        <figure><img src="figs/hist_impSS.png" alt="Histogram of sensation seeking"><figcaption>ImpSS Sensation Seeking Scores</figcaption></figure>
+        <figure>
+          <img src="figs/hist_ocean.png" alt="Histogram of OCEAN scores">
+          <figcaption>NEO-FFI-R OCEAN Scores</figcaption>
+        </figure>
+        <figure>
+          <img src="figs/hist_impulsivity.png" alt="Histogram of impulsivity">
+          <figcaption>BIS-11 Impulsiveness Scores</figcaption>
+        </figure>
+        <figure>
+          <img src="figs/hist_impSS.png" alt="Histogram of sensation seeking">
+          <figcaption>ImpSS Sensation Seeking Scores</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -51,8 +80,14 @@
       <h2>Traits by User Status</h2>
       <p>Boxplots comparing personality scores between users and non-users.</p>
       <div class="gallery">
-        <figure><img src="figs/box_ocean_user.png" alt="Boxplots of OCEAN by user status"><figcaption>OCEAN Scores × User Status</figcaption></figure>
-        <figure><img src="figs/box_impulsivity_user.png" alt="Boxplot of impulsivity by user status"><figcaption>Impulsivity Scores × User Status</figcaption></figure>
+        <figure>
+          <img src="figs/box_ocean_user.png" alt="Boxplots of OCEAN by user status">
+          <figcaption>OCEAN Scores × User Status</figcaption>
+        </figure>
+        <figure>
+          <img src="figs/box_impulsivity_user.png" alt="Boxplot of impulsivity by user status">
+          <figcaption>Impulsivity Scores × User Status</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -60,8 +95,14 @@
       <h2>Legal vs. Illegal</h2>
       <p>Stacked bars of consumption categories and a heatmap of trait–usage correlations.</p>
       <div class="gallery">
-        <figure><img src="figs/stacked_legal_illegal.png" alt="Stacked bars: legal vs illegal"><figcaption>Legal vs Illegal Drug Usage</figcaption></figure>
-        <figure><img src="figs/heatmap_traits_usage.png" alt="Heatmap of correlations"><figcaption>Personality Traits × Drug Usage Heatmap</figcaption></figure>
+        <figure>
+          <img src="figs/stacked_legal_illegal.png" alt="Stacked bars: legal vs illegal">
+          <figcaption>Legal vs Illegal Drug Usage</figcaption>
+        </figure>
+        <figure>
+          <img src="figs/heatmap_traits_usage.png" alt="Heatmap of correlations">
+          <figcaption>Personality Traits × Drug Usage Heatmap</figcaption>
+        </figure>
       </div>
     </section>
   </main>
