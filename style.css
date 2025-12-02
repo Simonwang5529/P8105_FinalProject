@@ -377,7 +377,31 @@ a:hover{
 .card:hover::before{
   opacity: 1;
 }
+/* Sub-navigation bar */
+.subnav {
+  margin: 1rem 0 2rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  display: flex;
+  gap: 1.5rem;
+}
 
+.subnav a {
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text, #222);
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.subnav a:hover {
+  opacity: 1;
+}
+
+.subnav a[aria-current="page"] {
+  border-bottom: 2px solid #4b9cff;
+  opacity: 1;
+}
 /* Small pastel chip on cards */
 
 .chip{
