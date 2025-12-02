@@ -260,10 +260,10 @@ OCEAN_boxplot = usage_data |>
     y = "Scores",
     fill = "Drug User Status",
     title = "Boxplot of OCEAN by User Status",
-    caption = "Note: Drug user defined as those who have used any drug in the past decade excluding caffeine and chocolate."
+    caption = "Note: Drug user defined as those who have used any drug \nin the past decade excluding caffeine and chocolate."
   ) +
   scale_fill_manual(values = c("non-user" = "#D8BFD8", "user" = "#DA70D6")) +
-  scale_x_discrete(labels = c("Openness to Experience (O)", "Conscientiousness (C)", "Extraversion (E)",
+  scale_x_discrete(labels = c("Openness to \nExperience (O)", "Conscientiousness (C)", "Extraversion (E)",
                               "Agreeableness (A)", "Neuroticism (N)")) +
   theme(axis.text.x = element_text(angle = 40, hjust = 1))
 
@@ -295,7 +295,7 @@ impulsivity_boxplot = usage_data |>
     x = "Drug User Status",
     y = "Impulsivity Scores",
     title = "Boxplot of Impulsivity by User Status",
-    caption = "Note: Drug user defined as those who have used any drug in the past decade excluding caffeine and chocolate."
+    caption = "Note: Drug user defined as those who have used any drug \nin the past decade excluding caffeine and chocolate."
   ) +
   scale_fill_manual(values = c("non-user" = "#E6E6FA", "user" = "#BA55D3")) +
   theme(legend.position = "none")
@@ -343,7 +343,7 @@ SS_stacked = legalusage_data |>
   labs(
     x = "Sensation Seeking (SS) Scores", 
     y = "Percentage",
-    caption = "Note: Only Alcohol, Caffeine, Chocolate, and Nicotine are considered legal drugs."
+    caption = "Note: Only Alcohol, Caffeine, Chocolate, and \nNicotine are considered legal drugs."
     ) +
   scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#ADD8E6")) +
   theme(legend.position = "none") +
@@ -356,7 +356,7 @@ SS_stacked
 ``` r
 Imp_SS_stacked = (I_stacked + SS_stacked) +
   plot_annotation(
-    title = "Proportion of Legal vs Illegal Drug Use Across Impulsivity and SS Scores"
+    title = "Proportion of Legal vs Illegal Drug Use Across \nImpulsivity and SS Scores"
   )
 
 Imp_SS_stacked
