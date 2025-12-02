@@ -114,6 +114,26 @@ a:hover{
 .nav.inline a[aria-current="page"]{
   color: #111827;
 }
+/* === Page transition: fade + slight slide === */
+body {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+/* When the page is ready */
+body.is-loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* When navigating away */
+body.is-fading-out {
+  opacity: 0;
+  transform: translateY(6px);
+}
 .nav.inline a[aria-current="page"]::after{
   content: "";
   position: absolute;
