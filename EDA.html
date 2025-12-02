@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Full EDA — Personality × Drug Use</title>
 
+  <meta name="description" content="Full exploratory data analysis for the Personality × Drug Use project." />
+  <link rel="stylesheet" href="style.css?v=1" />
+
+  <!-- GitHub-style Markdown rendering -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css" />
+  <style>
+    .markdown-body {
+      box-sizing: border-box;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 45px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 16px;
+      backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">🧪</span>
+      <span class="brand-text">Personality × Drug Use</span>
+    </a>
+    <nav class="nav inline">
+      <a href="proposal.html">Proposal</a>
+      <a href="dataset.html">Dataset</a>
+      <a href="visualization.html">Visualizations</a>
+      <a href="results.html">Results</a>
+    </nav>
+  </header>
+
+  <!-- Markdown content container -->
+  <article class="markdown-body" id="md-container">
+    Loading EDA...
+  </article>
+
+  <!-- Script to fetch and display the eda.md -->
+  <script>
+    fetch("eda.md")
+      .then(response => response.text())
+      .then(md => {
+        // Use a markdown parser (like marked.js)
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+        script.onload = () => {
+          document.getElementById("md-container").innerHTML = marked.parse(md);
+        };
+        document.body.appendChild(script);
+      })
+      .catch(err => {
+        document.getElementById("md-container").innerHTML =
+          "⚠️ Unable to load EDA markdown file.";
+      });
+  </script>
+
+  <footer class="site-footer">
+    <p><a href="visualization.html">← Back to Visualizations</a></p>
+  </footer>
+</body>
+</html>
