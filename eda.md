@@ -1,17 +1,31 @@
----
-title: "Exploratory Data Analysis"
-output: github_document
----
+Exploratory Data Analysis
+================
 
-Description: This document contains the workflow for our exploratory data analysis process including creating visualizations showing the distribution of personality trait scores, comparing these scores across drug users and non drug users, comparing the proportion of illegal and legal drug users across scoring types, and finding correlations between personality trait scores and ordinal drug usage, along with our observations. 
-
-```{r}
+``` r
 # Load in relevant libraries
 library(tidyverse)
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+    ## ✔ forcats   1.0.0     ✔ stringr   1.5.2
+    ## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+    ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+    ## ✔ purrr     1.1.0     
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(patchwork)
 library(ggplot2)
 library(pheatmap)
+```
 
+    ## Warning: package 'pheatmap' was built under R version 4.5.2
+
+``` r
 # default options
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -28,16 +42,25 @@ options(
 
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
-
 ```
 
-
-```{r}
+``` r
 # Read in cleaned dataset
 drug_data = read_csv("data/cleaned_drug_data.csv") |>
   mutate(
     Gender = as.factor(Gender))
+```
 
+    ## Rows: 1876 Columns: 31
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (3): Education, Country, Ethnicity
+    ## dbl (28): ID, Age, Gender, Nscore, Escore, Oscore, Ascore, Cscore, Impulsive...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
 # Create version of the dataset where we collapse drug use levels into binary values (drug user or non-user)
 # 0-1: non-user
 # 2–6: user
@@ -95,14 +118,13 @@ legalusage_ordinal_data = drug_data |>
 # 4: 45-54
 # 5: 55-64
 # 6: 65+
-
 ```
-
 
 # Trait distributions
 
 ## Histogram of OCEAN Scores
-```{r}
+
+``` r
 O_hist = drug_data |> 
   ggplot(aes(x = Oscore)) + 
   geom_histogram(fill = "#F4C2C2", color = "white", binwidth = 0.4) +
@@ -148,13 +170,21 @@ OCEAN_hist = (O_hist + C_hist + E_hist) / (A_hist + N_hist) +
   )
 
 OCEAN_hist
-ggsave("figs/hist_ocean.png", OCEAN_hist)
-
 ```
+
+<img src="eda_files/figure-gfm/unnamed-chunk-3-1.png" width="90%" />
+
+``` r
+ggsave("figs/hist_ocean.png", OCEAN_hist)
+```
+
+    ## Saving 6 x 3.59 in image
+
 Observations: All OCEAN scores seem to show a normal distribution.
 
 ## Histogram of impulsivity
-```{r}
+
+``` r
 impulsivity_hist = drug_data |> 
   ggplot(aes(x = Impulsive)) + 
   geom_histogram(fill = "#FFE4E1", color = "white", binwidth = 0.4) +
@@ -165,13 +195,22 @@ impulsivity_hist = drug_data |>
   ) 
 
 impulsivity_hist
-ggsave("figs/hist_impulsivity.png", impulsivity_hist)
-
 ```
-Observations: Impulsiveness scores seem to show a right skewed distribution.
+
+<img src="eda_files/figure-gfm/unnamed-chunk-4-1.png" width="90%" />
+
+``` r
+ggsave("figs/hist_impulsivity.png", impulsivity_hist)
+```
+
+    ## Saving 6 x 3.59 in image
+
+Observations: Impulsiveness scores seem to show a right skewed
+distribution.
 
 ## Histogram of sensation seeking
-```{r}
+
+``` r
 SS_hist = drug_data |> 
   ggplot(aes(x = SS)) + 
   geom_histogram(fill = "#FFB7C5", color = "white", binwidth = 0.3) +
@@ -182,16 +221,24 @@ SS_hist = drug_data |>
   ) 
 
 SS_hist
-ggsave("figs/hist_impSS.png", SS_hist)
-
 ```
-Observations: Sensation seeking scores seem to show a left skewed distribution.
 
+<img src="eda_files/figure-gfm/unnamed-chunk-5-1.png" width="90%" />
+
+``` r
+ggsave("figs/hist_impSS.png", SS_hist)
+```
+
+    ## Saving 6 x 3.59 in image
+
+Observations: Sensation seeking scores seem to show a left skewed
+distribution.
 
 # Traits by User Status
 
 ## Boxplot of OCEAN by user status
-```{r}
+
+``` r
 OCEAN_boxplot = usage_data |> 
   pivot_longer(
     Nscore:Cscore,
@@ -213,13 +260,26 @@ OCEAN_boxplot = usage_data |>
   theme(axis.text.x = element_text(angle = 40, hjust = 1))
 
 OCEAN_boxplot
-ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
-
 ```
-Observations: The distribution of OCEAN scores in drug users vs non-drug users are not significantly different. The median openness to experience and neuroticism scores are lower in non drug users than drug users. The median conscientiousness, extraversion, and agreeableness scores are higher in non drug users than drug users. Drug users have a larger range of OCEAN scores than non-users.
+
+<img src="eda_files/figure-gfm/unnamed-chunk-6-1.png" width="90%" />
+
+``` r
+ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
+```
+
+    ## Saving 6 x 3.59 in image
+
+Observations: The distribution of OCEAN scores in drug users vs non-drug
+users are not significantly different. The median openness to experience
+and neuroticism scores are lower in non drug users than drug users. The
+median conscientiousness, extraversion, and agreeableness scores are
+higher in non drug users than drug users. Drug users have a larger range
+of OCEAN scores than non-users.
 
 ## Boxplot of impulsivity by user status
-```{r}
+
+``` r
 impulsivity_boxplot = usage_data |> 
   ggplot(aes(x = harmfuluser_status, y = Impulsive, fill = harmfuluser_status)) + 
   geom_boxplot() +
@@ -233,16 +293,26 @@ impulsivity_boxplot = usage_data |>
   theme(legend.position = "none")
 
 impulsivity_boxplot
-ggsave("figs/box_impulsivity_user.png", impulsivity_boxplot)
-
 ```
-Observations: The distribution of Impulsiveness scores in drug users vs non-drug users are not significantly different. The median impulsivity score for non-users and users seem to be about the same. The impulsivity scores for drug users is has a larger third quartile than non-users. 
 
+<img src="eda_files/figure-gfm/unnamed-chunk-7-1.png" width="90%" />
+
+``` r
+ggsave("figs/box_impulsivity_user.png", impulsivity_boxplot)
+```
+
+    ## Saving 6 x 3.59 in image
+
+Observations: The distribution of Impulsiveness scores in drug users vs
+non-drug users are not significantly different. The median impulsivity
+score for non-users and users seem to be about the same. The impulsivity
+scores for drug users is has a larger third quartile than non-users.
 
 # Legal vs Illegal Usage
 
 ## Stacked barplot of legal vs illegal usage
-```{r}
+
+``` r
 I_stacked = legalusage_data |> 
   ggplot(aes(x = factor(Impulsive), fill = legaluser_status)) +
   geom_bar(position = "fill", color = "white") +
@@ -254,7 +324,11 @@ I_stacked = legalusage_data |>
   scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#ADD8E6")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 I_stacked
+```
 
+<img src="eda_files/figure-gfm/unnamed-chunk-8-1.png" width="90%" />
+
+``` r
 SS_stacked = legalusage_data |> 
   ggplot(aes(x = factor(SS), fill = legaluser_status)) +
   geom_bar(position = "fill", color = "white") +
@@ -267,20 +341,37 @@ SS_stacked = legalusage_data |>
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 SS_stacked
+```
 
+<img src="eda_files/figure-gfm/unnamed-chunk-8-2.png" width="90%" />
+
+``` r
 Imp_SS_stacked = (I_stacked + SS_stacked) +
   plot_annotation(
     title = "Proportion of Legal vs Illegal Drug Use Across Impulsivity and SS Scores"
   )
 
 Imp_SS_stacked
-ggsave("figs/stacked_legal_illegal.png", Imp_SS_stacked)
-
 ```
-Observations: As impulsivity scores increase, the proportion of illegal drug users increase and the proportion of legal drug users decrease. As sensation seeking scores increase, the proportion of illegal drug users increase and the proportion of legal drug users decrease. This indicates that there seems to be a relationship between higher impulsivity and sensation seeking scores and being a illegal drug user.
+
+<img src="eda_files/figure-gfm/unnamed-chunk-8-3.png" width="90%" />
+
+``` r
+ggsave("figs/stacked_legal_illegal.png", Imp_SS_stacked)
+```
+
+    ## Saving 6 x 3.59 in image
+
+Observations: As impulsivity scores increase, the proportion of illegal
+drug users increase and the proportion of legal drug users decrease. As
+sensation seeking scores increase, the proportion of illegal drug users
+increase and the proportion of legal drug users decrease. This indicates
+that there seems to be a relationship between higher impulsivity and
+sensation seeking scores and being a illegal drug user.
 
 ## Heatmap of correlations
-```{r}
+
+``` r
 correlation_matrix = cor(legalusage_ordinal_data[7:13], legalusage_ordinal_data[14:31])
 
 corr_heatmap = pheatmap(correlation_matrix,
@@ -292,10 +383,25 @@ corr_heatmap = pheatmap(correlation_matrix,
                         main = "Heatmap of Personality Traits x Drug Usage Correlations")
 
 corr_heatmap
-ggsave("figs/heatmap_traits_usage.png", corr_heatmap)
-
 ```
-Observations: The variables Alcohol, Caff, and Choc seem to be similar to and more correlated with each other which makes sense because they are legal drugs. An increase in SS scores, Oscore, and Impulsiveness scores seem to be moderately correlated with an increase in Cannabis, Legalh, Ecstasy, LSD, and Mushrooms usage in the past decade (these variables have a positive correlation). This indicates that being more sensation seeking, open to experiences, and impulsive are moderately associated with higher illegal drug usage of Cannabis, legal highs consumption, Ecstasy, LSD, and Mushrooms. An increase in especially cannabis and Legalh usage is associated with lower Cscore which means lower drug usage is weakly associated with lower drug usage of Cannabis and legal highs consumption.
 
+<img src="eda_files/figure-gfm/unnamed-chunk-9-1.png" width="90%" />
 
+``` r
+ggsave("figs/heatmap_traits_usage.png", corr_heatmap)
+```
 
+    ## Saving 6 x 3.59 in image
+
+Observations: The variables Alcohol, Caff, and Choc seem to be similar
+to and more correlated with each other which makes sense because they
+are legal drugs. An increase in SS scores, Oscore, and Impulsiveness
+scores seem to be moderately correlated with an increase in Cannabis,
+Legalh, Ecstasy, LSD, and Mushrooms usage in the past decade (these
+variables have a positive correlation). This indicates that being more
+sensation seeking, open to experiences, and impulsive are moderately
+associated with higher illegal drug usage of Cannabis, legal highs
+consumption, Ecstasy, LSD, and Mushrooms. An increase in especially
+cannabis and Legalh usage is associated with lower Cscore which means
+lower drug usage is weakly associated with lower drug usage of Cannabis
+and legal highs consumption.
