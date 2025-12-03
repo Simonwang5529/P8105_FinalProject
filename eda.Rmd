@@ -1,16 +1,19 @@
 ---
 title: "Exploratory Data Analysis"
-output: github_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
-Description: This document contains the workflow for our exploratory data analysis process including creating visualizations showing the distribution of personality trait scores, comparing these scores across drug users and non drug users, comparing the proportion of illegal and legal drug users across scoring types, and finding correlations between personality trait scores and ordinal drug usage, along with our observations. 
+Description: This document contains the workflow for our exploratory data analysis process including creating a table with the study sample characteristics, creating visualizations showing the distribution of personality trait scores, comparing these scores across drug users and non drug users, comparing the proportion of illegal and legal drug users across scoring types, and finding correlations between personality trait scores and ordinal drug usage, along with our observations. 
 
-```{r}
+```{r, include=FALSE}
 # Load in relevant libraries
 library(tidyverse)
 library(patchwork)
 library(ggplot2)
 library(pheatmap)
+library(gtsummary)
 
 # default options
 knitr::opts_chunk$set(
@@ -97,6 +100,40 @@ legalusage_ordinal_data = drug_data |>
 # 6: 65+
 
 ```
+
+
+# Study Sample Characteristics/ Demographics Table
+
+```{r}
+# Recode categorical variables for table presentation
+dat = drug_data |>
+  select(Age, Gender, Education, Country, Ethnicity) |>
+  mutate_at(c("Age", "Gender", "Education", "Country", "Ethnicity"), as.factor) |>
+  mutate(Gender = recode(Gender, "0" = "Male", "1" = "Female")) |>
+  mutate(Age = recode(Age, "1" = "18-24", "2" = "25-34", "3" = "35-44", "4" = "45-54", 
+                      "5" = "55-64", "6" = "65+"))
+
+# This is a fast way to compute the percentage of each level for a categorical variable
+tab = dat |>
+  count(Age) |>
+  mutate(percent = scales::percent(n / sum(n)))
+
+# Generating table using tbl_summary
+tab = dat |>
+  select(Age, Gender, Education, Country, Ethnicity) |>
+  tbl_summary(label = list(Age ~ "Age Group",
+                           Gender ~ "Gender",
+                           Education ~ "Education Level",
+                           Country ~ "Country",
+                           Ethnicity ~ "Ethnicity"),
+              statistic = list(all_categorical() ~ "{p}%"),
+              digits = ~ 2) |>
+  modify_caption("**Table 1. Characteristics of study sample**") |>
+  as_gt() |>
+  gt::tab_source_note(gt::md("*Source: Fehrman et al, 2015*"))
+tab
+```
+Observations: Most participants are under the age of 45. There are almost the same number of males and females. Most participants completed at least high school. Most participants are from the UK or USA. Most participants are white.
 
 
 # Trait distributions
@@ -253,7 +290,6 @@ I_stacked = legalusage_data |>
     ) +
   scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#ADD8E6")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-I_stacked
 
 SS_stacked = legalusage_data |> 
   ggplot(aes(x = factor(SS), fill = legaluser_status)) +
@@ -266,7 +302,6 @@ SS_stacked = legalusage_data |>
   scale_fill_manual(values = c("legal" = "#6495ED", "illegal" = "#ADD8E6")) +
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-SS_stacked
 
 Imp_SS_stacked = (I_stacked + SS_stacked) +
   plot_annotation(
