@@ -1,0 +1,846 @@
+---
+title: "Drug_Consumption_Analysis"
+output: github_document
+always_allow_html: true
+date: "2025-12-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(car)
+library(ggpubr)
+library(reshape2)
+library(MASS)
+library(plotly)
+library(broom)
+library(kableExtra)
+library(patchwork)
+library(ggpubr)
+library(performance)
+library(modelr)
+library(mgcv)
+library(tidyverse)
+library(plotly)
+library(reshape2)
+
+```
+
+## R Markdown
+
+
+```{r cars}
+data_one <- read.csv("C:/Users/xujin/Downloads/Drug_Consumption.csv")
+data_one <- data_one |> select(-Semer)
+
+data_two <- data_one |> pivot_longer(
+  cols = Alcohol:VSA,
+  names_to = "drug_type",
+  values_to = "consumption_level"
+)
+
+data_two <- data_two |> mutate(consumption_binary = case_when(
+  consumption_level == "CL6" | consumption_level == "CL5" | consumption_level == "CL4" | consumption_level == "CL3" |
+    consumption_level == "CL2" ~ "User",
+  consumption_level == "CL1" | consumption_level == "CL0" ~ "Non-user"
+))
+
+data_three <- data_two |> group_by(ID) |>
+  summarise(user_status = sum(consumption_binary == "User"))
+
+data_two <- data_two |> mutate(consumption_legal = case_when(
+  drug_type == "Alcohol" | drug_type == "Caff" | drug_type == "Nicotine" |
+                          drug_type == "Choc" | drug_type == "Amyl" | drug_type == "Legalh" ~ "legal",
+  drug_type == "Benzos" | drug_type == "Amphet" | drug_type == "Cannabis" |
+                             drug_type == "Coke" | drug_type == "Crack" | drug_type == "Ecstasy" |
+                             drug_type == "Heroin" | drug_type == "Ketamine" | drug_type == "LSD" |
+                             drug_type == "Meth" | drug_type == "Mushrooms" | drug_type == "VSA" ~ "illegal"
+))
+
+data_one <- left_join(data_one, data_three)
+
+data_one$user_status_real = factor(data_one$user_status, ordered = TRUE, levels = c(
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+))
+
+data_one_prime <- read.csv("C:/Users/xujin/Downloads/cleaned_drug_data.csv")
+data_one_prime <- data_one_prime |> pivot_longer(
+  cols = Alcohol:VSA,
+  names_to = "drug_type",
+  values_to = "consumption_level"
+)
+
+data_one_prime_user_status <- data_one_prime |> group_by(ID) |>
+  summarise(user_consumption_level = sum(consumption_level))
+
+data_one <- left_join(data_one, data_one_prime_user_status)
+
+data_one_prime_prime <- data_one_prime |> pivot_wider(
+  names_from = drug_type,
+  values_from = consumption_level
+)
+
+data_one_prime_prime <- left_join(data_one_prime_prime, data_one_prime_user_status)
+
+data_one_prime_use_no_use <-
+  data_one_prime_prime |> mutate(across(Alcohol:VSA, ~case_when(
+    . == 0 | . == 1 ~ "Not User",
+    . == 2 | . == 3 | . == 4 | . == 5 | . == 6 ~ "User"
+  ), .names = "{.col}_binary"))
+
+data_one_prime_use_no_use
+```
+
+
+
+```{r pressure, echo=FALSE}
+data_four <- data_two |> group_by(consumption_legal, consumption_level) |> summarize(count = n()) |>
+  na.omit(consumption_legal)
+
+data_four_prime <- data_four |> pivot_wider(
+  names_from = consumption_level,
+  values_from = count,
+  values_fill = 0
+)
+
+chi_test_result <- chisq.test(data_four_prime[ , -1])
+
+expected_data <- as.data.frame(chi_test_result$expected) |>
+  tibble::rownames_to_column(var = "Drug Type") |>
+  pivot_longer(cols = -`Drug Type`,
+               names_to = "Consumption Level",
+               values_to = "Count") |>
+  mutate(Type = "Expected") |>
+  mutate(`Drug Type` = case_when(
+    `Drug Type` == 1 ~ "Illegal",
+    `Drug Type` == 2 ~ "Legal"
+  ))
+
+observed_data <- as.data.frame(chi_test_result$observed) |>
+  tibble::rownames_to_column(var = "Drug Type") |>
+  pivot_longer(cols = -`Drug Type`,
+               names_to = "Consumption Level",
+               values_to = "Count") |>
+  mutate(Type = "Observed") |>
+  mutate(`Drug Type` = case_when(
+    `Drug Type` == 1 ~ "Illegal",
+    `Drug Type` == 2 ~ "Legal"
+  ))
+
+plot_bar_1_data = rbind(observed_data, expected_data)
+
+ggplot(plot_bar_1_data, aes(x = `Consumption Level`, y = Count, fill = Type)) +
+  geom_bar(stat = "identity", position = position_dodge()) + facet_wrap(~`Drug Type`)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+
+plot_histogram_1 <- data_one |>
+  ggplot(aes(x = as.numeric(user_consumption_level))) +
+  geom_histogram(bins = 50)
+
+plot_histogram_2 <- data_one |>
+  ggplot(aes(x = log1p(as.numeric(user_consumption_level)))) +
+  geom_histogram(bins = 50)
+
+plot_histogram_patch <- plot_histogram_1 + plot_histogram_2
+plot_histogram_patch
+
+```
+
+
+
+```{r}
+model_user_binary_consumption <- lm(log1p(user_consumption_level) ~ Alcohol_binary + Amphet_binary + Amyl_binary +
+                                      Benzos_binary + Caff_binary + Cannabis_binary + Choc_binary + Coke_binary + 
+                                      Crack_binary + Ecstasy_binary + Heroin_binary + Ketamine_binary +
+                                      Legalh_binary + LSD_binary + Meth_binary + Mushrooms_binary + Nicotine_binary +
+                                      VSA_binary, data_one_prime_use_no_use)
+summary(model_user_binary_consumption)
+```
+```{r}
+model_user_Oscore <- lm(Oscore~user_consumption_level, data = data_one_prime_use_no_use)
+plot_1 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Oscore)) +
+  geom_point(color = "red") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_user_Cscore <- lm(Cscore~user_consumption_level, data = data_one_prime_use_no_use)
+plot_2 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Cscore)) +
+  geom_point() +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_user_Escore <- lm(Escore~user_consumption_level, data = data_one_prime_use_no_use)
+plot_3 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Escore)) +
+  geom_point(color = "yellow") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_user_Ascore <- lm(Ascore~user_consumption_level, data = data_one_prime_use_no_use)
+plot_4 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Ascore)) +
+  geom_point(color = "orange") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_user_Nscore <- lm(Nscore~user_consumption_level, data = data_one_prime_use_no_use)
+plot_5 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Nscore)) +
+  geom_point(color = "purple") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+plot_patch <- (plot_1 + plot_2 + plot_3)/(plot_4 + plot_5)
+plot_patch
+
+model_user_Oscore |> summary() |> broom::glance() |>
+  bind_rows(summary(model_user_Cscore) |> broom::glance()) |>
+  bind_rows(summary(model_user_Escore) |> broom::glance()) |>
+  bind_rows(summary(model_user_Ascore) |> broom::glance()) |>
+  bind_rows(summary(model_user_Nscore) |> broom::glance()) |>
+  mutate(model = c("O model", "C model", "E score", "A score", "N score")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of OCEAN Scores from User Consumption"
+    , col.names = c(
+        "Model", "R-squared", "Adj. R-squared"
+      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
+    )
+    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
+  )
+
+```
+
+
+
+```{r}
+model_user_Impulsivity <- lm(Impulsive~user_consumption_level, data = data_one_prime_use_no_use)
+plot_6 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Impulsive)) +
+  geom_point(color = "cyan") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_user_SS<- lm(SS~user_consumption_level, data = data_one_prime_use_no_use)
+plot_7 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, SS)) +
+  geom_point(color = "green") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+plot_patch_2 = plot_6 + plot_7
+plot_patch_2
+
+model_user_Impulsivity |> summary() |> broom::glance() |>
+  bind_rows(summary(model_user_SS) |> broom::glance()) |>
+  mutate(model = c("Impulsivity model", "Sensation Seeking model")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of Impulsivity and SS Scores from User Consumption"
+    , col.names = c(
+        "Model", "R-squared", "Adj. R-squared"
+      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
+    )
+    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
+  )
+```
+
+
+```{r}
+
+data_Escore_1 = data_one |> dplyr::select(user_consumption_level, Escore)
+
+plot_Escore <- ggplot(data_Escore_1, aes(Escore, log1p(user_consumption_level))) +
+  geom_point(color = "yellow") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_Escore <- lm(log1p(user_consumption_level) ~ Escore, data = data_Escore_1)
+
+
+data_Oscore_1 = data_one |> dplyr::select(user_consumption_level, Oscore)
+
+plot_Oscore <- ggplot(data_Oscore_1, aes(Oscore, log1p(user_consumption_level))) +
+  geom_point(color = "red") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_Oscore <- lm(log1p(user_consumption_level) ~ Oscore, data = data_Oscore_1)
+
+
+data_Ascore_1 = data_one |> dplyr::select(user_consumption_level, AScore)
+
+plot_Ascore <- ggplot(data_Ascore_1, aes(AScore, log1p(user_consumption_level))) +
+  geom_point(color = "orange") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_Ascore <- lm(log1p(user_consumption_level) ~ AScore, data = data_Ascore_1)
+
+data_Nscore_1 = data_one |> dplyr::select(user_consumption_level, Nscore)
+
+plot_Nscore <- ggplot(data_Nscore_1, aes(Nscore, log1p(user_consumption_level))) +
+  geom_point(color = "purple") +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_Nscore <- lm(log1p(user_consumption_level) ~ Nscore, data = data_Nscore_1)
+
+data_Cscore_1 = data_one |> dplyr::select(user_consumption_level, Cscore)
+
+plot_Cscore <- ggplot(data_Cscore_1, aes(Cscore, log1p(user_consumption_level))) +
+  geom_point() +
+  geom_smooth(method="lm", se=TRUE, color="blue")
+
+model_Cscore <- lm(log1p(user_consumption_level) ~ Cscore, data = data_Cscore_1)
+
+
+model_Oscore |> summary() |> broom::tidy() |>
+  bind_rows(summary(model_Cscore) |> broom::tidy()) |>
+  bind_rows(summary(model_Escore) |> broom::tidy()) |>
+  bind_rows(summary(model_Ascore) |> broom::tidy()) |>
+  bind_rows(summary(model_Nscore) |> broom::tidy()) |>
+  mutate(model = c("O model", "O model", "C model", "C model", "E model", "E model", 
+                   "A model", "A model", "N model", "N model")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of Impulsivity and SS Scores from User Consumption"
+    , col.names = c(
+        "Model", "Predictor", "Estimate", "SE", "t-statistic", "p-value"
+    )
+    , digits    = c(3, 3, 3, 3, 3)
+  )
+
+plot_patch_3 <- (plot_Oscore + plot_Cscore + plot_Escore)/(plot_Ascore + plot_Nscore)
+plot_patch_3
+```
+
+
+```{r}
+data_Impulsivity_1 = data_one |> dplyr::select(user_consumption_level, Impulsive)
+
+plot_impulsivity <- ggplot(data_Impulsivity_1, aes(Impulsive, log1p(user_consumption_level))) + 
+  geom_point(color = "cyan") +
+  geom_smooth(method = "lm", se = TRUE, color = "blue")
+
+model_Impulsivity <- lm(log1p(user_consumption_level) ~ Impulsive, data = data_Impulsivity_1)
+
+data_SS_1 = data_one |> dplyr::select(user_consumption_level, SS)
+
+plot_SS <- ggplot(data_SS_1, aes(SS, log1p(user_consumption_level))) + 
+  geom_point(color = "green") +
+  geom_smooth(method = "lm", se = TRUE, color = "blue")
+
+model_SS <- lm(log1p(user_consumption_level) ~ SS, data = data_SS_1)
+
+plot_patch_4 <- plot_impulsivity + plot_SS
+plot_patch_4
+
+model_Impulsivity |> summary() |> broom::tidy() |>
+  bind_rows(summary(model_SS) |> broom::tidy()) |>
+  mutate(model = c("Impulsivity model", "Impulsivity model", "SS model", "SS model")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of Impulsivity and SS Scores from User Consumption"
+    , col.names = c(
+        "Model", "Predictor", "Estimate", "SE", "t-statistic", "p-value"
+    )
+    , digits    = c(3, 3, 3, 3, 3)
+  )
+
+
+```
+
+
+```{r}
+
+model_no_interaction_psychology <- lm(log1p(user_consumption_level) ~ Oscore + Cscore +
+                                 AScore + Nscore + Impulsive + SS, data = data_one)
+
+model_interaction_psychology <- lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
+                                 AScore + Nscore + Impulsive + SS)^6, data = data_one)
+
+model_no_interaction_psychology |> summary() |>
+  broom::tidy() |>
+  kbl(
+      caption     = "Effect of Psychological Predictors on Drug Consumption Levels"
+    , col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value")
+    , digits      = c(3, 3, 3, 3, 3)
+  )
+
+model_no_interaction_psychology |> summary() |> broom::glance() |>
+  bind_rows(summary(model_interaction_psychology) |> broom::glance()) |>
+  mutate(model = c("Psychology Model No Interaction", "Psychology Model with Interaction")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits"
+    , col.names = c(
+        "Model", "R-squared", "Adj. R-squared"
+      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
+    )
+    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
+  )
+
+knitr::kable(AIC(model_no_interaction_psychology, model_interaction_psychology))
+
+model_interaction_psychology |> summary() |>
+  broom::tidy() |>
+  filter(p.value < 0.05) |>
+  filter(term %in% c("Oscore", "Cscore", "AScore", "Nscore", "SS")) |>
+  kbl(
+      caption     = "Effect of Psychological Predictors on Drug Consumption Levels", 
+      col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value"), 
+      digits      = c(3, 3, 3, 3, 3)
+  )
+
+```
+
+
+```{r}
+
+data_one_transformed <- data_one |> mutate(log_user_consumption_level = log1p(user_consumption_level))
+
+data_correlation = data_one_transformed |> select(Nscore, Escore, Oscore, AScore, Cscore, 
+                                             Impulsive, SS, log_user_consumption_level) |>
+  na.omit(log_user_consumption_level)
+
+corr_mat <- round(cor(data_correlation), 3)
+head(corr_mat)
+
+corr_mat[upper.tri(corr_mat)] <- NA
+
+melted_corr_mat <- melt(corr_mat)
+
+p <- ggplot(data = melted_corr_mat, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(Var1, Var2, label = value, color = "black", size = 4))
+
+ggplotly(p)
+
+```
+
+
+
+```{r}
+data_five <- data_one |> group_by(Education, user_status) |> summarize(count = n()) |>
+  na.omit(Education)
+
+data_six <- data_five |> pivot_wider(
+  names_from = user_status,
+  values_from = count,
+  values_fill = 0
+)
+
+chi_test_result_education <- chisq.test(data_six[ , -1])
+
+tidy_chi_test_result_education <- tidy(chi_test_result_education)
+
+chi_square_education_summary <- data.frame(
+  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
+  Value = c(round(tidy_chi_test_result_education$statistic, 2),
+            round(tidy_chi_test_result_education$parameter, 2),
+            round(tidy_chi_test_result_education$p.value, 3)
+            )
+)
+
+kable(chi_square_education_summary)
+
+
+
+```
+
+
+
+```{r}
+data_education <- data_one |> mutate(Education = factor(Education, levels = c("Left school before 16 years", "Left school at 16 years", "Left school at 17 years", "Left school at 18 years",
+                                                  "Some college or university, no certificate or degree",
+                                                  "University degree", "Masters degree",
+                                                  "Professional certificate/ diploma", "Doctorate degree"))) |>
+  arrange(Education)
+
+plot_education <- data_education |> ggplot(aes(x = Education, y = log1p(user_consumption_level), fill = Education)) +
+  geom_boxplot() +
+  labs(title = "Log of User Consumption Dependent on Education",
+       x = "Education",
+       y = "Log User Consumption Level") +
+  theme_minimal()
+
+plot_education
+```
+
+
+```{r}
+
+data_Oscore_Education_prime <- data_education |> select(Education, Oscore)
+Oscore_aov_education_model <- aov(Oscore~Education, data = data_Oscore_Education_prime)
+tidy_anova_Oscore <- tidy(Oscore_aov_education_model) |> mutate(model = "O score education")
+
+data_Cscore_Education_prime <- data_education |> select(Education, Cscore)
+Cscore_aov_education_model <- aov(Cscore~Education, data = data_Cscore_Education_prime)
+tidy_anova_Cscore <- tidy(Cscore_aov_education_model) |> mutate(model = "C score education")
+
+data_Escore_Education_prime <- data_education |> select(Education, Escore)
+Escore_aov_education_model <- aov(Escore~Education, data = data_Escore_Education_prime)
+tidy_anova_Escore <- tidy(Escore_aov_education_model) |> mutate(model = "E score education")
+
+data_Ascore_Education_prime <- data_education |> select(Education, AScore)
+Ascore_aov_education_model <- aov(AScore~Education, data = data_Ascore_Education_prime)
+tidy_anova_Ascore <- tidy(Ascore_aov_education_model) |> mutate(model = "O score education")
+
+data_Nscore_Education_prime <- data_education |> select(Education, Nscore)
+Nscore_aov_education_model <- aov(Nscore~Education, data = data_Nscore_Education_prime)
+tidy_anova_Nscore <- tidy(Nscore_aov_education_model) |> mutate(model = "N score education")
+
+
+kable(bind_rows(tidy_anova_Oscore, tidy_anova_Cscore, tidy_anova_Escore, tidy_anova_Ascore, tidy_anova_Nscore))
+  
+```
+
+
+```{r}
+
+plot_Education_Oscore <- data_Oscore_Education_prime |> ggplot(aes(x = Education, 
+                              y = Oscore, fill = Education)) + geom_boxplot() + 
+  theme(axis.text.x = element_blank())
+plot_Education_Cscore <- data_Cscore_Education_prime |> ggplot(aes(x = Education, y = Cscore, fill = Education)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+plot_Education_Escore <- data_Escore_Education_prime |> ggplot(aes(x = Education, y = Escore, fill = Education)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+plot_Education_Ascore <- data_Ascore_Education_prime |> ggplot(aes(x = Education, y = AScore, fill = Education)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+plot_Education_Nscore <- data_Nscore_Education_prime |> ggplot(aes(x = Education, y = Nscore, fill = Education)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+plot_education_patch <- ggarrange(plot_Education_Oscore, plot_Education_Cscore, plot_Education_Escore,
+                                  plot_Education_Ascore, plot_Education_Nscore, ncol = 3, 
+                                  nrow = 2, common.legend = TRUE, legend = "right")
+
+plot_education_patch
+
+
+```
+
+
+```{r}
+
+data_country <- data_one |> group_by(Country, user_status_real) |> summarize(count = n()) |>
+  na.omit(user_status_real)
+
+data_country_prime <- data_country |> pivot_wider(
+  names_from = user_status_real,
+  values_from = count,
+  values_fill = 0
+)
+
+chi_test_result_residence <- chisq.test(data_country_prime[ , -1])
+
+tidy_chi_test_result_residence <- tidy(chi_test_result_residence)
+
+chi_square_residence_summary <- data.frame(
+  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
+  Value = c(round(tidy_chi_test_result_residence$statistic, 2),
+            round(tidy_chi_test_result_residence$parameter, 2),
+            round(tidy_chi_test_result_residence$p.value, 3)
+            )
+)
+
+kable(chi_square_residence_summary)
+
+```
+
+```{r}
+data_one_trans <- data_one |> mutate(log_user_consumption_level = log1p(user_consumption_level))
+
+data_one_trans |> ggplot(aes(x = Country, y = log_user_consumption_level, fill = Country)) + geom_boxplot()
+```
+
+
+```{r}
+data_Oscore_country <- data_one |> select(Country, Oscore)
+Oscore_aov_country_model <- aov(Oscore~Country, data = data_Oscore_country)
+tidy_anova_Oscore_country <- tidy(Oscore_aov_country_model) |> mutate(model = "O score country")
+p1 <- data_Oscore_country |> ggplot(aes(x = Country, y = Oscore, fill = Country)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_Cscore_country <- data_one |> select(Country, Cscore)
+Cscore_aov_country_model <- aov(Cscore~Country, data = data_Cscore_country)
+tidy_anova_Cscore_country <- tidy(Cscore_aov_country_model) |> mutate(model = "C score country")
+p2 <- data_Cscore_country |> ggplot(aes(x = Country, y = Cscore, fill = Country)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_Escore_country <- data_one |> select(Country, Escore)
+Escore_aov_country_model <- aov(Escore~Country, data = data_Escore_country)
+tidy_anova_Escore_country <- tidy(Escore_aov_country_model) |> mutate(model = "E score country")
+p3 <- data_Escore_country |> ggplot(aes(x = Country, y = Escore, fill = Country)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_Ascore_country <- data_one |> select(Country, AScore)
+Ascore_aov_country_model <- aov(AScore~Country, data = data_Ascore_country)
+tidy_anova_Ascore_country <- tidy(Ascore_aov_country_model) |> mutate(model = "A score country")
+p4 <- data_Ascore_country |> ggplot(aes(x = Country, y = AScore, fill = Country)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_Nscore_country <- data_one |> select(Country, Nscore)
+Nscore_aov_country_model <- aov(Nscore~Country, data = data_Nscore_country)
+tidy_anova_Nscore_country <- tidy(Nscore_aov_country_model) |> mutate(model = "N score country")
+p5 <- data_Nscore_country |> ggplot(aes(x = Country, y = Nscore, fill = Country)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_Impulsivity_country <- data_one |> select(Country, Impulsive)
+Impulsivity_aov_country_model <- aov(Impulsive~Country, data = data_Impulsivity_country)
+tidy_anova_Impulsivity_country <- tidy(Impulsivity_aov_country_model) |> mutate(model = "Impulsivity score country")
+p6 <- data_Impulsivity_country |> ggplot(aes(x = Country, y = Impulsive, fill = Country)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_SS_country <- data_one |> select(Country, SS)
+SS_aov_country_model <- aov(SS~Country, data = data_SS_country)
+tidy_anova_SS_country <- tidy(SS_aov_country_model) |> mutate(model = "N score country")
+p7 <- data_SS_country |> ggplot(aes(x = Country, y = SS, fill = Country)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+kable(bind_rows(tidy_anova_Oscore_country, tidy_anova_Cscore_country, 
+                tidy_anova_Escore_country, tidy_anova_Ascore_country, 
+                tidy_anova_Nscore_country))
+
+plot_country_psychology_patch <- ggarrange(p1, p2, p3,
+                                  p4, p5, ncol = 3, 
+                                  nrow = 2, common.legend = TRUE, legend = "right")
+
+plot_country_psychology_patch
+
+kable(bind_rows(tidy_anova_Impulsivity_country, tidy_anova_SS_country))
+plot_country_psychology_patch_2 <- ggarrange(p6, p7, ncol = 2, 
+                                  nrow = 1, common.legend = TRUE, legend = "right")
+
+plot_country_psychology_patch_2
+
+```
+
+
+```{r}
+data_education |> ggplot(aes(x = Education, fill = Education)) + geom_bar() +
+  facet_wrap(~Country) + theme(axis.text.x = element_blank())
+```
+
+
+```{r}
+model_no_interaction_education_residence <- lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
+                                 AScore + Nscore + Impulsive + SS)^6 + Country + Education, data = data_one)
+
+model_no_interaction_education_residence |> summary() |>
+  broom::tidy() |>
+  filter(p.value < 0.05) |>
+  filter(term %in% c("CountryCanada", "CountryOther", "CountryUK",
+                     "EducationLeft school at 18 years",
+                     "EducationLeft school before 16 years",
+                     "EducationSome college or university, no certificate or degree")) |>
+  kbl(
+      caption     = "Effect of Psychological Predictors on Drug Consumption Levels", 
+      col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value"), 
+      digits      = c(3, 3, 3, 3, 3)
+  )
+
+model_interaction_psychology |> summary() |> broom::glance() |>
+  bind_rows(summary(model_no_interaction_education_residence) |> broom::glance()) |>
+  mutate(model = c("Psychology Model with Interaction", "Psychology Model with Education and Residence")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits"
+    , col.names = c(
+        "Model", "R-squared", "Adj. R-squared"
+      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
+    )
+    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
+  )
+
+knitr::kable(AIC(model_interaction_psychology, model_no_interaction_education_residence))
+
+
+```
+
+
+# Additional Analysis
+
+```{r}
+t_test_result <- t.test(user_consumption_level~Gender, data = data_one, var.equaql = FALSE, alternative = "two.sided")
+print(t_test_result)
+
+data_one |> ggplot(aes(x = Gender, y = user_consumption_level, fill = Gender)) + geom_boxplot()
+```
+
+
+```{r}
+data_ethnicity <- data_one |> group_by(Ethnicity, user_status_real) |> summarize(count = n()) |>
+  na.omit(user_status_real)
+
+data_ethnicity_prime <- data_ethnicity |> pivot_wider(
+  names_from = user_status_real,
+  values_from = count,
+  values_fill = 0
+)
+
+chi_test_result_ethnicity <- chisq.test(data_ethnicity_prime[ , -1])
+
+tidy_chi_test_result_ethnicity <- tidy(chi_test_result_ethnicity)
+
+chi_square_ethnicity_summary <- data.frame(
+  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
+  Value = c(round(tidy_chi_test_result_ethnicity$statistic, 2),
+            round(tidy_chi_test_result_ethnicity$parameter, 2),
+            round(tidy_chi_test_result_ethnicity$p.value, 3)
+            )
+)
+
+kable(chi_square_ethnicity_summary)
+
+```
+
+
+```{r}
+data_one_trans |> ggplot(aes(x = Ethnicity, y = log_user_consumption_level, fill = Ethnicity)) + geom_boxplot()
+
+```
+
+
+```{r}
+data_ethnicity_country <- data_one |> group_by(Country, Ethnicity) |> summarize(count = n())
+
+data_ethnicity_country_prime <- data_ethnicity_country |> pivot_wider(
+  names_from = Ethnicity,
+  values_from = count,
+  values_fill = 0
+)
+
+chi_test_result_ethnicity_country <- chisq.test(data_ethnicity_country_prime[ , -1])
+
+tidy_chi_test_result_ethnicity_country <- tidy(chi_test_result_ethnicity_country)
+
+chi_square_ethnicity_country_summary <- data.frame(
+  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
+  Value = c(round(tidy_chi_test_result_ethnicity_country$statistic, 2),
+            round(tidy_chi_test_result_ethnicity_country$parameter, 2),
+            round(tidy_chi_test_result_ethnicity_country$p.value, 3)
+            )
+)
+
+kable(chi_square_ethnicity_country_summary)
+```
+
+```{r}
+
+data_age <- data_one |> group_by(Age, user_status_real) |> summarize(count = n()) |>
+  na.omit(user_status_real)
+
+data_age_prime <- data_age |> pivot_wider(
+  names_from = user_status_real,
+  values_from = count,
+  values_fill = 0
+)
+
+chi_test_result_age <- chisq.test(data_age_prime[ , -1])
+print(chi_test_result_age)
+
+```
+
+
+```{r}
+
+data_one_trans |> ggplot(aes(x = Age, y = log_user_consumption_level, fill = Age)) + geom_boxplot()
+
+```
+
+
+```{r}
+model_full <- lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
+                                 AScore + Nscore + Impulsive + SS)^6 + Country + Education +
+                   Age + Gender + Ethnicity*Country, data = data_one)
+
+knitr::kable(AIC(model_no_interaction_education_residence, model_full))
+
+model_no_interaction_education_residence |> summary() |> broom::glance() |>
+  bind_rows(summary(model_full) |> broom::glance()) |>
+  mutate(model = c("Psychology Model with Education and Residence", "Best Model")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits"
+    , col.names = c(
+        "Model", "R-squared", "Adj. R-squared"
+      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
+    )
+    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
+  )
+
+```
+
+
+```{r}
+model_full |> summary() |>
+  broom::tidy() |>
+  filter(p.value < 0.05) |>
+  filter(term %in% c("Oscore", "Cscore", "Ascore", "Nscore", "SS",
+                     "CountryCanada", "CountryUK", "EducationLeft school at 18 years",
+                     "EducationLeft school before 16 years",
+                     "Age45-54", "Age55-64", "Age65+", "GenderM")) |>
+  kbl(
+      caption     = "Effect of Psychological Predictors on Drug Consumption Levels", 
+      col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value"), 
+      digits      = c(3, 3, 3, 3, 3)
+  )
+```
+
+```{r}
+check_model(model_full, check = c("linearity", "outliers", "qq", "normality"))
+```
+
+```{r}
+model_full_nonlinear_no_interaction <- gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
+                                 s(AScore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
+                   Age + Gender + Ethnicity*Country, data = data_one)
+
+model_full_nonlinear_interaction <- gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
+                                 s(AScore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
+                   Age + Gender + Ethnicity*Country +
+                     ti(Oscore, Cscore, AScore, Nscore) + ti(Impulsive, SS), data = data_one)
+
+knitr::kable(AIC(model_full, model_full_nonlinear_no_interaction, model_full_nonlinear_interaction))
+
+```
+
+
+
+
+```{r}
+
+data_one_prime_use_no_use_clean <- data_one_prime_use_no_use |> select(
+  Oscore, Cscore, Escore, Ascore, Nscore, Impulsive, SS, Country, Education,
+  Age, Gender, Ethnicity, user_consumption_level
+)
+
+cv_df =
+  crossv_mc(data_one_prime_use_no_use_clean, 20) |> 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble))
+
+cv_df = 
+  cv_df |> 
+  mutate(
+    linear_mod  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
+                                 Ascore + Nscore + Impulsive + SS)^6 + Country + Education +
+                   Age + Gender + Ethnicity*Country, data = df)),
+    non_linear_no_interaction_mod     = map(train, \(df) gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
+                                 s(Ascore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
+                   Age + Gender + Ethnicity*Country, data = df)),
+    smooth_mod  = map(train, \(df) gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
+                                 s(Ascore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
+                   Age + Gender + Ethnicity*Country +
+                     ti(Oscore, Cscore, Ascore, Nscore) + ti(Impulsive, SS), data = as_tibble(df)))) |> 
+  mutate(
+    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_non_linear_interaction    = map2_dbl(non_linear_no_interaction_mod, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_smooth = map2_dbl(smooth_mod, test, \(mod, df) rmse(model = mod, data = df)))
+
+cv_df |> 
+  select(starts_with("rmse")) |> 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") |> 
+  mutate(model = fct_inorder(model)) |> 
+  ggplot(aes(x = model, y = rmse, fill = model)) + geom_violin()
+
+```
+
+
