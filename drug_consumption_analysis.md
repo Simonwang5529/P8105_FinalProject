@@ -3062,11 +3062,13 @@ p <- ggplot(data = melted_corr_mat, aes(x = Var1, y = Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(Var1, Var2, label = value, color = "black", size = 4))
 
-ggplotly(p)
+p
 ```
 
-<div class="plotly html-widget html-fill-item" id="htmlwidget-d2ff40441300a9803138" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-d2ff40441300a9803138">{"x":{"data":[{"x":[1,2,3,4,5,6,7,8],"y":[1,2,3,4,5,6,7,8],"z":[[1,0,0.30677847658979734,0.14884696016771487,0.027253668763102711,0.42208245981830883,0.3556953179594689,0.42627533193570927],[null,1,0.47239692522711385,0.41160027952480777,0.51642208245981824,0.38085255066387141,0.44654088050314467,0.27882599580712791],[null,null,1,0.32704402515723269,0.25995807127882598,0.49336128581411598,0.59399021663172602,0.56603773584905659],[null,null,null,1,0.47239692522711385,0.14046121593291402,0.1551362683438155,0.16002795248078264],[null,null,null,null,1,0.066387141858839954,0.14046121593291402,0.069881201956673633],[null,null,null,null,null,1,0.73654786862334032,0.55345911949685533],[null,null,null,null,null,null,1,0.64430468204053104],[null,null,null,null,null,null,null,1]],"text":[["Var1: Nscore<br />Var2: Nscore<br />value:  1.000","Var1: Escore<br />Var2: Nscore<br />value: -0.431","Var1: Oscore<br />Var2: Nscore<br />value:  0.008","Var1: AScore<br />Var2: Nscore<br />value: -0.218","Var1: Cscore<br />Var2: Nscore<br />value: -0.392","Var1: Impulsive<br />Var2: Nscore<br />value:  0.173","Var1: SS<br />Var2: Nscore<br />value:  0.078","Var1: log_user_consumption_level<br />Var2: Nscore<br />value:  0.179"],["Var1: Nscore<br />Var2: Escore<br />value:     NA","Var1: Escore<br />Var2: Escore<br />value:  1.000","Var1: Oscore<br />Var2: Escore<br />value:  0.245","Var1: AScore<br />Var2: Escore<br />value:  0.158","Var1: Cscore<br />Var2: Escore<br />value:  0.308","Var1: Impulsive<br />Var2: Escore<br />value:  0.114","Var1: SS<br />Var2: Escore<br />value:  0.208","Var1: log_user_consumption_level<br />Var2: Escore<br />value: -0.032"],["Var1: Nscore<br />Var2: Oscore<br />value:     NA","Var1: Escore<br />Var2: Oscore<br />value:     NA","Var1: Oscore<br />Var2: Oscore<br />value:  1.000","Var1: AScore<br />Var2: Oscore<br />value:  0.037","Var1: Cscore<br />Var2: Oscore<br />value: -0.059","Var1: Impulsive<br />Var2: Oscore<br />value:  0.275","Var1: SS<br />Var2: Oscore<br />value:  0.419","Var1: log_user_consumption_level<br />Var2: Oscore<br />value:  0.379"],["Var1: Nscore<br />Var2: AScore<br />value:     NA","Var1: Escore<br />Var2: AScore<br />value:     NA","Var1: Oscore<br />Var2: AScore<br />value:     NA","Var1: AScore<br />Var2: AScore<br />value:  1.000","Var1: Cscore<br />Var2: AScore<br />value:  0.245","Var1: Impulsive<br />Var2: AScore<br />value: -0.230","Var1: SS<br />Var2: AScore<br />value: -0.209","Var1: log_user_consumption_level<br />Var2: AScore<br />value: -0.202"],["Var1: Nscore<br />Var2: Cscore<br />value:     NA","Var1: Escore<br />Var2: Cscore<br />value:     NA","Var1: Oscore<br />Var2: Cscore<br />value:     NA","Var1: AScore<br />Var2: Cscore<br />value:     NA","Var1: Cscore<br />Var2: Cscore<br />value:  1.000","Var1: Impulsive<br />Var2: Cscore<br />value: -0.336","Var1: SS<br />Var2: Cscore<br />value: -0.230","Var1: log_user_consumption_level<br />Var2: Cscore<br />value: -0.331"],["Var1: Nscore<br />Var2: Impulsive<br />value:     NA","Var1: Escore<br />Var2: Impulsive<br />value:     NA","Var1: Oscore<br />Var2: Impulsive<br />value:     NA","Var1: AScore<br />Var2: Impulsive<br />value:     NA","Var1: Cscore<br />Var2: Impulsive<br />value:     NA","Var1: Impulsive<br />Var2: Impulsive<br />value:  1.000","Var1: SS<br />Var2: Impulsive<br />value:  0.623","Var1: log_user_consumption_level<br />Var2: Impulsive<br />value:  0.361"],["Var1: Nscore<br />Var2: SS<br />value:     NA","Var1: Escore<br />Var2: SS<br />value:     NA","Var1: Oscore<br />Var2: SS<br />value:     NA","Var1: AScore<br />Var2: SS<br />value:     NA","Var1: Cscore<br />Var2: SS<br />value:     NA","Var1: Impulsive<br />Var2: SS<br />value:     NA","Var1: SS<br />Var2: SS<br />value:  1.000","Var1: log_user_consumption_level<br />Var2: SS<br />value:  0.491"],["Var1: Nscore<br />Var2: log_user_consumption_level<br />value:     NA","Var1: Escore<br />Var2: log_user_consumption_level<br />value:     NA","Var1: Oscore<br />Var2: log_user_consumption_level<br />value:     NA","Var1: AScore<br />Var2: log_user_consumption_level<br />value:     NA","Var1: Cscore<br />Var2: log_user_consumption_level<br />value:     NA","Var1: Impulsive<br />Var2: log_user_consumption_level<br />value:     NA","Var1: SS<br />Var2: log_user_consumption_level<br />value:     NA","Var1: log_user_consumption_level<br />Var2: log_user_consumption_level<br />value:  1.000"]],"colorscale":[[0,"#132B43"],[0.027253668763102711,"#152E47"],[0.066387141858839954,"#17334E"],[0.069881201956673633,"#17334E"],[0.14046121593291402,"#1C3C5A"],[0.14884696016771487,"#1C3D5B"],[0.1551362683438155,"#1C3E5C"],[0.16002795248078264,"#1D3E5D"],[0.25995807127882598,"#234B6E"],[0.27882599580712791,"#244D71"],[0.30677847658979734,"#265176"],[0.32704402515723269,"#275379"],[0.3556953179594689,"#29577E"],[0.38085255066387141,"#2B5A83"],[0.41160027952480777,"#2D5E88"],[0.42208245981830883,"#2E608A"],[0.42627533193570927,"#2E608B"],[0.44654088050314467,"#2F638E"],[0.47239692522711385,"#316693"],[0.49336128581411598,"#326997"],[0.51642208245981824,"#346C9B"],[0.55345911949685533,"#3671A2"],[0.56603773584905659,"#3773A4"],[0.59399021663172602,"#3977A9"],[0.64430468204053104,"#3D7EB2"],[0.73654786862334032,"#438BC4"],[1,"#56B1F7"]],"type":"heatmap","showscale":false,"autocolorscale":false,"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8],"y":[1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,7,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8],"text":[1,-0.43099999999999999,0.0080000000000000002,-0.218,-0.39200000000000002,0.17299999999999999,0.078,0.17899999999999999,null,1,0.245,0.158,0.308,0.114,0.20799999999999999,-0.032000000000000001,null,null,1,0.036999999999999998,-0.058999999999999997,0.27500000000000002,0.41899999999999998,0.379,null,null,null,1,0.245,-0.23000000000000001,-0.20899999999999999,-0.20200000000000001,null,null,null,null,1,-0.33600000000000002,-0.23000000000000001,-0.33100000000000002,null,null,null,null,null,1,0.623,0.36099999999999999,null,null,null,null,null,null,1,0.49099999999999999,null,null,null,null,null,null,null,1],"hovertext":["Var1: Nscore<br />Var2: Nscore<br />value:  1.000<br />value:  1.000<br />colour: black<br />size: 4","Var1: Escore<br />Var2: Nscore<br />value: -0.431<br />value: -0.431<br />colour: black<br />size: 4","Var1: Oscore<br />Var2: Nscore<br />value:  0.008<br />value:  0.008<br />colour: black<br />size: 4","Var1: AScore<br />Var2: Nscore<br />value: -0.218<br />value: -0.218<br />colour: black<br />size: 4","Var1: Cscore<br />Var2: Nscore<br />value: -0.392<br />value: -0.392<br />colour: black<br />size: 4","Var1: Impulsive<br />Var2: Nscore<br />value:  0.173<br />value:  0.173<br />colour: black<br />size: 4","Var1: SS<br />Var2: Nscore<br />value:  0.078<br />value:  0.078<br />colour: black<br />size: 4","Var1: log_user_consumption_level<br />Var2: Nscore<br />value:  0.179<br />value:  0.179<br />colour: black<br />size: 4","Var1: Nscore<br />Var2: Escore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Escore<br />Var2: Escore<br />value:  1.000<br />value:  1.000<br />colour: black<br />size: 4","Var1: Oscore<br />Var2: Escore<br />value:  0.245<br />value:  0.245<br />colour: black<br />size: 4","Var1: AScore<br />Var2: Escore<br />value:  0.158<br />value:  0.158<br />colour: black<br />size: 4","Var1: Cscore<br />Var2: Escore<br />value:  0.308<br />value:  0.308<br />colour: black<br />size: 4","Var1: Impulsive<br />Var2: Escore<br />value:  0.114<br />value:  0.114<br />colour: black<br />size: 4","Var1: SS<br />Var2: Escore<br />value:  0.208<br />value:  0.208<br />colour: black<br />size: 4","Var1: log_user_consumption_level<br />Var2: Escore<br />value: -0.032<br />value: -0.032<br />colour: black<br />size: 4","Var1: Nscore<br />Var2: Oscore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Escore<br />Var2: Oscore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Oscore<br />Var2: Oscore<br />value:  1.000<br />value:  1.000<br />colour: black<br />size: 4","Var1: AScore<br />Var2: Oscore<br />value:  0.037<br />value:  0.037<br />colour: black<br />size: 4","Var1: Cscore<br />Var2: Oscore<br />value: -0.059<br />value: -0.059<br />colour: black<br />size: 4","Var1: Impulsive<br />Var2: Oscore<br />value:  0.275<br />value:  0.275<br />colour: black<br />size: 4","Var1: SS<br />Var2: Oscore<br />value:  0.419<br />value:  0.419<br />colour: black<br />size: 4","Var1: log_user_consumption_level<br />Var2: Oscore<br />value:  0.379<br />value:  0.379<br />colour: black<br />size: 4","Var1: Nscore<br />Var2: AScore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Escore<br />Var2: AScore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Oscore<br />Var2: AScore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: AScore<br />Var2: AScore<br />value:  1.000<br />value:  1.000<br />colour: black<br />size: 4","Var1: Cscore<br />Var2: AScore<br />value:  0.245<br />value:  0.245<br />colour: black<br />size: 4","Var1: Impulsive<br />Var2: AScore<br />value: -0.230<br />value: -0.230<br />colour: black<br />size: 4","Var1: SS<br />Var2: AScore<br />value: -0.209<br />value: -0.209<br />colour: black<br />size: 4","Var1: log_user_consumption_level<br />Var2: AScore<br />value: -0.202<br />value: -0.202<br />colour: black<br />size: 4","Var1: Nscore<br />Var2: Cscore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Escore<br />Var2: Cscore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Oscore<br />Var2: Cscore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: AScore<br />Var2: Cscore<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Cscore<br />Var2: Cscore<br />value:  1.000<br />value:  1.000<br />colour: black<br />size: 4","Var1: Impulsive<br />Var2: Cscore<br />value: -0.336<br />value: -0.336<br />colour: black<br />size: 4","Var1: SS<br />Var2: Cscore<br />value: -0.230<br />value: -0.230<br />colour: black<br />size: 4","Var1: log_user_consumption_level<br />Var2: Cscore<br />value: -0.331<br />value: -0.331<br />colour: black<br />size: 4","Var1: Nscore<br />Var2: Impulsive<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Escore<br />Var2: Impulsive<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Oscore<br />Var2: Impulsive<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: AScore<br />Var2: Impulsive<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Cscore<br />Var2: Impulsive<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Impulsive<br />Var2: Impulsive<br />value:  1.000<br />value:  1.000<br />colour: black<br />size: 4","Var1: SS<br />Var2: Impulsive<br />value:  0.623<br />value:  0.623<br />colour: black<br />size: 4","Var1: log_user_consumption_level<br />Var2: Impulsive<br />value:  0.361<br />value:  0.361<br />colour: black<br />size: 4","Var1: Nscore<br />Var2: SS<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Escore<br />Var2: SS<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Oscore<br />Var2: SS<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: AScore<br />Var2: SS<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Cscore<br />Var2: SS<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Impulsive<br />Var2: SS<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: SS<br />Var2: SS<br />value:  1.000<br />value:  1.000<br />colour: black<br />size: 4","Var1: log_user_consumption_level<br />Var2: SS<br />value:  0.491<br />value:  0.491<br />colour: black<br />size: 4","Var1: Nscore<br />Var2: log_user_consumption_level<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Escore<br />Var2: log_user_consumption_level<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Oscore<br />Var2: log_user_consumption_level<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: AScore<br />Var2: log_user_consumption_level<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Cscore<br />Var2: log_user_consumption_level<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: Impulsive<br />Var2: log_user_consumption_level<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: SS<br />Var2: log_user_consumption_level<br />value:     NA<br />value:     NA<br />colour: black<br />size: 4","Var1: log_user_consumption_level<br />Var2: log_user_consumption_level<br />value:  1.000<br />value:  1.000<br />colour: black<br />size: 4"],"textfont":{"size":17.142175392501688,"color":"rgba(248,118,109,1)"},"type":"scatter","mode":"text","hoveron":"points","name":"black","legendgroup":"black","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1],"y":[1],"name":"3d3ec5a547205e6edfda69a6d8227320","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#132B43"],[0.0033444816053511887,"#132B44"],[0.0066889632107023393,"#132C44"],[0.010033444816053528,"#142C45"],[0.013377926421404679,"#142D45"],[0.016722408026755866,"#142D46"],[0.020066889632107017,"#142D46"],[0.023411371237458206,"#142E47"],[0.026755852842809357,"#152E47"],[0.030100334448160546,"#152F48"],[0.033444816053511697,"#152F48"],[0.036789297658862886,"#152F49"],[0.040133779264214034,"#153049"],[0.043478260869565223,"#16304A"],[0.046822742474916371,"#16304A"],[0.05016722408026756,"#16314B"],[0.053511705685618749,"#16314B"],[0.056856187290969903,"#16324C"],[0.060200668896321051,"#17324D"],[0.06354515050167224,"#17324D"],[0.066889632107023422,"#17334E"],[0.070234113712374577,"#17334E"],[0.073578595317725773,"#17344F"],[0.076923076923076913,"#18344F"],[0.08026755852842811,"#183450"],[0.08361204013377925,"#183550"],[0.086956521739130446,"#183551"],[0.090301003344481628,"#183651"],[0.093645484949832783,"#193652"],[0.096989966555183937,"#193652"],[0.10033444816053512,"#193753"],[0.10367892976588632,"#193754"],[0.10702341137123746,"#193854"],[0.11036789297658861,"#1A3855"],[0.11371237458193981,"#1A3955"],[0.11705685618729099,"#1A3956"],[0.12040133779264214,"#1A3956"],[0.12374581939799328,"#1A3A57"],[0.12709030100334448,"#1B3A57"],[0.13043478260869565,"#1B3B58"],[0.13377926421404682,"#1B3B59"],[0.13712374581939801,"#1B3B59"],[0.14046822742474918,"#1C3C5A"],[0.14381270903010035,"#1C3C5A"],[0.14715719063545152,"#1C3D5B"],[0.15050167224080269,"#1C3D5B"],[0.15384615384615385,"#1C3D5C"],[0.15719063545150502,"#1D3E5C"],[0.16053511705685619,"#1D3E5D"],[0.16387959866220736,"#1D3F5D"],[0.16722408026755853,"#1D3F5E"],[0.1705685618729097,"#1D3F5F"],[0.17391304347826086,"#1E405F"],[0.17725752508361203,"#1E4060"],[0.18060200668896323,"#1E4160"],[0.18394648829431437,"#1E4161"],[0.18729096989966557,"#1E4261"],[0.19063545150501671,"#1F4262"],[0.1939799331103679,"#1F4263"],[0.19732441471571904,"#1F4363"],[0.20066889632107024,"#1F4364"],[0.20401337792642141,"#1F4464"],[0.20735785953177258,"#204465"],[0.21070234113712374,"#204465"],[0.21404682274247491,"#204566"],[0.21739130434782611,"#204566"],[0.22073578595317725,"#214667"],[0.22408026755852845,"#214668"],[0.22742474916387961,"#214768"],[0.23076923076923078,"#214769"],[0.23411371237458195,"#214769"],[0.23745819397993312,"#22486A"],[0.24080267558528429,"#22486A"],[0.24414715719063546,"#22496B"],[0.24749163879598662,"#22496C"],[0.25083612040133779,"#224A6C"],[0.25418060200668896,"#234A6D"],[0.25752508361204013,"#234A6D"],[0.2608695652173913,"#234B6E"],[0.26421404682274247,"#234B6E"],[0.26755852842809363,"#244C6F"],[0.2709030100334448,"#244C70"],[0.27424749163879603,"#244C70"],[0.27759197324414714,"#244D71"],[0.28093645484949836,"#244D71"],[0.28428093645484948,"#254E72"],[0.2876254180602007,"#254E72"],[0.29096989966555187,"#254F73"],[0.29431438127090304,"#254F74"],[0.2976588628762542,"#254F74"],[0.30100334448160537,"#265075"],[0.30434782608695654,"#265075"],[0.30769230769230771,"#265176"],[0.31103678929765888,"#265176"],[0.31438127090301005,"#275277"],[0.31772575250836121,"#275278"],[0.32107023411371238,"#275278"],[0.32441471571906355,"#275379"],[0.32775919732441472,"#275379"],[0.33110367892976589,"#28547A"],[0.33444816053511706,"#28547B"],[0.33779264214046822,"#28557B"],[0.34113712374581939,"#28557C"],[0.34448160535117062,"#28567C"],[0.34782608695652173,"#29567D"],[0.35117056856187295,"#29567D"],[0.35451505016722407,"#29577E"],[0.35785953177257523,"#29577F"],[0.36120401337792646,"#2A587F"],[0.36454849498327763,"#2A5880"],[0.36789297658862874,"#2A5980"],[0.37123745819397991,"#2A5981"],[0.37458193979933113,"#2A5982"],[0.3779264214046823,"#2B5A82"],[0.38127090301003341,"#2B5A83"],[0.38461538461538464,"#2B5B83"],[0.38795986622073581,"#2B5B84"],[0.39130434782608697,"#2C5C85"],[0.39464882943143809,"#2C5C85"],[0.39799331103678937,"#2C5D86"],[0.40133779264214048,"#2C5D86"],[0.40468227424749165,"#2C5D87"],[0.40802675585284282,"#2D5E87"],[0.41137123745819404,"#2D5E88"],[0.41471571906354515,"#2D5F89"],[0.41806020066889632,"#2D5F89"],[0.42140468227424749,"#2E608A"],[0.42474916387959871,"#2E608A"],[0.42809364548494983,"#2E618B"],[0.43143812709030099,"#2E618C"],[0.43478260869565222,"#2E618C"],[0.43812709030100339,"#2F628D"],[0.4414715719063545,"#2F628D"],[0.44481605351170567,"#2F638E"],[0.44816053511705689,"#2F638F"],[0.45150501672240806,"#30648F"],[0.45484949832775923,"#306490"],[0.45819397993311034,"#306590"],[0.46153846153846156,"#306591"],[0.46488294314381273,"#306592"],[0.4682274247491639,"#316692"],[0.47157190635451501,"#316693"],[0.47491638795986624,"#316793"],[0.47826086956521741,"#316794"],[0.48160535117056857,"#326895"],[0.4849498327759198,"#326895"],[0.48829431438127091,"#326996"],[0.49163879598662208,"#326996"],[0.49498327759197325,"#326997"],[0.49832775919732447,"#336A98"],[0.50167224080267558,"#336A98"],[0.50501672240802675,"#336B99"],[0.50836120401337792,"#336B99"],[0.51170568561872909,"#346C9A"],[0.51505016722408026,"#346C9B"],[0.51839464882943143,"#346D9B"],[0.52173913043478259,"#346D9C"],[0.52508361204013387,"#346E9D"],[0.52842809364548493,"#356E9D"],[0.5317725752508361,"#356E9E"],[0.53511705685618727,"#356F9E"],[0.53846153846153855,"#356F9F"],[0.5418060200668896,"#3670A0"],[0.54515050167224077,"#3670A0"],[0.54849498327759205,"#3671A1"],[0.55183946488294322,"#3671A1"],[0.55518394648829428,"#3772A2"],[0.55852842809364545,"#3772A3"],[0.56187290969899673,"#3773A3"],[0.56521739130434789,"#3773A4"],[0.56856187290969895,"#3773A4"],[0.57190635451505012,"#3874A5"],[0.5752508361204014,"#3874A6"],[0.57859531772575257,"#3875A6"],[0.58193979933110374,"#3875A7"],[0.58528428093645479,"#3976A8"],[0.58862876254180607,"#3976A8"],[0.59197324414715724,"#3977A9"],[0.59531772575250841,"#3977A9"],[0.59866220735785958,"#3978AA"],[0.60200668896321075,"#3A78AB"],[0.60535117056856191,"#3A79AB"],[0.60869565217391308,"#3A79AC"],[0.61204013377926425,"#3A79AC"],[0.61538461538461542,"#3B7AAD"],[0.61872909698996659,"#3B7AAE"],[0.62207357859531776,"#3B7BAE"],[0.62541806020066892,"#3B7BAF"],[0.62876254180602009,"#3C7CB0"],[0.63210702341137126,"#3C7CB0"],[0.63545150501672243,"#3C7DB1"],[0.6387959866220736,"#3C7DB1"],[0.64214046822742477,"#3C7EB2"],[0.64548494983277593,"#3D7EB3"],[0.6488294314381271,"#3D7FB3"],[0.65217391304347838,"#3D7FB4"],[0.65551839464882944,"#3D7FB5"],[0.65886287625418072,"#3E80B5"],[0.66220735785953189,"#3E80B6"],[0.66555183946488294,"#3E81B6"],[0.66889632107023422,"#3E81B7"],[0.67224080267558528,"#3F82B8"],[0.67558528428093645,"#3F82B8"],[0.67892976588628773,"#3F83B9"],[0.68227424749163879,"#3F83BA"],[0.68561872909699006,"#4084BA"],[0.68896321070234123,"#4084BB"],[0.69230769230769229,"#4085BB"],[0.69565217391304357,"#4085BC"],[0.69899665551839463,"#4086BD"],[0.70234113712374591,"#4186BD"],[0.70568561872909707,"#4186BE"],[0.70903010033444813,"#4187BF"],[0.71237458193979941,"#4187BF"],[0.71571906354515047,"#4288C0"],[0.71906354515050164,"#4288C1"],[0.72240802675585292,"#4289C1"],[0.72575250836120397,"#4289C2"],[0.72909698996655525,"#438AC2"],[0.73244147157190642,"#438AC3"],[0.73578595317725748,"#438BC4"],[0.73913043478260876,"#438BC4"],[0.74247491638795982,"#438CC5"],[0.7458193979933111,"#448CC6"],[0.74916387959866226,"#448DC6"],[0.75250836120401332,"#448DC7"],[0.7558528428093646,"#448EC8"],[0.75919732441471577,"#458EC8"],[0.76254180602006683,"#458FC9"],[0.76588628762541811,"#458FC9"],[0.76923076923076927,"#458FCA"],[0.77257525083612044,"#4690CB"],[0.77591973244147161,"#4690CB"],[0.77926421404682267,"#4691CC"],[0.78260869565217395,"#4691CD"],[0.78595317725752512,"#4792CD"],[0.78929765886287617,"#4792CE"],[0.79264214046822745,"#4793CF"],[0.79598662207357873,"#4793CF"],[0.79933110367892979,"#4894D0"],[0.80267558528428096,"#4894D0"],[0.80602006688963224,"#4895D1"],[0.80936454849498329,"#4895D2"],[0.81270903010033446,"#4896D2"],[0.81605351170568563,"#4996D3"],[0.8193979933110368,"#4997D4"],[0.82274247491638808,"#4997D4"],[0.82608695652173914,"#4998D5"],[0.8294314381270903,"#4A98D6"],[0.83277591973244158,"#4A99D6"],[0.83612040133779264,"#4A99D7"],[0.83946488294314392,"#4A9AD8"],[0.84280936454849498,"#4B9AD8"],[0.84615384615384615,"#4B9BD9"],[0.84949832775919742,"#4B9BDA"],[0.85284280936454848,"#4B9BDA"],[0.85618729096989965,"#4C9CDB"],[0.85953177257525093,"#4C9CDB"],[0.86287625418060199,"#4C9DDC"],[0.86622073578595327,"#4C9DDD"],[0.86956521739130443,"#4D9EDD"],[0.87290969899665549,"#4D9EDE"],[0.87625418060200677,"#4D9FDF"],[0.87959866220735783,"#4D9FDF"],[0.882943143812709,"#4DA0E0"],[0.88628762541806028,"#4EA0E1"],[0.88963210702341133,"#4EA1E1"],[0.89297658862876261,"#4EA1E2"],[0.89632107023411378,"#4EA2E3"],[0.89966555183946484,"#4FA2E3"],[0.90301003344481612,"#4FA3E4"],[0.90635451505016718,"#4FA3E5"],[0.90969899665551845,"#4FA4E5"],[0.91304347826086962,"#50A4E6"],[0.91638795986622068,"#50A5E7"],[0.91973244147157196,"#50A5E7"],[0.92307692307692313,"#50A6E8"],[0.92642140468227419,"#51A6E8"],[0.92976588628762546,"#51A7E9"],[0.93311036789297663,"#51A7EA"],[0.9364548494983278,"#51A8EA"],[0.93979933110367897,"#52A8EB"],[0.94314381270903003,"#52A9EC"],[0.94648829431438131,"#52A9EC"],[0.94983277591973247,"#52AAED"],[0.95317725752508364,"#53AAEE"],[0.95652173913043481,"#53ABEE"],[0.95986622073578609,"#53ABEF"],[0.96321070234113715,"#53ACF0"],[0.96655518394648832,"#54ACF0"],[0.9698996655518396,"#54ADF1"],[0.97324414715719065,"#54ADF2"],[0.97658862876254182,"#54AEF2"],[0.97993311036789299,"#55AEF3"],[0.98327759197324416,"#55AFF4"],[0.98662207357859544,"#55AFF4"],[0.98996655518394649,"#55B0F5"],[0.99331103678929766,"#56B0F6"],[0.99665551839464894,"#56B1F6"],[1,"#56B1F7"]],"colorbar":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":0,"thickness":23.039999999999996,"title":"value","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["0.0","0.5","1.0"],"tickvals":[0.30185068716515251,0.65009201024924301,0.99833333333333329],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5,"yanchor":"top","y":1}},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"margin":{"t":23.305936073059364,"r":7.3059360730593621,"b":37.260273972602747,"l":177.53424657534251},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,8.5999999999999996],"tickmode":"array","ticktext":["Nscore","Escore","Oscore","AScore","Cscore","Impulsive","SS","log_user_consumption_level"],"tickvals":[1,2,3,4,5,6,7,8],"categoryorder":"array","categoryarray":["Nscore","Escore","Oscore","AScore","Cscore","Impulsive","SS","log_user_consumption_level"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Var1","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,8.5999999999999996],"tickmode":"array","ticktext":["Nscore","Escore","Oscore","AScore","Cscore","Impulsive","SS","log_user_consumption_level"],"tickvals":[1,2,3,4,5,6,7,8],"categoryorder":"array","categoryarray":["Nscore","Escore","Oscore","AScore","Cscore","Impulsive","SS","log_user_consumption_level"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"Var2","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"y":0.5,"yanchor":"top","title":{"text":"colour<br />size<br />value","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"511c7bfb4139":{"x":{},"y":{},"fill":{},"type":"heatmap"},"511c24e86591":{"x":{},"y":{},"fill":{},"label":{},"colour":{},"size":{}}},"cur_data":"511c7bfb4139","visdat":{"511c7bfb4139":["function (y) ","x"],"511c24e86591":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+    ## Warning: Removed 28 rows containing missing values or values outside the scale range
+    ## (`geom_text()`).
+
+![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 # Education
 
@@ -3240,6 +3242,10 @@ average, respectively.
 
 # Country
 
+To test a relationship between drug consumption and a user’s country of
+residence, a similar procedure to the chi-squared test for education was
+used. The results of the chi-squared test are shown below.
+
 ``` r
 data_country <- data_one |> group_by(Country, user_status_real) |> summarize(count = n()) |>
   na.omit(user_status_real)
@@ -3281,6 +3287,16 @@ kable(chi_square_residence_summary)
 | df        | Degrees of Freedom | 108.00 |
 |           | P-Value            |   0.00 |
 
+After determining a significant relationship, we examined the
+distribution of the log of total drug consumption and how that changed
+for each country.
+
+The most notable result from our analysis is that if a user resides in
+the country of UK, they are likely to have a lower level of total drug
+consumption compared to other countries. Meanwhile, the users with the
+highest level of drug consumption on average are those that reside in
+the U.S.A.
+
 ``` r
 data_one_trans <- data_one |> mutate(log_user_consumption_level = log1p(user_consumption_level))
 
@@ -3291,6 +3307,23 @@ data_one_trans |> ggplot(aes(x = Country, y = log_user_consumption_level, fill =
     ## (`stat_boxplot()`).
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+To determine the reason for this discrepancy, we examined the
+distribution of a user’s OCEAN scores, impulsivity and sensation-seeking
+fo each country.
+
+For traits that negatively impact a user’s drug consumption, the U.S.A.
+was often the highest in terms of the mean traits. For example, in terms
+of openness and curiosity, it is shown that the U.S.A. has a higher
+trait score on average. Along the same direction, for traits such as
+agreeableness or conscientiousness that would positively improve a
+user’s level of total drug consumption, the U.S.A. often ranked the
+lowest among the countries on average.
+
+In contrast, the U.K. often ranks the highest in positive traits and the
+lowest in negative traits. The difference in extraversion for these
+countries were not considered strongly, since there isn’t a significant
+association between said trait and total drug consumption.
 
 ``` r
 data_Oscore_country <- data_one |> select(Country, Oscore)
@@ -3383,12 +3416,26 @@ plot_country_psychology_patch_2
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
 
+To examine if there was also a relationship between the country of
+residence and a user’s education, seven histograms were produced to
+examine the distribution of education status.
+
+Specifically, the UK has a distribution for education that is skewed
+toward the lower levels, meaning a person is more likely to have a
+university degree or above. Meanwhile, the education level in the U.S.A.
+is heavily concentrated in those who have some college or university
+experience but no degree. This is the education level that was
+identified as a possible population at risk due to its average OCEAN,
+impulsivity and sensation-seeking trait scores.
+
 ``` r
 data_education |> ggplot(aes(x = Education, fill = Education)) + geom_bar() +
   facet_wrap(~Country) + theme(axis.text.x = element_blank())
 ```
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+# Model with Psychological Traits, Education, and Residence
 
 ``` r
 model_no_interaction_education_residence <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
@@ -3402,7 +3449,7 @@ model_no_interaction_education_residence |> summary() |>
                      "EducationLeft school before 16 years",
                      "EducationSome college or university, no certificate or degree")) |>
   kbl(
-      caption     = "Effect of Psychological Predictors on Drug Consumption Levels", 
+      caption     = "Effect of Relevant Environmental Predictors on Drug Consumption Levels", 
       col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value"), 
       digits      = c(3, 3, 3, 3, 3)
   )
@@ -3412,7 +3459,7 @@ model_no_interaction_education_residence |> summary() |>
 
 <caption>
 
-Effect of Psychological Predictors on Drug Consumption Levels
+Effect of Relevant Environmental Predictors on Drug Consumption Levels
 </caption>
 
 <thead>
@@ -3631,10 +3678,12 @@ EducationSome college or university, no certificate or degree
 ``` r
 model_interaction_psychology |> summary() |> broom::glance() |>
   bind_rows(summary(model_no_interaction_education_residence) |> broom::glance()) |>
-  mutate(model = c("Psychology Model with Interaction", "Psychology Model with Education and Residence")) |>
+  mutate(model = c("Psychology Model with Personality Traits", "Psychology Model with Personality Traits, 
+                   Education and Residence")) |>
   relocate(model) |>
   kbl(
-    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits"
+    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits 
+    and Environmental Factors"
     , col.names = c(
         "Model", "R-squared", "Adj. R-squared"
       , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
@@ -3648,7 +3697,7 @@ model_interaction_psychology |> summary() |> broom::glance() |>
 <caption>
 
 Key Statistics for Prediction of User Consumption from Psychological
-Traits
+Traits and Environmental Factors
 </caption>
 
 <thead>
@@ -3710,7 +3759,7 @@ N
 
 <td style="text-align:left;">
 
-Psychology Model with Interaction
+Psychology Model with Personality Traits
 </td>
 
 <td style="text-align:right;">
@@ -3759,7 +3808,7 @@ Psychology Model with Interaction
 
 <td style="text-align:left;">
 
-Psychology Model with Education and Residence
+Psychology Model with Personality Traits, Education and Residence
 </td>
 
 <td style="text-align:right;">
@@ -3817,7 +3866,11 @@ knitr::kable(AIC(model_interaction_psychology, model_no_interaction_education_re
 | model_interaction_psychology             |  65 | 1646.347 |
 | model_no_interaction_education_residence |  47 | 1371.758 |
 
-# Additional Analysis
+# Gender on Drug Consumption
+
+We also explore other variables that could contribute to a person’s drug
+consumption. To analyze if the true user drug consumption was the same
+or different between the two genders, we conducted a two-sample t-test.
 
 ``` r
 t_test_result <- t.test(user_consumption_level~Gender, data = data_one, var.equaql = FALSE, alternative = "two.sided")
@@ -3844,6 +3897,22 @@ data_one |> ggplot(aes(x = Gender, y = user_consumption_level, fill = Gender)) +
     ## (`stat_boxplot()`).
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+
+Because the p-value of our t-test was again near 0, we can conclude that
+there is a significant difference in the true average drug consumption
+level between the male and female genders.
+
+To examine this difference, we plotted their respective distributions in
+the boxplot graph. The general trend is that male users have a higher
+drug consumption level on average compared to female users. There is
+also more variation in the log of user consumption level as compared to
+female users.
+
+# Ethnicity on Drug Consumption
+
+A similar procedure to the chi-squared tests for ethnicity and country
+of residence was carried out to examine if there is a relationship
+between drug consumption and a user’s ethnicity.
 
 ``` r
 data_ethnicity <- data_one |> group_by(Ethnicity, user_status_real) |> summarize(count = n()) |>
@@ -3886,6 +3955,16 @@ kable(chi_square_ethnicity_summary)
 | df        | Degrees of Freedom | 108.00 |
 |           | P-Value            |   0.00 |
 
+After determining a significant relationship due to the p-value of near
+0, we then plotted the distribution of a user’s consumption level in
+regard to their ethnicity.
+
+On average, we determined that Mixed-Black/Asian, Mixed-White/Asian, and
+“Other” ethnicity have the highest log total drug consumption on average
+compared to other ethnicity. It is also notable that White also has a
+fairly higher log total drug consumption when compared to the Black and
+Asian ethnicity.
+
 ``` r
 data_one_trans |> ggplot(aes(x = Ethnicity, y = log_user_consumption_level, fill = Ethnicity)) + geom_boxplot()
 ```
@@ -3894,6 +3973,13 @@ data_one_trans |> ggplot(aes(x = Ethnicity, y = log_user_consumption_level, fill
     ## (`stat_boxplot()`).
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+
+To this end, we also examined if there is a significant relationship
+between a user’s ethnicity and a user’s country of residence using a
+chi-squared statistical test. Because the p-value is near 0, we
+determined that there is a significant association between the two
+variables, which influenced our decision to take their interaction into
+account later in our linear model building.
 
 ``` r
 data_ethnicity_country <- data_one |> group_by(Country, Ethnicity) |> summarize(count = n())
@@ -3935,6 +4021,8 @@ kable(chi_square_ethnicity_country_summary)
 | df        | Degrees of Freedom | 36.000 |
 |           | P-Value            |  0.001 |
 
+# Age and Drug Consumption
+
 ``` r
 data_age <- data_one |> group_by(Age, user_status_real) |> summarize(count = n()) |>
   na.omit(user_status_real)
@@ -3966,6 +4054,11 @@ print(chi_test_result_age)
     ## data:  data_age_prime[, -1]
     ## X-squared = 540.9, df = 90, p-value < 2.2e-16
 
+After conducting a chi-squared test, we determined a significant
+relationship between a user’s age and their total drug consumption
+level. Below is a distribution of said user’s log consumption and their
+respective age group.
+
 ``` r
 data_one_trans |> ggplot(aes(x = Age, y = log_user_consumption_level, fill = Age)) + geom_boxplot()
 ```
@@ -3975,201 +4068,374 @@ data_one_trans |> ggplot(aes(x = Age, y = log_user_consumption_level, fill = Age
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
+We see that those who are aged 18 to 24 are generally more at risk in
+regards to having a higher log drug consumption. This motivated us to
+determine if there was any correlation between age groups and other
+variables such as Education.
+
 ``` r
-model_full <- lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
-                                 AScore + Nscore + Impulsive + SS)^6 + Country + Education +
+data_age_education <- data_one |> group_by(Age, Education) |> summarize(count = n()) |>
+  na.omit(Education)
+```
+
+    ## `summarise()` has grouped output by 'Age'. You can override using the `.groups`
+    ## argument.
+
+``` r
+data_age_education_prime <- data_age_education |> pivot_wider(
+  names_from = Education,
+  values_from = count,
+  values_fill = 0
+)
+
+chi_test_result_age_education <- chisq.test(data_age_education_prime[ , -1])
+```
+
+    ## Warning in chisq.test(data_age_education_prime[, -1]): Chi-squared
+    ## approximation may be incorrect
+
+``` r
+tidy_chi_test_result_age_education <- tidy(chi_test_result_age_education)
+
+chi_square_age_education_summary <- data.frame(
+  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
+  Value = c(round(tidy_chi_test_result_age_education$statistic, 2),
+            round(tidy_chi_test_result_age_education$parameter, 2),
+            round(tidy_chi_test_result_age_education$p.value, 3)
+            )
+)
+
+kable(chi_square_age_education_summary)
+```
+
+|           | Statistic          |  Value |
+|:----------|:-------------------|-------:|
+| X-squared | Chi-squared        | 532.93 |
+| df        | Degrees of Freedom |  40.00 |
+|           | P-Value            |   0.00 |
+
+After determining a significant association between age group and
+education from the chi-squared test above, we plotted the distribution
+of age for each education level. We see that for the education level of
+some college or university, the data is skewed extremely towards the
+right.
+
+This suggests that age 18-24 are also most likely attending college or
+university, the education group most at risk. Below are all the
+distributions for age groups among each education level.
+
+``` r
+data_education |> ggplot(aes(x = Age, fill = Age)) + geom_bar() +
+  facet_wrap(~Education) + theme(axis.text.x = element_blank())
+```
+
+![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+
+Finally, in regards to age-groups and personality traits, we conducted
+an ANOVA test for each relevant personality trait. The results are
+compiled in the table below.
+
+``` r
+data_Oscore_age <- data_one |> select(Age, Oscore)
+Oscore_aov_age_model <- aov(Oscore~Age, data = data_Oscore_age)
+tidy_anova_Oscore_age <- tidy(Oscore_aov_age_model) |> mutate(model = "O score Age")
+pp1 <- data_Oscore_age |> ggplot(aes(x = Age, y = Oscore, fill = Age)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_Cscore_age <- data_one |> select(Age, Cscore)
+Cscore_aov_age_model <- aov(Cscore~Age, data = data_Cscore_age)
+tidy_anova_Cscore_age <- tidy(Cscore_aov_age_model) |> mutate(model = "C score Age")
+pp2 <- data_Cscore_age |> ggplot(aes(x = Age, y = Cscore, fill = Age)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_Ascore_age <- data_one |> select(Age, AScore)
+Ascore_aov_age_model <- aov(AScore~Age, data = data_Ascore_age)
+tidy_anova_Ascore_age <- tidy(Ascore_aov_age_model) |> mutate(model = "A score Age")
+pp3 <- data_Ascore_age |> ggplot(aes(x = Age, y = AScore, fill = Age)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_Nscore_age <- data_one |> select(Age, Nscore)
+Nscore_aov_age_model <- aov(Nscore~Age, data = data_Nscore_age)
+tidy_anova_Nscore_age <- tidy(Nscore_aov_age_model) |> mutate(model = "N score Age")
+pp4 <- data_Nscore_age |> ggplot(aes(x = Age, y = Nscore, fill = Age)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+data_SS_age <- data_one |> select(Age, SS)
+SS_aov_age_model <- aov(SS~Age, data = data_SS_age)
+tidy_anova_SS_age <- tidy(SS_aov_age_model) |> mutate(model = "SS score Age")
+pp5 <- data_SS_age |> ggplot(aes(x = Age, y = SS, fill = Age)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
+
+kable(bind_rows(tidy_anova_Oscore_age, tidy_anova_Cscore_age, tidy_anova_Ascore_age,
+                tidy_anova_Nscore_age, tidy_anova_SS_age))
+```
+
+| term      |   df |      sumsq |     meansq | statistic |   p.value | model        |
+|:----------|-----:|-----------:|-----------:|----------:|----------:|:-------------|
+| Age       |    5 |  115.76147 | 23.1522942 | 24.793091 | 0.0000000 | O score Age  |
+| Residuals | 1878 | 1753.71471 |  0.9338204 |        NA |        NA | O score Age  |
+| Age       |    5 |   75.19042 | 15.0380845 | 15.694213 | 0.0000000 | C score Age  |
+| Residuals | 1878 | 1799.48636 |  0.9581930 |        NA |        NA | C score Age  |
+| Age       |    5 |   17.87990 |  3.5759803 |  3.619056 | 0.0029177 | A score Age  |
+| Residuals | 1878 | 1855.64735 |  0.9880976 |        NA |        NA | A score Age  |
+| Age       |    5 |   40.05836 |  8.0116712 |  8.191761 | 0.0000001 | N score Age  |
+| Residuals | 1878 | 1836.71366 |  0.9780158 |        NA |        NA | N score Age  |
+| Age       |    5 |  205.30726 | 41.0614520 | 49.975840 | 0.0000000 | SS score Age |
+| Residuals | 1878 | 1543.01372 |  0.8216260 |        NA |        NA | SS score Age |
+
+For each trait, we see that their distribution and mean at least differs
+among two of the age groups. Thus, the distribution of the O, C, A, N
+score, and sensation-seeking scores in regards to age group were plotted
+out in the graph below.
+
+``` r
+plot_age_patch <- ggarrange(pp1, pp2, pp3,
+                                  pp4, pp5, ncol = 3, 
+                                  nrow = 2, common.legend = TRUE, legend = "bottom")
+
+plot_age_patch
+```
+
+![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+
+From the box-plots, we can determine that, in general, a person’s O
+score tends to decrease as age increases. A person’s C score may have a
+positive correlation with a person’s age. It is notable that those age
+18-24 have the lowest conscientiousness score. There doesn’t seem to be
+an apparent trend in how a person’s agreeableness varies with age.
+However, a person’s likelihood to experience negative emotions (N score)
+seems to decrease as age increases. Finally, the most striking trend is
+observed in sensation seeking, as said trait appears to have a negative
+association with age. In particular, age 18-24 have on average the
+highest sensation seeking score compared to other age groups.
+
+# Possibility of Other Interactions
+
+``` r
+model_full <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
+                                 AScore * Nscore * SS) + Country + Education + Age + 
+                   Gender + Ethnicity + Country, data = data_one)
+
+model_full_1 <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
+                                 AScore * Nscore * SS) + Education + Age + 
+                   Gender + Ethnicity*Country, data = data_one)
+```
+
+Throughout our analysis, we observed how variables such as education and
+personality traits were often differentiated distributed among other
+variables such as age group and country of residence. Thus, we decided
+to investigate if there were possible interactions between variables
+other than our key personality traits.
+
+After developing one such model accounting for interaction between age
+groups and personality trait scores, we compared it to our model for no
+interactions. Another model was developed that only took into account
+the interactions between country of residence and ethnicity. Below is a
+plot that displays the distribution of our root-mean squared error for
+each model.
+
+``` r
+set.seed(123)
+
+data_one_prime_use_no_use_clean <- data_one_prime_use_no_use |> select(
+  Oscore, Cscore, Escore, Ascore, Nscore, Impulsive, SS, Country, Education,
+  Age, Gender, Ethnicity, user_consumption_level
+)
+
+eth_levels <- unique(data_one_prime_use_no_use_clean$Ethnicity)
+
+cv_df =
+  crossv_mc(data_one_prime_use_no_use_clean, 200) |> 
+  mutate(
+    train = map(train, ~ as_tibble(.x) %>%
+                  mutate(Ethnicity = factor(Ethnicity, levels = eth_levels))),
+    test = map(test, ~ as_tibble(.x) %>%
+                  mutate(Ethnicity = factor(Ethnicity, levels = eth_levels))))
+
+cv_df <- cv_df %>%
+  mutate(
+    ok = map_lgl(train, ~ "Mixed-Black/Asian" %in% .$Ethnicity)
+  ) %>%
+  filter(ok)
+
+cv_df = 
+  cv_df |> 
+  mutate(
+    linear_mod  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
+                                 Ascore * Nscore * SS) + Country + Education +
+                   Age + Gender + Ethnicity, data = df)),
+    linear_mod_interaction  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
+                                 Ascore * Nscore * SS) + Country * Education * Age + 
+                   Age * Oscore + Age * Cscore + Age * SS + Age * Nscore +
+                   Gender + Ethnicity, data = df)), 
+    linear_mod_Country_Ethnicity  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
+                                 Ascore * Nscore * SS) + Country + Education +
+                   Age + Gender + Ethnicity*Country, data = df))) |> 
+  mutate(
+    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_linear_interaction    = map2_dbl(linear_mod_interaction, test, \(mod, df) rmse(mod, df)),
+    rmse_linear_interaction_Country_Ethnicity    = map2_dbl(linear_mod_Country_Ethnicity, 
+                                                            test, \(mod, df) rmse(mod, df)))
+```
+
+    ## Warning: There were 304 warnings in `mutate()`.
+    ## The first warning was:
+    ## ℹ In argument: `rmse_linear_interaction = map2_dbl(...)`.
+    ## Caused by warning in `predict.lm()`:
+    ## ! prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases
+    ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 303 remaining warnings.
+
+``` r
+cv_df |> 
+  select(starts_with("rmse")) |> 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") |> 
+  mutate(model = fct_inorder(model)) |> 
+  ggplot(aes(x = model, y = rmse, fill = model)) + geom_violin()
+```
+
+![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+
+We see that the distribution of the root mean squared error is roughly
+the same for both a linear model that takes into account no interactions
+beyond personality traits and one that takes into account the effect
+that country and ethnicity has on one another. However, as the error
+distribution for the other model has a higher RMSE on average, we will
+limit our investigation into only the interaction between country and
+ethnicity.
+
+``` r
+model_no_other_interactions <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
+                                 AScore * Nscore * SS) + Country + Education + Age + 
+                   Gender + Ethnicity + Country, data = data_one)
+
+model_country_ethnicity <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
+                                 AScore * Nscore * SS) + Country + Education + Age + 
+                   Gender + Ethnicity*Country, data = data_one)
+
+knitr::kable(AIC(model_no_other_interactions, model_country_ethnicity))
+```
+
+|                             |  df |      AIC |
+|:----------------------------|----:|---------:|
+| model_no_other_interactions |  59 | 1179.181 |
+| model_country_ethnicity     |  72 | 1173.639 |
+
+By conducting an AIC test, we see the model that takes into account the
+interaction between country and ethnicity has a lower AIC score,
+therefore it is the best model between the two.
+
+# Nonlinear vs Linear Regression
+
+``` r
+check_model(model_full_1, check = c("linearity", "outliers", "qq", "normality"))
+```
+
+![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+
+From a simple diagnostic of our linear regression model, our residuals
+are averaged around 0 and generally independent from our fitted values.
+There also doesn’t seem to be any outliers that are too influential to
+the variation in total drug consumption. Finally, the residuals are
+approximately normally distributed along 0. This suggests that our
+linear model is appropriate for the approximation of total drug
+consumption.
+
+However, as a final check, we compared the AIC and RMSE distribution of
+our linear model to those of an unlinear model that accounts for
+non-linearity in our personality trait scores.
+
+Below are the table and plot showing the AIC score and RMSE
+distribution, respectively.
+
+``` r
+model_full_nonlinear_no_interaction <- gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
+                                 s(AScore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
                    Age + Gender + Ethnicity*Country, data = data_one)
 
-knitr::kable(AIC(model_no_interaction_education_residence, model_full))
+knitr::kable(AIC(model_country_ethnicity, model_full_nonlinear_no_interaction))
 ```
 
-|                                          |  df |      AIC |
-|:-----------------------------------------|----:|---------:|
-| model_no_interaction_education_residence |  47 | 1371.758 |
-| model_full                               | 104 | 1161.297 |
+|                                     |       df |      AIC |
+|:------------------------------------|---------:|---------:|
+| model_country_ethnicity             | 72.00000 | 1173.639 |
+| model_full_nonlinear_no_interaction | 54.59517 | 1167.055 |
 
 ``` r
-model_no_interaction_education_residence |> summary() |> broom::glance() |>
-  bind_rows(summary(model_full) |> broom::glance()) |>
-  mutate(model = c("Psychology Model with Education and Residence", "Best Model")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits"
-    , col.names = c(
-        "Model", "R-squared", "Adj. R-squared"
-      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
-    )
-    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
-  )
+set.seed(123)
+
+data_one_prime_use_no_use_clean <- data_one_prime_use_no_use |> select(
+  Oscore, Cscore, Escore, Ascore, Nscore, Impulsive, SS, Country, Education,
+  Age, Gender, Ethnicity, user_consumption_level
+)
+
+cv_df_1 =
+  crossv_mc(data_one_prime_use_no_use_clean, 200) |> 
+  mutate(
+    train = map(train, ~ as_tibble(.x) %>%
+                  mutate(Ethnicity = factor(Ethnicity, levels = eth_levels))),
+    test = map(test, ~ as_tibble(.x) %>%
+                  mutate(Ethnicity = factor(Ethnicity, levels = eth_levels))))
+
+cv_df_1 <- cv_df_1 %>%
+  mutate(
+    ok = map_lgl(train, ~ "Mixed-Black/Asian" %in% .$Ethnicity)
+  ) %>%
+  filter(ok)
+
+cv_df_1 = 
+  cv_df_1 |> 
+  mutate(
+    linear_mod  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
+                                 Ascore + Nscore + Impulsive + SS)^6 + Country + Education +
+                   Age + Gender + Ethnicity*Country, data = df)),
+    non_linear_no_interaction_mod     = map(train, \(df) gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
+                                 s(Ascore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
+                   Age + Gender + Ethnicity*Country, data = df))) |> 
+  mutate(
+    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_non_linear_interaction    = map2_dbl(non_linear_no_interaction_mod, test, \(mod, df) rmse(model = mod, data = df)))
 ```
 
-<table>
-
-<caption>
-
-Key Statistics for Prediction of User Consumption from Psychological
-Traits
-</caption>
-
-<thead>
-
-<tr>
-
-<th style="text-align:left;">
-
-Model
-</th>
-
-<th style="text-align:right;">
-
-R-squared
-</th>
-
-<th style="text-align:right;">
-
-Adj. R-squared
-</th>
-
-<th style="text-align:right;">
-
-Sigma
-</th>
-
-<th style="text-align:right;">
-
-F-statistic
-</th>
-
-<th style="text-align:right;">
-
-p-value
-</th>
-
-<th style="text-align:right;">
-
-df
-</th>
-
-<th style="text-align:right;">
-
-Residual df
-</th>
-
-<th style="text-align:right;">
-
-N
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td style="text-align:left;">
-
-Psychology Model with Education and Residence
-</td>
-
-<td style="text-align:right;">
-
-0.47
-</td>
-
-<td style="text-align:right;">
-
-0.45
-</td>
-
-<td style="text-align:right;">
-
-0
-</td>
-
-<td style="text-align:right;">
-
-35.35
-</td>
-
-<td style="text-align:right;">
-
-0
-</td>
-
-<td style="text-align:right;">
-
-45
-</td>
-
-<td style="text-align:right;">
-
-1830
-</td>
-
-<td style="text-align:right;">
-
-1876
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Best Model
-</td>
-
-<td style="text-align:right;">
-
-0.55
-</td>
-
-<td style="text-align:right;">
-
-0.52
-</td>
-
-<td style="text-align:right;">
-
-0
-</td>
-
-<td style="text-align:right;">
-
-21.25
-</td>
-
-<td style="text-align:right;">
-
-0
-</td>
-
-<td style="text-align:right;">
-
-102
-</td>
-
-<td style="text-align:right;">
-
-1773
-</td>
-
-<td style="text-align:right;">
-
-1876
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
+    ## Warning: There were 109 warnings in `mutate()`.
+    ## The first warning was:
+    ## ℹ In argument: `rmse_linear = map2_dbl(...)`.
+    ## Caused by warning in `predict.lm()`:
+    ## ! prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases
+    ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 108 remaining warnings.
 
 ``` r
-model_full |> summary() |>
+cv_df_1 |> 
+  select(starts_with("rmse")) |> 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") |> 
+  mutate(model = fct_inorder(model)) |> 
+  ggplot(aes(x = model, y = rmse, fill = model)) + geom_violin()
+```
+
+![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+
+While the non-linear model has a slightly lower AIC score, the
+distribution of the RMSE for the non-linear model also tends to have
+more probablity around the higher RMSE compared to the linear model.
+
+Thus, for the purposes of predicting total drug use consumption, we
+still maintain that the linear model is the most appropriate.
+
+# Best Linear Model
+
+Below are the tables that summarize all the relevant predictors, their
+estimated parameters, and the key statistics of our best linear model in
+temrs of R squared and p-value.
+
+``` r
+model_full_1 |> summary() |>
   broom::tidy() |>
   filter(p.value < 0.05) |>
   filter(term %in% c("Oscore", "Cscore", "Ascore", "Nscore", "SS",
@@ -4234,17 +4500,17 @@ Oscore
 
 <td style="text-align:right;">
 
-0.075
+0.078
 </td>
 
 <td style="text-align:right;">
 
-0.011
+0.010
 </td>
 
 <td style="text-align:right;">
 
-6.778
+7.904
 </td>
 
 <td style="text-align:right;">
@@ -4263,17 +4529,17 @@ Cscore
 
 <td style="text-align:right;">
 
--0.067
+-0.066
 </td>
 
 <td style="text-align:right;">
 
-0.011
+0.010
 </td>
 
 <td style="text-align:right;">
 
--5.908
+-6.499
 </td>
 
 <td style="text-align:right;">
@@ -4292,22 +4558,22 @@ Nscore
 
 <td style="text-align:right;">
 
-0.031
+0.021
 </td>
 
 <td style="text-align:right;">
 
-0.011
+0.010
 </td>
 
 <td style="text-align:right;">
 
-2.905
+2.184
 </td>
 
 <td style="text-align:right;">
 
-0.004
+0.029
 </td>
 
 </tr>
@@ -4321,75 +4587,17 @@ SS
 
 <td style="text-align:right;">
 
-0.092
+0.090
 </td>
 
 <td style="text-align:right;">
 
-0.013
+0.010
 </td>
 
 <td style="text-align:right;">
 
-7.241
-</td>
-
-<td style="text-align:right;">
-
-0.000
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-CountryCanada
-</td>
-
-<td style="text-align:right;">
-
--0.117
-</td>
-
-<td style="text-align:right;">
-
-0.060
-</td>
-
-<td style="text-align:right;">
-
--1.961
-</td>
-
-<td style="text-align:right;">
-
-0.050
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-CountryUK
-</td>
-
-<td style="text-align:right;">
-
--0.959
-</td>
-
-<td style="text-align:right;">
-
-0.208
-</td>
-
-<td style="text-align:right;">
-
--4.609
+8.613
 </td>
 
 <td style="text-align:right;">
@@ -4408,7 +4616,7 @@ EducationLeft school at 18 years
 
 <td style="text-align:right;">
 
-0.107
+0.123
 </td>
 
 <td style="text-align:right;">
@@ -4418,12 +4626,12 @@ EducationLeft school at 18 years
 
 <td style="text-align:right;">
 
-2.123
+2.438
 </td>
 
 <td style="text-align:right;">
 
-0.034
+0.015
 </td>
 
 </tr>
@@ -4437,7 +4645,7 @@ EducationLeft school before 16 years
 
 <td style="text-align:right;">
 
-0.220
+0.244
 </td>
 
 <td style="text-align:right;">
@@ -4447,12 +4655,12 @@ EducationLeft school before 16 years
 
 <td style="text-align:right;">
 
-3.024
+3.366
 </td>
 
 <td style="text-align:right;">
 
-0.003
+0.001
 </td>
 
 </tr>
@@ -4466,7 +4674,7 @@ Age45-54
 
 <td style="text-align:right;">
 
--0.135
+-0.136
 </td>
 
 <td style="text-align:right;">
@@ -4476,7 +4684,7 @@ Age45-54
 
 <td style="text-align:right;">
 
--5.175
+-5.210
 </td>
 
 <td style="text-align:right;">
@@ -4495,7 +4703,7 @@ Age55-64
 
 <td style="text-align:right;">
 
--0.239
+-0.238
 </td>
 
 <td style="text-align:right;">
@@ -4505,7 +4713,7 @@ Age55-64
 
 <td style="text-align:right;">
 
--6.299
+-6.246
 </td>
 
 <td style="text-align:right;">
@@ -4524,17 +4732,17 @@ Age65+
 
 <td style="text-align:right;">
 
--0.369
+-0.363
 </td>
 
 <td style="text-align:right;">
 
-0.083
+0.082
 </td>
 
 <td style="text-align:right;">
 
--4.418
+-4.408
 </td>
 
 <td style="text-align:right;">
@@ -4553,7 +4761,7 @@ GenderM
 
 <td style="text-align:right;">
 
-0.136
+0.133
 </td>
 
 <td style="text-align:right;">
@@ -4563,7 +4771,36 @@ GenderM
 
 <td style="text-align:right;">
 
-8.086
+7.874
+</td>
+
+<td style="text-align:right;">
+
+0.000
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+CountryUK
+</td>
+
+<td style="text-align:right;">
+
+-1.012
+</td>
+
+<td style="text-align:right;">
+
+0.209
+</td>
+
+<td style="text-align:right;">
+
+-4.850
 </td>
 
 <td style="text-align:right;">
@@ -4578,80 +4815,154 @@ GenderM
 </table>
 
 ``` r
-check_model(model_full, check = c("linearity", "outliers", "qq", "normality"))
+model_full_1 |> summary() |> broom::glance() |>
+  mutate(model = c("Best Model for total drug consumption")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits"
+    , col.names = c(
+        "Model", "R-squared", "Adj. R-squared"
+      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
+    )
+    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
+  )
 ```
 
-![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+<table>
 
-``` r
-model_full_nonlinear_no_interaction <- gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
-                                 s(AScore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
-                   Age + Gender + Ethnicity*Country, data = data_one)
+<caption>
 
-model_full_nonlinear_interaction <- gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
-                                 s(AScore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
-                   Age + Gender + Ethnicity*Country +
-                     ti(Oscore, Cscore, AScore, Nscore) + ti(Impulsive, SS), data = data_one)
+Key Statistics for Prediction of User Consumption from Psychological
+Traits
+</caption>
 
-knitr::kable(AIC(model_full, model_full_nonlinear_no_interaction, model_full_nonlinear_interaction))
-```
+<thead>
 
-|                                     |        df |      AIC |
-|:------------------------------------|----------:|---------:|
-| model_full                          | 104.00000 | 1161.297 |
-| model_full_nonlinear_no_interaction |  54.59517 | 1167.055 |
-| model_full_nonlinear_interaction    |  68.45005 | 1157.174 |
+<tr>
 
-``` r
-set.seed(123)
+<th style="text-align:left;">
 
-data_one_prime_use_no_use_clean <- data_one_prime_use_no_use |> select(
-  Oscore, Cscore, Escore, Ascore, Nscore, Impulsive, SS, Country, Education,
-  Age, Gender, Ethnicity, user_consumption_level
-)
+Model
+</th>
 
-cv_df =
-  crossv_mc(data_one_prime_use_no_use_clean, 20) |> 
-  mutate(
-    train = map(train, as_tibble),
-    test = map(test, as_tibble))
+<th style="text-align:right;">
 
-cv_df = 
-  cv_df |> 
-  mutate(
-    linear_mod  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
-                                 Ascore + Nscore + Impulsive + SS)^6 + Country + Education +
-                   Age + Gender + Ethnicity*Country, data = df)),
-    non_linear_no_interaction_mod     = map(train, \(df) gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
-                                 s(Ascore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
-                   Age + Gender + Ethnicity*Country, data = df)),
-    smooth_mod  = map(train, \(df) gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
-                                 s(Ascore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
-                   Age + Gender + Ethnicity*Country +
-                     ti(Oscore, Cscore, Ascore, Nscore) + ti(Impulsive, SS), data = as_tibble(df)))) |> 
-  mutate(
-    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_non_linear_interaction    = map2_dbl(non_linear_no_interaction_mod, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_smooth = map2_dbl(smooth_mod, test, \(mod, df) rmse(model = mod, data = df)))
-```
+R-squared
+</th>
 
-    ## Warning: There were 13 warnings in `mutate()`.
-    ## The first warning was:
-    ## ℹ In argument: `rmse_linear = map2_dbl(...)`.
-    ## Caused by warning in `predict.lm()`:
-    ## ! prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases
-    ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 12 remaining warnings.
+<th style="text-align:right;">
 
-``` r
-cv_df |> 
-  select(starts_with("rmse")) |> 
-  pivot_longer(
-    everything(),
-    names_to = "model", 
-    values_to = "rmse",
-    names_prefix = "rmse_") |> 
-  mutate(model = fct_inorder(model)) |> 
-  ggplot(aes(x = model, y = rmse, fill = model)) + geom_violin()
-```
+Adj. R-squared
+</th>
 
-![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+<th style="text-align:right;">
+
+Sigma
+</th>
+
+<th style="text-align:right;">
+
+F-statistic
+</th>
+
+<th style="text-align:right;">
+
+p-value
+</th>
+
+<th style="text-align:right;">
+
+df
+</th>
+
+<th style="text-align:right;">
+
+Residual df
+</th>
+
+<th style="text-align:right;">
+
+N
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Best Model for total drug consumption
+</td>
+
+<td style="text-align:right;">
+
+0.53
+</td>
+
+<td style="text-align:right;">
+
+0.51
+</td>
+
+<td style="text-align:right;">
+
+0
+</td>
+
+<td style="text-align:right;">
+
+29.23
+</td>
+
+<td style="text-align:right;">
+
+0
+</td>
+
+<td style="text-align:right;">
+
+70
+</td>
+
+<td style="text-align:right;">
+
+1805
+</td>
+
+<td style="text-align:right;">
+
+1876
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+# Interpretation of Best Linear Model
+
+From our linear model, taking into account possible interactions, it
+seems that as the O score increases, a user’s log of their total drug
+consumption would increase by 0.078. Meanwhile, as a user’s C score
+decreases by 1, the user’s log total consumption increases by 0.066. As
+a user’s sensation seeking increases, their log consumption increases by
+0.09. For the last personality trait, as a user’s N score increases by
+1, their log consumption increases by 0.021.
+
+As for our other variables, those who reside in the country of UK have a
+lower log total consumption of 1.012 as compared to other countries.
+Those who left school at 18 years or before 16 years have a higher log
+total consumption of 0.123 and 0.244 compared to other education groups,
+respectively.
+
+For the age groups, those age 45-54, 55-64, and 65+ have a lower log
+total drug consumption of 0.136, 0.238, and 0.363 compared to other age
+groups, respectively.
+
+Finally, for users who are of the male gender, their log total drug
+consumption is 0.133 higher compared to those who are female.
