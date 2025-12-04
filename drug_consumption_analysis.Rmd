@@ -29,11 +29,10 @@ library(reshape2)
 
 ```
 
-## R Markdown
+# Data Processing
 
-
-```{r cars}
-data_one <- read.csv("C:/Users/xujin/Downloads/Drug_Consumption.csv")
+```{r}
+data_one <- read.csv("data/Drug_consumption.csv")
 data_one <- data_one |> select(-Semer)
 
 data_two <- data_one |> pivot_longer(
@@ -66,7 +65,7 @@ data_one$user_status_real = factor(data_one$user_status, ordered = TRUE, levels 
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
 ))
 
-data_one_prime <- read.csv("C:/Users/xujin/Downloads/cleaned_drug_data.csv")
+data_one_prime <- read.csv("data/cleaned_drug_data.csv")
 data_one_prime <- data_one_prime |> pivot_longer(
   cols = Alcohol:VSA,
   names_to = "drug_type",
@@ -91,9 +90,11 @@ data_one_prime_use_no_use <-
     . == 2 | . == 3 | . == 4 | . == 5 | . == 6 ~ "User"
   ), .names = "{.col}_binary"))
 
-data_one_prime_use_no_use
 ```
 
+# Drug Consumption and Drug Type
+
+To analyze drug consumption for each user, we converted all ordinal measures for each drug into numeric variables. Then, they were added together to calculate the total drug consumption level. A binary variable was also created for each drug to detail whether each participant was a user of that drug or not. For example, if a participant had an 0 or 1 level of consumption for alcohol, that person would be classified as a non-user of alcohol. However, for consumption levels of 2 or higher, that participant would be classified as a user. Finally, a variable of user-status was created to measure how many drugs a participant was using, legal and illegal.
 
 
 ```{r pressure, echo=FALSE}
@@ -107,6 +108,18 @@ data_four_prime <- data_four |> pivot_wider(
 )
 
 chi_test_result <- chisq.test(data_four_prime[ , -1])
+
+tidy_chi_test_result <- tidy(chi_test_result)
+
+chi_square_summary <- data.frame(
+  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
+  Value = c(round(tidy_chi_test_result$statistic, 2),
+            round(tidy_chi_test_result$parameter, 2),
+            round(tidy_chi_test_result$p.value, 3)
+            )
+)
+
+kable(chi_square_summary)
 
 expected_data <- as.data.frame(chi_test_result$expected) |>
   tibble::rownames_to_column(var = "Drug Type") |>
@@ -136,7 +149,13 @@ ggplot(plot_bar_1_data, aes(x = `Consumption Level`, y = Count, fill = Type)) +
   geom_bar(stat = "identity", position = position_dodge()) + facet_wrap(~`Drug Type`)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+To see whether the type of drug--legal or illegal--a person takes has any relationship to the consumption level of said drug, we conducted a chi-squared test for the two categorical variables. The results of the test, with a p-value of close to 0, suggests a significant association. 
+
+To examine the direction of this relationship, 2 bar graphs--for both legal and illegal drugs--was constructed to compare the expected frequency and the observed frequency for all consumption levels. For illegal drugs, the observed counts for consumption levels 0, 1, 2, and 3 are all higher than the expected frequency. Meanwhile, the observed counts are all much lower than the expected counts for consumption levels 4, 5, and 6.
+
+By contrast, for legal drugs, the observed counts for consumption levels 0, 1, 2, and 3 are all lower than the expected frequency. Meanwhile, the observed counts are all much higher than the expected counts for consumption levels 4, 5, and 6.
+
+These results indicate that consumption levels are generally higher for legal drugs compared to illegal drugs.
 
 ```{r}
 
@@ -153,7 +172,11 @@ plot_histogram_patch
 
 ```
 
+Along this direction, we wanted to examine whether total drug consumption for a participant can be predicted by examining the types of drugs a person uses. 
 
+To predict this model, we first examined the distribution of the drug consumption level.However, this distribution was heavily skewed to the right. Thus, by transforming the variable into the log of total drug consumption, we are able to get a much more approximately normal distribution, suited for linear regression.
+
+Predictors were the binary variables that detail whether a participant used or didn't use said drug. 
 
 ```{r}
 model_user_binary_consumption <- lm(log1p(user_consumption_level) ~ Alcohol_binary + Amphet_binary + Amyl_binary +
@@ -161,8 +184,39 @@ model_user_binary_consumption <- lm(log1p(user_consumption_level) ~ Alcohol_bina
                                       Crack_binary + Ecstasy_binary + Heroin_binary + Ketamine_binary +
                                       Legalh_binary + LSD_binary + Meth_binary + Mushrooms_binary + Nicotine_binary +
                                       VSA_binary, data_one_prime_use_no_use)
-summary(model_user_binary_consumption)
+model_user_binary_consumption |> summary() |> broom::glance() |>
+  mutate(model = c("Drug Type Consumption")) |>
+  relocate(model) |>
+  kbl(
+    caption     = "Key Statistics for Prediction of OCEAN Scores from User Consumption"
+    , col.names = c(
+        "Model", "R-squared", "Adj. R-squared"
+      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
+    )
+    , digits    = c(3, 3, 3, 3, 3, 3, 3, 3, 3)
+  )
 ```
+
+From the summary of our model, the adjusted R-squared value is equal to 0.882. This suggests a good fit and that the total drug consumption level can be approximately modeled from which drugs a person uses. The estimated parameters of this fit are also shown in the following table.
+
+```{r}
+model_user_binary_consumption |> summary() |>
+  broom::tidy() |>
+  kbl(
+      caption     = "Types of Drugs Consumed on Drug Consumption Level"
+    , col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value")
+    , digits      = c(3, 3, 3, 3, 3)
+  )
+```
+
+To interpret these parameters, we can examine the relationship between drug consumption level and a participant's use of meth. If a participant uses meth, then said user would have a log of total drug consumption which is 0.114 higher than those who do not use meth. From statistical analysis, since all the predictors have a p-value of approximately 0, we can conclude that all these predictors have a significant association with the log of total drug consumption.
+
+# Intervention for Drug Consumption
+
+After obtaining user drug consumption level, it is important to analyze possible areas for treatment and rehabilitation. To that end, we analyzed whether there was a significant association between total consumption level and all OCEAN personality traits, impulsivity and sensation-seeking. This way, it may be possible to predict and narrow down personality traits that could use improvement.
+
+From the histograms fo OCEAN scores, impulsivity and sensation-seeking, we see that all distributions are approximately normal as to not requiring any further variable transformation. The plots that demonstrate total user consumption vs OCEAN scores--and its fit--are displayed below. A table showing each model's key statistics--including R-squared and p-values--are also shown below.
+
 ```{r}
 model_user_Oscore <- lm(Oscore~user_consumption_level, data = data_one_prime_use_no_use)
 plot_1 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Oscore)) +
@@ -197,7 +251,8 @@ model_user_Oscore |> summary() |> broom::glance() |>
   bind_rows(summary(model_user_Escore) |> broom::glance()) |>
   bind_rows(summary(model_user_Ascore) |> broom::glance()) |>
   bind_rows(summary(model_user_Nscore) |> broom::glance()) |>
-  mutate(model = c("O model", "C model", "E score", "A score", "N score")) |>
+  mutate(model = c("O score model", "C score model", "E score model", 
+                   "A score model", "N score model")) |>
   relocate(model) |>
   kbl(
     caption     = "Key Statistics for Prediction of OCEAN Scores from User Consumption"
@@ -205,11 +260,17 @@ model_user_Oscore |> summary() |> broom::glance() |>
         "Model", "R-squared", "Adj. R-squared"
       , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
     )
-    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
+    , digits    = c(3, 3, 3, 3, 3, 3, 3, 3, 3)
   )
 
 ```
 
+
+The only personality trait that doesn't have a significant association with the total drug use consumption is Extraversion, which describes how outgoing and sociable the subject is. This is concluded due to the model having a p-value of 0.36, which is larger than a significance p-value of 0.05.
+
+We also attempted to examine if there is a significant association between the total drug use consumption and impulsive and sensation seeking via. linear regression. Below, their association is plotted and key statistics for the fit models--such as the R squared values-- are shown.
+
+Unlike OCEAN scores, by examining our p-values, we can conclude that total user drug consumption has a significant association with both impulsivity and sensation-seeking.
 
 
 ```{r}
@@ -236,9 +297,35 @@ model_user_Impulsivity |> summary() |> broom::glance() |>
         "Model", "R-squared", "Adj. R-squared"
       , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
     )
-    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
+    , digits    = c(3, 3, 3, 3, 3, 3, 3, 3, 3)
   )
 ```
+
+Finally, all parametric estimates for all significant models are shown in the table below.
+
+```{r}
+
+model_user_Oscore |> summary() |> broom::tidy() |> filter(term %in% c("user_consumption_level")) |>
+  bind_rows(summary(model_user_Cscore) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
+  bind_rows(summary(model_user_Ascore) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
+  bind_rows(summary(model_user_Nscore) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
+  bind_rows(summary(model_user_Impulsivity) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
+  bind_rows(summary(model_user_SS) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
+  mutate(model = c("Consumption on O score", "Consumption on C score",
+                   "Consumption on A score", "Consumption on N score", "Consumption on Impulsivity",
+                   "Consumption on Sensation Seeking")) |>
+  relocate(model) |>
+  kbl(
+      caption     = "Effect of Psychological Predictors on Drug Consumption Levels"
+    , col.names   = c("Model", "Predictor", "Estimate", "SE", "t-statistic", "p-value")
+    , digits      = c(3, 3, 3, 3, 3)
+  )
+
+```
+
+The table of estimates predict that with higher total drug consumption level, the user isle likely to be more curious (O score), less organized and conscientious (C score), less agreeable (A score), more prone to negative emotions and anxiety (N score), and more impulsive and sensation-seeking. However, for all models, their adjusted R-squared values suggest that total user drug consumption only accounts for a small portion across all personality traits.
+
+# Drug Consumption Risk Assessment
 
 
 ```{r}
@@ -291,8 +378,10 @@ model_Oscore |> summary() |> broom::tidy() |>
   bind_rows(summary(model_Escore) |> broom::tidy()) |>
   bind_rows(summary(model_Ascore) |> broom::tidy()) |>
   bind_rows(summary(model_Nscore) |> broom::tidy()) |>
-  mutate(model = c("O model", "O model", "C model", "C model", "E model", "E model", 
-                   "A model", "A model", "N model", "N model")) |>
+  filter(term != "(Intercept)") |>
+  filter(p.value < 0.05) |>
+  mutate(model = c("O model", "C model", 
+                   "A model", "N model")) |>
   relocate(model) |>
   kbl(
     caption     = "Key Statistics for Prediction of Impulsivity and SS Scores from User Consumption"
@@ -306,6 +395,7 @@ plot_patch_3 <- (plot_Oscore + plot_Cscore + plot_Escore)/(plot_Ascore + plot_Ns
 plot_patch_3
 ```
 
+Again, across all the OCEAN personality traits, the significant associations suggest that people who are more curious and entertain new ideas (O score), less self-disciplined and diligent (C score), less likely to be cooperative or kind (A score), and more likely to experience emotions like anxiety or sadness (N score) may be more at risk in regards to total drug consumption, both legal and illegal.
 
 ```{r}
 data_Impulsivity_1 = data_one |> dplyr::select(user_consumption_level, Impulsive)
@@ -342,6 +432,15 @@ model_Impulsivity |> summary() |> broom::tidy() |>
 
 ```
 
+Likewise, the significant associations suggest that people who are more impulsive and sensation-seeking may be more at risk in regards to total drug consumption, both legal and illegal.
+
+To take all of these personality traits into account for total drug consumption, we developed 2 models. One model uses linear regression, but doesn't take any of the interactions between OCEAN trait scores, impulsivity, and sensation seeking into account. The second model takes all possible interactions into account.
+
+The first table below displays the estimates of our personality trait predictors without any interaction. It is notable that--in this model--impulsivity has a p-value of 0.894, suggesting that the effects it has on total drug consumption overlaps with other personality traits. 
+
+The second table is the results of comparing our two models through the AIC test. Since the model with interaction between the personality traits has a lower AIC score, it is tempting to conclude that taking interaction into account is the better option.
+
+For further testing, we compared key statistics such as R-squared between the two models. Indeed, we observe that the interaction model accounts for more of the variation in total drug consumption level compared to the model with no interaction.
 
 ```{r}
 
@@ -359,6 +458,8 @@ model_no_interaction_psychology |> summary() |>
     , digits      = c(3, 3, 3, 3, 3)
   )
 
+knitr::kable(AIC(model_no_interaction_psychology, model_interaction_psychology))
+
 model_no_interaction_psychology |> summary() |> broom::glance() |>
   bind_rows(summary(model_interaction_psychology) |> broom::glance()) |>
   mutate(model = c("Psychology Model No Interaction", "Psychology Model with Interaction")) |>
@@ -372,8 +473,6 @@ model_no_interaction_psychology |> summary() |> broom::glance() |>
     , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
   )
 
-knitr::kable(AIC(model_no_interaction_psychology, model_interaction_psychology))
-
 model_interaction_psychology |> summary() |>
   broom::tidy() |>
   filter(p.value < 0.05) |>
@@ -386,6 +485,11 @@ model_interaction_psychology |> summary() |>
 
 ```
 
+Going forward, we will employ the linear model of total drug consumption vs O score, C score, A score, N score, and sensation-seeking with interaction as we take more variables into account. The parametric estimates for each significant personality trait predictor is shown in the table above.
+
+To answer the original research question, while there is a significant association between a person's drug consumption level and their personality traits, only 37 percent of this variation is accounted by the personality traits. Thus, there is likely other factors that contribute to a person's consumption of drugs, legal and illegal.
+
+To summarize the direction of the correlation between all of our relevant variables--including OCEAN score, impulsivity, sensation-seeking, and log of user drug consumption level-- is displayed in the following correlation heatmap.
 
 ```{r}
 
@@ -411,6 +515,9 @@ ggplotly(p)
 ```
 
 
+# Education
+
+To test whether there is a significant relationship between a person's education status and their consumption of drugs, we decided to create a variable in the data that counted how many drugs a person uses. We classified this as an ordinal variable in terms of severity. Thus, this relationship's significance is shown in the following chi-squared test.
 
 ```{r}
 data_five <- data_one |> group_by(Education, user_status) |> summarize(count = n()) |>
@@ -440,7 +547,9 @@ kable(chi_square_education_summary)
 
 ```
 
+Since our chi-squared test resulted in a p-value of near 0, we can conclude that there is a significant relationship between a person's education status and their drug consumption level, and that these two variables are not independent.
 
+To examine the direction of this relationship, we decided to plot out the distribution of total drug consumption level for each level of education in box-plots. This plot can be seen below.
 
 ```{r}
 data_education <- data_one |> mutate(Education = factor(Education, levels = c("Left school before 16 years", "Left school at 16 years", "Left school at 17 years", "Left school at 18 years",
@@ -454,11 +563,15 @@ plot_education <- data_education |> ggplot(aes(x = Education, y = log1p(user_con
   labs(title = "Log of User Consumption Dependent on Education",
        x = "Education",
        y = "Log User Consumption Level") +
-  theme_minimal()
+  theme_minimal() + 
+  theme(axis.text.x = element_blank())
 
 plot_education
 ```
 
+It is notable that as a person's education goes up from "left school before 16 years" to "some college or university, but no certificate or degree," a person's total drug consumption level increases on average. However, from that point on, as education status goes up, the level of total drug consumption level generally decreases. 
+
+Furthermore, to analyze the relationship between education status and our relevant personality traits, we conducted ANOVA test to see if the mean traits of O score, C score, A score, N score, and Sensation-Seeking differed among at least 2 of our education groups. The results of the ANOVA tests are summarized below.
 
 ```{r}
 
@@ -470,10 +583,6 @@ data_Cscore_Education_prime <- data_education |> select(Education, Cscore)
 Cscore_aov_education_model <- aov(Cscore~Education, data = data_Cscore_Education_prime)
 tidy_anova_Cscore <- tidy(Cscore_aov_education_model) |> mutate(model = "C score education")
 
-data_Escore_Education_prime <- data_education |> select(Education, Escore)
-Escore_aov_education_model <- aov(Escore~Education, data = data_Escore_Education_prime)
-tidy_anova_Escore <- tidy(Escore_aov_education_model) |> mutate(model = "E score education")
-
 data_Ascore_Education_prime <- data_education |> select(Education, AScore)
 Ascore_aov_education_model <- aov(AScore~Education, data = data_Ascore_Education_prime)
 tidy_anova_Ascore <- tidy(Ascore_aov_education_model) |> mutate(model = "O score education")
@@ -482,11 +591,16 @@ data_Nscore_Education_prime <- data_education |> select(Education, Nscore)
 Nscore_aov_education_model <- aov(Nscore~Education, data = data_Nscore_Education_prime)
 tidy_anova_Nscore <- tidy(Nscore_aov_education_model) |> mutate(model = "N score education")
 
+data_SS_Education_prime <- data_education |> select(Education, SS)
+SS_aov_education_model <- aov(SS~Education, data = data_SS_Education_prime)
+tidy_anova_SS <- tidy(SS_aov_education_model) |> mutate(model = "SS education")
 
-kable(bind_rows(tidy_anova_Oscore, tidy_anova_Cscore, tidy_anova_Escore, tidy_anova_Ascore, tidy_anova_Nscore))
+
+kable(bind_rows(tidy_anova_Oscore, tidy_anova_Cscore, tidy_anova_Ascore, tidy_anova_Nscore, tidy_anova_SS))
   
 ```
 
+From our ANOVA table, it is observed that all the tests yielded p-values of near 0. Thus, we can conclude that the O trait, C trait, A trait, N trait, and sensation-seeking traits differ significantly between at least 2 education groups for each trait. To further examine the specific differences, we plotted the distribution of all trait scores for each education status below.
 
 ```{r}
 
@@ -495,21 +609,25 @@ plot_Education_Oscore <- data_Oscore_Education_prime |> ggplot(aes(x = Education
   theme(axis.text.x = element_blank())
 plot_Education_Cscore <- data_Cscore_Education_prime |> ggplot(aes(x = Education, y = Cscore, fill = Education)) + geom_boxplot() +
   theme(axis.text.x = element_blank())
-plot_Education_Escore <- data_Escore_Education_prime |> ggplot(aes(x = Education, y = Escore, fill = Education)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
 plot_Education_Ascore <- data_Ascore_Education_prime |> ggplot(aes(x = Education, y = AScore, fill = Education)) + geom_boxplot() +
   theme(axis.text.x = element_blank())
 plot_Education_Nscore <- data_Nscore_Education_prime |> ggplot(aes(x = Education, y = Nscore, fill = Education)) + geom_boxplot() +
   theme(axis.text.x = element_blank())
+plot_Education_SS <- data_SS_Education_prime |> ggplot(aes(x = Education, y = SS, fill = Education)) + geom_boxplot() +
+  theme(axis.text.x = element_blank())
 
-plot_education_patch <- ggarrange(plot_Education_Oscore, plot_Education_Cscore, plot_Education_Escore,
-                                  plot_Education_Ascore, plot_Education_Nscore, ncol = 3, 
-                                  nrow = 2, common.legend = TRUE, legend = "right")
+plot_education_patch <- ggarrange(plot_Education_Oscore, plot_Education_Cscore, plot_Education_Ascore,
+                                  plot_Education_Nscore, plot_Education_SS, ncol = 3, 
+                                  nrow = 2, common.legend = TRUE, legend = "bottom")
 
 plot_education_patch
 
 
 ```
+
+By examining the O-score distribution, it seems that the group most at-risk of a high curiosity are those with some college or university experience, but no certificate or degree. Likewise, for the C-score trait, the same group also has the lowest mean score for organization and diligence. For the sensation-seeking trait, those who left school at 18 years are also very likely to have a high score on average. For agreeableness (A score) and neuroticism (N score), those who left school at 17 years are most at risk of having the lowest and highest scores on average, respectively. 
+
+# Country
 
 
 ```{r}
@@ -615,8 +733,8 @@ data_education |> ggplot(aes(x = Education, fill = Education)) + geom_bar() +
 
 
 ```{r}
-model_no_interaction_education_residence <- lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
-                                 AScore + Nscore + Impulsive + SS)^6 + Country + Education, data = data_one)
+model_no_interaction_education_residence <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
+                                 AScore * Nscore * SS) + Country + Education, data = data_one)
 
 model_no_interaction_education_residence |> summary() |>
   broom::tidy() |>
@@ -801,6 +919,8 @@ knitr::kable(AIC(model_full, model_full_nonlinear_no_interaction, model_full_non
 
 
 ```{r}
+
+set.seed(123)
 
 data_one_prime_use_no_use_clean <- data_one_prime_use_no_use |> select(
   Oscore, Cscore, Escore, Ascore, Nscore, Impulsive, SS, Country, Education,
