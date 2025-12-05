@@ -4,77 +4,9 @@ Drug_Consumption_Analysis
 
 # Data Processing
 
-``` r
-data_one <- read.csv("data/Drug_consumption.csv")
-data_one <- data_one |> select(-Semer)
-
-data_two <- data_one |> pivot_longer(
-  cols = Alcohol:VSA,
-  names_to = "drug_type",
-  values_to = "consumption_level"
-)
-
-data_two <- data_two |> mutate(consumption_binary = case_when(
-  consumption_level == "CL6" | consumption_level == "CL5" | consumption_level == "CL4" | consumption_level == "CL3" |
-    consumption_level == "CL2" ~ "User",
-  consumption_level == "CL1" | consumption_level == "CL0" ~ "Non-user"
-))
-
-data_three <- data_two |> group_by(ID) |>
-  summarise(user_status = sum(consumption_binary == "User"))
-
-data_two <- data_two |> mutate(consumption_legal = case_when(
-  drug_type == "Alcohol" | drug_type == "Caff" | drug_type == "Nicotine" |
-                          drug_type == "Choc" | drug_type == "Amyl" | drug_type == "Legalh" ~ "legal",
-  drug_type == "Benzos" | drug_type == "Amphet" | drug_type == "Cannabis" |
-                             drug_type == "Coke" | drug_type == "Crack" | drug_type == "Ecstasy" |
-                             drug_type == "Heroin" | drug_type == "Ketamine" | drug_type == "LSD" |
-                             drug_type == "Meth" | drug_type == "Mushrooms" | drug_type == "VSA" ~ "illegal"
-))
-
-data_one <- left_join(data_one, data_three)
-```
-
     ## Joining with `by = join_by(ID)`
-
-``` r
-data_one$user_status_real = factor(data_one$user_status, ordered = TRUE, levels = c(
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-))
-
-data_one_prime <- read.csv("data/cleaned_drug_data.csv")
-data_one_prime <- data_one_prime |> pivot_longer(
-  cols = Alcohol:VSA,
-  names_to = "drug_type",
-  values_to = "consumption_level"
-)
-
-data_one_prime_user_status <- data_one_prime |> group_by(ID) |>
-  summarise(user_consumption_level = sum(consumption_level))
-
-data_one <- left_join(data_one, data_one_prime_user_status)
-```
-
     ## Joining with `by = join_by(ID)`
-
-``` r
-data_one_prime_prime <- data_one_prime |> pivot_wider(
-  names_from = drug_type,
-  values_from = consumption_level
-)
-
-data_one_prime_prime <- left_join(data_one_prime_prime, data_one_prime_user_status)
-```
-
     ## Joining with `by = join_by(ID)`
-
-``` r
-data_one_prime_use_no_use <-
-  data_one_prime_prime |> mutate(across(Alcohol:VSA, ~case_when(
-    . == 0 | . == 1 ~ "Not User",
-    . == 2 | . == 3 | . == 4 | . == 5 | . == 6 ~ "User"
-  ), .names = "{.col}_binary"))
-```
 
 # Drug Consumption and Drug Type
 
@@ -121,19 +53,6 @@ consumption levels 4, 5, and 6.
 These results indicate that consumption levels are generally higher for
 legal drugs compared to illegal drugs.
 
-``` r
-plot_histogram_1 <- data_one |>
-  ggplot(aes(x = as.numeric(user_consumption_level))) +
-  geom_histogram(bins = 50)
-
-plot_histogram_2 <- data_one |>
-  ggplot(aes(x = log1p(as.numeric(user_consumption_level)))) +
-  geom_histogram(bins = 50)
-
-plot_histogram_patch <- plot_histogram_1 + plot_histogram_2
-plot_histogram_patch
-```
-
     ## Warning: Removed 8 rows containing non-finite outside the scale range (`stat_bin()`).
     ## Removed 8 rows containing non-finite outside the scale range (`stat_bin()`).
 
@@ -151,25 +70,6 @@ distribution, suited for linear regression.
 
 Predictors were the binary variables that detail whether a participant
 used or didn’t use said drug.
-
-``` r
-model_user_binary_consumption <- lm(log1p(user_consumption_level) ~ Alcohol_binary + Amphet_binary + Amyl_binary +
-                                      Benzos_binary + Caff_binary + Cannabis_binary + Choc_binary + Coke_binary + 
-                                      Crack_binary + Ecstasy_binary + Heroin_binary + Ketamine_binary +
-                                      Legalh_binary + LSD_binary + Meth_binary + Mushrooms_binary + Nicotine_binary +
-                                      VSA_binary, data_one_prime_use_no_use)
-model_user_binary_consumption |> summary() |> broom::glance() |>
-  mutate(model = c("Drug Type Consumption")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of OCEAN Scores from User Consumption"
-    , col.names = c(
-        "Model", "R-squared", "Adj. R-squared"
-      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
-    )
-    , digits    = c(3, 3, 3, 3, 3, 3, 3, 3, 3)
-  )
-```
 
 <table>
 
@@ -290,16 +190,6 @@ From the summary of our model, the adjusted R-squared value is equal to
 0.882. This suggests a good fit and that the total drug consumption
 level can be approximately modeled from which drugs a person uses. The
 estimated parameters of this fit are also shown in the following table.
-
-``` r
-model_user_binary_consumption |> summary() |>
-  broom::tidy() |>
-  kbl(
-      caption     = "Types of Drugs Consumed on Drug Consumption Level"
-    , col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value")
-    , digits      = c(3, 3, 3, 3, 3)
-  )
-```
 
 <table>
 
@@ -922,36 +812,6 @@ demonstrate total user consumption vs OCEAN scores–and its fit–are
 displayed below. A table showing each model’s key statistics–including
 R-squared and p-values–are also shown below.
 
-``` r
-model_user_Oscore <- lm(Oscore~user_consumption_level, data = data_one_prime_use_no_use)
-plot_1 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Oscore)) +
-  geom_point(color = "red") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_user_Cscore <- lm(Cscore~user_consumption_level, data = data_one_prime_use_no_use)
-plot_2 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Cscore)) +
-  geom_point() +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_user_Escore <- lm(Escore~user_consumption_level, data = data_one_prime_use_no_use)
-plot_3 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Escore)) +
-  geom_point(color = "yellow") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_user_Ascore <- lm(Ascore~user_consumption_level, data = data_one_prime_use_no_use)
-plot_4 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Ascore)) +
-  geom_point(color = "orange") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_user_Nscore <- lm(Nscore~user_consumption_level, data = data_one_prime_use_no_use)
-plot_5 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Nscore)) +
-  geom_point(color = "purple") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-plot_patch <- (plot_1 + plot_2 + plot_3)/(plot_4 + plot_5)
-plot_patch
-```
-
     ## `geom_smooth()` using formula = 'y ~ x'
     ## `geom_smooth()` using formula = 'y ~ x'
     ## `geom_smooth()` using formula = 'y ~ x'
@@ -959,26 +819,6 @@ plot_patch
     ## `geom_smooth()` using formula = 'y ~ x'
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
-
-``` r
-model_user_Oscore |> summary() |> broom::glance() |>
-  bind_rows(summary(model_user_Cscore) |> broom::glance()) |>
-  bind_rows(summary(model_user_Escore) |> broom::glance()) |>
-  bind_rows(summary(model_user_Ascore) |> broom::glance()) |>
-  bind_rows(summary(model_user_Nscore) |> broom::glance()) |>
-  mutate(model = c("O score model", "C score model", "E score model", 
-                   "A score model", "N score model")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of OCEAN Scores from User Consumption"
-    , col.names = c(
-        "Model", "R-squared", "Adj. R-squared"
-      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
-    )
-    , digits    = c(3, 3, 3, 3, 3, 3, 3, 3, 3)
-  )
-```
-
 <table>
 
 <caption>
@@ -1306,41 +1146,10 @@ Unlike OCEAN scores, by examining our p-values, we can conclude that
 total user drug consumption has a significant association with both
 impulsivity and sensation-seeking.
 
-``` r
-model_user_Impulsivity <- lm(Impulsive~user_consumption_level, data = data_one_prime_use_no_use)
-plot_6 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Impulsive)) +
-  geom_point(color = "cyan") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_user_SS<- lm(SS~user_consumption_level, data = data_one_prime_use_no_use)
-plot_7 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, SS)) +
-  geom_point(color = "green") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-plot_patch_2 = plot_6 + plot_7
-plot_patch_2
-```
-
     ## `geom_smooth()` using formula = 'y ~ x'
     ## `geom_smooth()` using formula = 'y ~ x'
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
-
-``` r
-model_user_Impulsivity |> summary() |> broom::glance() |>
-  bind_rows(summary(model_user_SS) |> broom::glance()) |>
-  mutate(model = c("Impulsivity model", "Sensation Seeking model")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of Impulsivity and SS Scores from User Consumption"
-    , col.names = c(
-        "Model", "R-squared", "Adj. R-squared"
-      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
-    )
-    , digits    = c(3, 3, 3, 3, 3, 3, 3, 3, 3)
-  )
-```
-
 <table>
 
 <caption>
@@ -1508,24 +1317,6 @@ Sensation Seeking model
 
 Finally, all parametric estimates for all significant models are shown
 in the table below.
-
-``` r
-model_user_Oscore |> summary() |> broom::tidy() |> filter(term %in% c("user_consumption_level")) |>
-  bind_rows(summary(model_user_Cscore) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
-  bind_rows(summary(model_user_Ascore) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
-  bind_rows(summary(model_user_Nscore) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
-  bind_rows(summary(model_user_Impulsivity) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
-  bind_rows(summary(model_user_SS) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
-  mutate(model = c("Consumption on O score", "Consumption on C score",
-                   "Consumption on A score", "Consumption on N score", "Consumption on Impulsivity",
-                   "Consumption on Sensation Seeking")) |>
-  relocate(model) |>
-  kbl(
-      caption     = "Effect of Psychological Predictors on Drug Consumption Levels"
-    , col.names   = c("Model", "Predictor", "Estimate", "SE", "t-statistic", "p-value")
-    , digits      = c(3, 3, 3, 3, 3)
-  )
-```
 
 <table>
 
@@ -1802,69 +1593,6 @@ variable’s normal distributions. The plots of the personality traits vs
 the total consumption–along with the linear regression lines–are shown
 below.
 
-``` r
-data_Escore_1 = data_one |> dplyr::select(user_consumption_level, Escore)
-
-plot_Escore <- ggplot(data_Escore_1, aes(Escore, log1p(user_consumption_level))) +
-  geom_point(color = "yellow") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_Escore <- lm(log1p(user_consumption_level) ~ Escore, data = data_Escore_1)
-
-
-data_Oscore_1 = data_one |> dplyr::select(user_consumption_level, Oscore)
-
-plot_Oscore <- ggplot(data_Oscore_1, aes(Oscore, log1p(user_consumption_level))) +
-  geom_point(color = "red") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_Oscore <- lm(log1p(user_consumption_level) ~ Oscore, data = data_Oscore_1)
-
-
-data_Ascore_1 = data_one |> dplyr::select(user_consumption_level, AScore)
-
-plot_Ascore <- ggplot(data_Ascore_1, aes(AScore, log1p(user_consumption_level))) +
-  geom_point(color = "orange") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_Ascore <- lm(log1p(user_consumption_level) ~ AScore, data = data_Ascore_1)
-
-data_Nscore_1 = data_one |> dplyr::select(user_consumption_level, Nscore)
-
-plot_Nscore <- ggplot(data_Nscore_1, aes(Nscore, log1p(user_consumption_level))) +
-  geom_point(color = "purple") +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_Nscore <- lm(log1p(user_consumption_level) ~ Nscore, data = data_Nscore_1)
-
-data_Cscore_1 = data_one |> dplyr::select(user_consumption_level, Cscore)
-
-plot_Cscore <- ggplot(data_Cscore_1, aes(Cscore, log1p(user_consumption_level))) +
-  geom_point() +
-  geom_smooth(method="lm", se=TRUE, color="blue")
-
-model_Cscore <- lm(log1p(user_consumption_level) ~ Cscore, data = data_Cscore_1)
-
-
-model_Oscore |> summary() |> broom::tidy() |>
-  bind_rows(summary(model_Cscore) |> broom::tidy()) |>
-  bind_rows(summary(model_Escore) |> broom::tidy()) |>
-  bind_rows(summary(model_Ascore) |> broom::tidy()) |>
-  bind_rows(summary(model_Nscore) |> broom::tidy()) |>
-  filter(term != "(Intercept)") |>
-  filter(p.value < 0.05) |>
-  mutate(model = c("O model", "C model", 
-                   "A model", "N model")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of Impulsivity and SS Scores from User Consumption"
-    , col.names = c(
-        "Model", "Predictor", "Estimate", "SE", "t-statistic", "p-value"
-    )
-    , digits    = c(3, 3, 3, 3, 3)
-  )
-```
-
 <table>
 
 <caption>
@@ -2053,11 +1781,6 @@ Nscore
 
 </table>
 
-``` r
-plot_patch_3 <- (plot_Oscore + plot_Cscore + plot_Escore)/(plot_Ascore + plot_Nscore)
-plot_patch_3
-```
-
     ## `geom_smooth()` using formula = 'y ~ x'
 
     ## Warning: Removed 8 rows containing non-finite outside the scale range
@@ -2099,27 +1822,6 @@ likely to be cooperative or kind (A score), and more likely to
 experience emotions like anxiety or sadness (N score) may be more at
 risk in regards to total drug consumption, both legal and illegal.
 
-``` r
-data_Impulsivity_1 = data_one |> dplyr::select(user_consumption_level, Impulsive)
-
-plot_impulsivity <- ggplot(data_Impulsivity_1, aes(Impulsive, log1p(user_consumption_level))) + 
-  geom_point(color = "cyan") +
-  geom_smooth(method = "lm", se = TRUE, color = "blue")
-
-model_Impulsivity <- lm(log1p(user_consumption_level) ~ Impulsive, data = data_Impulsivity_1)
-
-data_SS_1 = data_one |> dplyr::select(user_consumption_level, SS)
-
-plot_SS <- ggplot(data_SS_1, aes(SS, log1p(user_consumption_level))) + 
-  geom_point(color = "green") +
-  geom_smooth(method = "lm", se = TRUE, color = "blue")
-
-model_SS <- lm(log1p(user_consumption_level) ~ SS, data = data_SS_1)
-
-plot_patch_4 <- plot_impulsivity + plot_SS
-plot_patch_4
-```
-
     ## `geom_smooth()` using formula = 'y ~ x'
 
     ## Warning: Removed 8 rows containing non-finite outside the scale range
@@ -2135,21 +1837,6 @@ plot_patch_4
     ## (`geom_point()`).
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
-
-``` r
-model_Impulsivity |> summary() |> broom::tidy() |>
-  bind_rows(summary(model_SS) |> broom::tidy()) |>
-  mutate(model = c("Impulsivity model", "Impulsivity model", "SS model", "SS model")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of Impulsivity and SS Scores from User Consumption"
-    , col.names = c(
-        "Model", "Predictor", "Estimate", "SE", "t-statistic", "p-value"
-    )
-    , digits    = c(3, 3, 3, 3, 3)
-  )
-```
-
 <table>
 
 <caption>
@@ -2362,22 +2049,6 @@ For further testing, we compared key statistics such as R-squared
 between the two models. Indeed, we observe that the interaction model
 accounts for more of the variation in total drug consumption level
 compared to the model with no interaction.
-
-``` r
-model_no_interaction_psychology <- lm(log1p(user_consumption_level) ~ Oscore + Cscore +
-                                 AScore + Nscore + Impulsive + SS, data = data_one)
-
-model_interaction_psychology <- lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
-                                 AScore + Nscore + Impulsive + SS)^6, data = data_one)
-
-model_no_interaction_psychology |> summary() |>
-  broom::tidy() |>
-  kbl(
-      caption     = "Effect of Psychological Predictors on Drug Consumption Levels"
-    , col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value")
-    , digits      = c(3, 3, 3, 3, 3)
-  )
-```
 
 <table>
 
@@ -2628,29 +2299,10 @@ SS
 
 </table>
 
-``` r
-knitr::kable(AIC(model_no_interaction_psychology, model_interaction_psychology))
-```
-
 |                                 |  df |      AIC |
 |:--------------------------------|----:|---------:|
 | model_no_interaction_psychology |   8 | 1684.909 |
 | model_interaction_psychology    |  65 | 1646.347 |
-
-``` r
-model_no_interaction_psychology |> summary() |> broom::glance() |>
-  bind_rows(summary(model_interaction_psychology) |> broom::glance()) |>
-  mutate(model = c("Psychology Model No Interaction", "Psychology Model with Interaction")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits"
-    , col.names = c(
-        "Model", "R-squared", "Adj. R-squared"
-      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
-    )
-    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
-  )
-```
 
 <table>
 
@@ -2816,18 +2468,6 @@ Psychology Model with Interaction
 </tbody>
 
 </table>
-
-``` r
-model_interaction_psychology |> summary() |>
-  broom::tidy() |>
-  filter(p.value < 0.05) |>
-  filter(term %in% c("Oscore", "Cscore", "AScore", "Nscore", "SS")) |>
-  kbl(
-      caption     = "Effect of Psychological Predictors on Drug Consumption Levels", 
-      col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value"), 
-      digits      = c(3, 3, 3, 3, 3)
-  )
-```
 
 <table>
 
@@ -3037,17 +2677,6 @@ relevant variables–including OCEAN score, impulsivity,
 sensation-seeking, and log of user drug consumption level– is displayed
 in the following correlation heatmap.
 
-``` r
-data_one_transformed <- data_one |> mutate(log_user_consumption_level = log1p(user_consumption_level))
-
-data_correlation = data_one_transformed |> select(Nscore, Escore, Oscore, AScore, Cscore, 
-                                             Impulsive, SS, log_user_consumption_level) |>
-  na.omit(log_user_consumption_level)
-
-corr_mat <- round(cor(data_correlation), 3)
-head(corr_mat)
-```
-
     ##           Nscore Escore Oscore AScore Cscore Impulsive     SS
     ## Nscore     1.000 -0.431  0.008 -0.218 -0.392     0.173  0.078
     ## Escore    -0.431  1.000  0.245  0.158  0.308     0.114  0.208
@@ -3063,18 +2692,6 @@ head(corr_mat)
     ## Cscore                        -0.331
     ## Impulsive                      0.361
 
-``` r
-corr_mat[upper.tri(corr_mat)] <- NA
-
-melted_corr_mat <- melt(corr_mat)
-
-p <- ggplot(data = melted_corr_mat, aes(x = Var1, y = Var2, fill = value)) +
-  geom_tile() +
-  geom_text(aes(Var1, Var2, label = value, color = "black", size = 4))
-
-p
-```
-
     ## Warning: Removed 28 rows containing missing values or values outside the scale range
     ## (`geom_text()`).
 
@@ -3088,40 +2705,11 @@ variable in the data that counted how many drugs a person uses. We
 classified this as an ordinal variable in terms of severity. Thus, this
 relationship’s significance is shown in the following chi-squared test.
 
-``` r
-data_five <- data_one |> group_by(Education, user_status) |> summarize(count = n()) |>
-  na.omit(Education)
-```
-
     ## `summarise()` has grouped output by 'Education'. You can override using the
     ## `.groups` argument.
 
-``` r
-data_six <- data_five |> pivot_wider(
-  names_from = user_status,
-  values_from = count,
-  values_fill = 0
-)
-
-chi_test_result_education <- chisq.test(data_six[ , -1])
-```
-
     ## Warning in chisq.test(data_six[, -1]): Chi-squared approximation may be
     ## incorrect
-
-``` r
-tidy_chi_test_result_education <- tidy(chi_test_result_education)
-
-chi_square_education_summary <- data.frame(
-  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
-  Value = c(round(tidy_chi_test_result_education$statistic, 2),
-            round(tidy_chi_test_result_education$parameter, 2),
-            round(tidy_chi_test_result_education$p.value, 3)
-            )
-)
-
-kable(chi_square_education_summary)
-```
 
 |           | Statistic          |  Value |
 |:----------|:-------------------|-------:|
@@ -3137,24 +2725,6 @@ variables are not independent.
 To examine the direction of this relationship, we decided to plot out
 the distribution of total drug consumption level for each level of
 education in box-plots. This plot can be seen below.
-
-``` r
-data_education <- data_one |> mutate(Education = factor(Education, levels = c("Left school before 16 years", "Left school at 16 years", "Left school at 17 years", "Left school at 18 years",
-                                                  "Some college or university, no certificate or degree",
-                                                  "University degree", "Masters degree",
-                                                  "Professional certificate/ diploma", "Doctorate degree"))) |>
-  arrange(Education)
-
-plot_education <- data_education |> ggplot(aes(x = Education, y = log1p(user_consumption_level), fill = Education)) +
-  geom_boxplot() +
-  labs(title = "Log of User Consumption Dependent on Education",
-       x = "Education",
-       y = "Log User Consumption Level") +
-  theme_minimal() + 
-  theme(axis.text.x = element_blank())
-
-plot_education
-```
 
     ## Warning: Removed 8 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
@@ -3172,31 +2742,6 @@ our relevant personality traits, we conducted ANOVA test to see if the
 mean traits of O score, C score, A score, N score, and Sensation-Seeking
 differed among at least 2 of our education groups. The results of the
 ANOVA tests are summarized below.
-
-``` r
-data_Oscore_Education_prime <- data_education |> select(Education, Oscore)
-Oscore_aov_education_model <- aov(Oscore~Education, data = data_Oscore_Education_prime)
-tidy_anova_Oscore <- tidy(Oscore_aov_education_model) |> mutate(model = "O score education")
-
-data_Cscore_Education_prime <- data_education |> select(Education, Cscore)
-Cscore_aov_education_model <- aov(Cscore~Education, data = data_Cscore_Education_prime)
-tidy_anova_Cscore <- tidy(Cscore_aov_education_model) |> mutate(model = "C score education")
-
-data_Ascore_Education_prime <- data_education |> select(Education, AScore)
-Ascore_aov_education_model <- aov(AScore~Education, data = data_Ascore_Education_prime)
-tidy_anova_Ascore <- tidy(Ascore_aov_education_model) |> mutate(model = "O score education")
-
-data_Nscore_Education_prime <- data_education |> select(Education, Nscore)
-Nscore_aov_education_model <- aov(Nscore~Education, data = data_Nscore_Education_prime)
-tidy_anova_Nscore <- tidy(Nscore_aov_education_model) |> mutate(model = "N score education")
-
-data_SS_Education_prime <- data_education |> select(Education, SS)
-SS_aov_education_model <- aov(SS~Education, data = data_SS_Education_prime)
-tidy_anova_SS <- tidy(SS_aov_education_model) |> mutate(model = "SS education")
-
-
-kable(bind_rows(tidy_anova_Oscore, tidy_anova_Cscore, tidy_anova_Ascore, tidy_anova_Nscore, tidy_anova_SS))
-```
 
 | term      |   df |      sumsq |     meansq | statistic |  p.value | model             |
 |:----------|-----:|-----------:|-----------:|----------:|---------:|:------------------|
@@ -3218,26 +2763,6 @@ least 2 education groups for each trait. To further examine the specific
 differences, we plotted the distribution of all trait scores for each
 education status below.
 
-``` r
-plot_Education_Oscore <- data_Oscore_Education_prime |> ggplot(aes(x = Education, 
-                              y = Oscore, fill = Education)) + geom_boxplot() + 
-  theme(axis.text.x = element_blank())
-plot_Education_Cscore <- data_Cscore_Education_prime |> ggplot(aes(x = Education, y = Cscore, fill = Education)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-plot_Education_Ascore <- data_Ascore_Education_prime |> ggplot(aes(x = Education, y = AScore, fill = Education)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-plot_Education_Nscore <- data_Nscore_Education_prime |> ggplot(aes(x = Education, y = Nscore, fill = Education)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-plot_Education_SS <- data_SS_Education_prime |> ggplot(aes(x = Education, y = SS, fill = Education)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-plot_education_patch <- ggarrange(plot_Education_Oscore, plot_Education_Cscore, plot_Education_Ascore,
-                                  plot_Education_Nscore, plot_Education_SS, ncol = 3, 
-                                  nrow = 2, common.legend = TRUE, legend = "bottom")
-
-plot_education_patch
-```
-
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 By examining the O-score distribution, it seems that the group most
@@ -3256,40 +2781,11 @@ To test a relationship between drug consumption and a user’s country of
 residence, a similar procedure to the chi-squared test for education was
 used. The results of the chi-squared test are shown below.
 
-``` r
-data_country <- data_one |> group_by(Country, user_status_real) |> summarize(count = n()) |>
-  na.omit(user_status_real)
-```
-
     ## `summarise()` has grouped output by 'Country'. You can override using the
     ## `.groups` argument.
 
-``` r
-data_country_prime <- data_country |> pivot_wider(
-  names_from = user_status_real,
-  values_from = count,
-  values_fill = 0
-)
-
-chi_test_result_residence <- chisq.test(data_country_prime[ , -1])
-```
-
     ## Warning in chisq.test(data_country_prime[, -1]): Chi-squared approximation may
     ## be incorrect
-
-``` r
-tidy_chi_test_result_residence <- tidy(chi_test_result_residence)
-
-chi_square_residence_summary <- data.frame(
-  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
-  Value = c(round(tidy_chi_test_result_residence$statistic, 2),
-            round(tidy_chi_test_result_residence$parameter, 2),
-            round(tidy_chi_test_result_residence$p.value, 3)
-            )
-)
-
-kable(chi_square_residence_summary)
-```
 
 |           | Statistic          |  Value |
 |:----------|:-------------------|-------:|
@@ -3306,12 +2802,6 @@ the country of UK, they are likely to have a lower level of total drug
 consumption compared to other countries. Meanwhile, the users with the
 highest level of drug consumption on average are those that reside in
 the U.S.A.
-
-``` r
-data_one_trans <- data_one |> mutate(log_user_consumption_level = log1p(user_consumption_level))
-
-data_one_trans |> ggplot(aes(x = Country, y = log_user_consumption_level, fill = Country)) + geom_boxplot()
-```
 
     ## Warning: Removed 8 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
@@ -3335,54 +2825,6 @@ lowest in negative traits. The difference in extraversion for these
 countries were not considered strongly, since there isn’t a significant
 association between said trait and total drug consumption.
 
-``` r
-data_Oscore_country <- data_one |> select(Country, Oscore)
-Oscore_aov_country_model <- aov(Oscore~Country, data = data_Oscore_country)
-tidy_anova_Oscore_country <- tidy(Oscore_aov_country_model) |> mutate(model = "O score country")
-p1 <- data_Oscore_country |> ggplot(aes(x = Country, y = Oscore, fill = Country)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_Cscore_country <- data_one |> select(Country, Cscore)
-Cscore_aov_country_model <- aov(Cscore~Country, data = data_Cscore_country)
-tidy_anova_Cscore_country <- tidy(Cscore_aov_country_model) |> mutate(model = "C score country")
-p2 <- data_Cscore_country |> ggplot(aes(x = Country, y = Cscore, fill = Country)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_Escore_country <- data_one |> select(Country, Escore)
-Escore_aov_country_model <- aov(Escore~Country, data = data_Escore_country)
-tidy_anova_Escore_country <- tidy(Escore_aov_country_model) |> mutate(model = "E score country")
-p3 <- data_Escore_country |> ggplot(aes(x = Country, y = Escore, fill = Country)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_Ascore_country <- data_one |> select(Country, AScore)
-Ascore_aov_country_model <- aov(AScore~Country, data = data_Ascore_country)
-tidy_anova_Ascore_country <- tidy(Ascore_aov_country_model) |> mutate(model = "A score country")
-p4 <- data_Ascore_country |> ggplot(aes(x = Country, y = AScore, fill = Country)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_Nscore_country <- data_one |> select(Country, Nscore)
-Nscore_aov_country_model <- aov(Nscore~Country, data = data_Nscore_country)
-tidy_anova_Nscore_country <- tidy(Nscore_aov_country_model) |> mutate(model = "N score country")
-p5 <- data_Nscore_country |> ggplot(aes(x = Country, y = Nscore, fill = Country)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_Impulsivity_country <- data_one |> select(Country, Impulsive)
-Impulsivity_aov_country_model <- aov(Impulsive~Country, data = data_Impulsivity_country)
-tidy_anova_Impulsivity_country <- tidy(Impulsivity_aov_country_model) |> mutate(model = "Impulsivity score country")
-p6 <- data_Impulsivity_country |> ggplot(aes(x = Country, y = Impulsive, fill = Country)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_SS_country <- data_one |> select(Country, SS)
-SS_aov_country_model <- aov(SS~Country, data = data_SS_country)
-tidy_anova_SS_country <- tidy(SS_aov_country_model) |> mutate(model = "N score country")
-p7 <- data_SS_country |> ggplot(aes(x = Country, y = SS, fill = Country)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-kable(bind_rows(tidy_anova_Oscore_country, tidy_anova_Cscore_country, 
-                tidy_anova_Escore_country, tidy_anova_Ascore_country, 
-                tidy_anova_Nscore_country))
-```
-
 | term      |   df |      sumsq |     meansq | statistic |  p.value | model           |
 |:----------|-----:|-----------:|-----------:|----------:|---------:|:----------------|
 | Country   |    6 |  221.16396 | 36.8606597 | 41.974729 | 0.00e+00 | O score country |
@@ -3396,19 +2838,7 @@ kable(bind_rows(tidy_anova_Oscore_country, tidy_anova_Cscore_country,
 | Country   |    6 |   42.74903 |  7.1248382 |  7.291796 | 1.00e-07 | N score country |
 | Residuals | 1877 | 1834.02299 |  0.9771033 |        NA |       NA | N score country |
 
-``` r
-plot_country_psychology_patch <- ggarrange(p1, p2, p3,
-                                  p4, p5, ncol = 3, 
-                                  nrow = 2, common.legend = TRUE, legend = "right")
-
-plot_country_psychology_patch
-```
-
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
-
-``` r
-kable(bind_rows(tidy_anova_Impulsivity_country, tidy_anova_SS_country))
-```
 
 | term | df | sumsq | meansq | statistic | p.value | model |
 |:---|---:|---:|---:|---:|---:|:---|
@@ -3416,13 +2846,6 @@ kable(bind_rows(tidy_anova_Impulsivity_country, tidy_anova_SS_country))
 | Residuals | 1877 | 1620.29080 | 0.8632343 | NA | NA | Impulsivity score country |
 | Country | 6 | 210.95916 | 35.1598592 | 42.92747 | 0 | N score country |
 | Residuals | 1877 | 1537.36182 | 0.8190527 | NA | NA | N score country |
-
-``` r
-plot_country_psychology_patch_2 <- ggarrange(p6, p7, ncol = 2, 
-                                  nrow = 1, common.legend = TRUE, legend = "right")
-
-plot_country_psychology_patch_2
-```
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
 
@@ -3438,32 +2861,9 @@ experience but no degree. This is the education level that was
 identified as a possible population at risk due to its average OCEAN,
 impulsivity and sensation-seeking trait scores.
 
-``` r
-data_education |> ggplot(aes(x = Education, fill = Education)) + geom_bar() +
-  facet_wrap(~Country) + theme(axis.text.x = element_blank())
-```
-
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 # Model with Psychological Traits, Education, and Residence
-
-``` r
-model_no_interaction_education_residence <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
-                                 AScore * Nscore * SS) + Country + Education, data = data_one)
-
-model_no_interaction_education_residence |> summary() |>
-  broom::tidy() |>
-  filter(p.value < 0.05) |>
-  filter(term %in% c("CountryCanada", "CountryOther", "CountryUK",
-                     "EducationLeft school at 18 years",
-                     "EducationLeft school before 16 years",
-                     "EducationSome college or university, no certificate or degree")) |>
-  kbl(
-      caption     = "Effect of Relevant Environmental Predictors on Drug Consumption Levels", 
-      col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value"), 
-      digits      = c(3, 3, 3, 3, 3)
-  )
-```
 
 <table>
 
@@ -3685,23 +3085,6 @@ EducationSome college or university, no certificate or degree
 
 </table>
 
-``` r
-model_interaction_psychology |> summary() |> broom::glance() |>
-  bind_rows(summary(model_no_interaction_education_residence) |> broom::glance()) |>
-  mutate(model = c("Psychology Model with Personality Traits", "Psychology Model with Personality Traits, 
-                   Education and Residence")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits 
-    and Environmental Factors"
-    , col.names = c(
-        "Model", "R-squared", "Adj. R-squared"
-      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
-    )
-    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
-  )
-```
-
 <table>
 
 <caption>
@@ -3867,10 +3250,6 @@ Psychology Model with Personality Traits, Education and Residence
 
 </table>
 
-``` r
-knitr::kable(AIC(model_interaction_psychology, model_no_interaction_education_residence))
-```
-
 |                                          |  df |      AIC |
 |:-----------------------------------------|----:|---------:|
 | model_interaction_psychology             |  65 | 1646.347 |
@@ -3881,11 +3260,6 @@ knitr::kable(AIC(model_interaction_psychology, model_no_interaction_education_re
 We also explore other variables that could contribute to a person’s drug
 consumption. To analyze if the true user drug consumption was the same
 or different between the two genders, we conducted a two-sample t-test.
-
-``` r
-t_test_result <- t.test(user_consumption_level~Gender, data = data_one, var.equaql = FALSE, alternative = "two.sided")
-print(t_test_result)
-```
 
     ## 
     ##  Welch Two Sample t-test
@@ -3898,10 +3272,6 @@ print(t_test_result)
     ## sample estimates:
     ## mean in group F mean in group M 
     ##        28.44338        38.25213
-
-``` r
-data_one |> ggplot(aes(x = Gender, y = user_consumption_level, fill = Gender)) + geom_boxplot()
-```
 
     ## Warning: Removed 8 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
@@ -3924,40 +3294,11 @@ A similar procedure to the chi-squared tests for ethnicity and country
 of residence was carried out to examine if there is a relationship
 between drug consumption and a user’s ethnicity.
 
-``` r
-data_ethnicity <- data_one |> group_by(Ethnicity, user_status_real) |> summarize(count = n()) |>
-  na.omit(user_status_real)
-```
-
     ## `summarise()` has grouped output by 'Ethnicity'. You can override using the
     ## `.groups` argument.
 
-``` r
-data_ethnicity_prime <- data_ethnicity |> pivot_wider(
-  names_from = user_status_real,
-  values_from = count,
-  values_fill = 0
-)
-
-chi_test_result_ethnicity <- chisq.test(data_ethnicity_prime[ , -1])
-```
-
     ## Warning in chisq.test(data_ethnicity_prime[, -1]): Chi-squared approximation
     ## may be incorrect
-
-``` r
-tidy_chi_test_result_ethnicity <- tidy(chi_test_result_ethnicity)
-
-chi_square_ethnicity_summary <- data.frame(
-  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
-  Value = c(round(tidy_chi_test_result_ethnicity$statistic, 2),
-            round(tidy_chi_test_result_ethnicity$parameter, 2),
-            round(tidy_chi_test_result_ethnicity$p.value, 3)
-            )
-)
-
-kable(chi_square_ethnicity_summary)
-```
 
 |           | Statistic          |  Value |
 |:----------|:-------------------|-------:|
@@ -3975,10 +3316,6 @@ compared to other ethnicity. It is also notable that White also has a
 fairly higher log total drug consumption when compared to the Black and
 Asian ethnicity.
 
-``` r
-data_one_trans |> ggplot(aes(x = Ethnicity, y = log_user_consumption_level, fill = Ethnicity)) + geom_boxplot()
-```
-
     ## Warning: Removed 8 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
 
@@ -3991,39 +3328,11 @@ determined that there is a significant association between the two
 variables, which influenced our decision to take their interaction into
 account later in our linear model building.
 
-``` r
-data_ethnicity_country <- data_one |> group_by(Country, Ethnicity) |> summarize(count = n())
-```
-
     ## `summarise()` has grouped output by 'Country'. You can override using the
     ## `.groups` argument.
 
-``` r
-data_ethnicity_country_prime <- data_ethnicity_country |> pivot_wider(
-  names_from = Ethnicity,
-  values_from = count,
-  values_fill = 0
-)
-
-chi_test_result_ethnicity_country <- chisq.test(data_ethnicity_country_prime[ , -1])
-```
-
     ## Warning in chisq.test(data_ethnicity_country_prime[, -1]): Chi-squared
     ## approximation may be incorrect
-
-``` r
-tidy_chi_test_result_ethnicity_country <- tidy(chi_test_result_ethnicity_country)
-
-chi_square_ethnicity_country_summary <- data.frame(
-  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
-  Value = c(round(tidy_chi_test_result_ethnicity_country$statistic, 2),
-            round(tidy_chi_test_result_ethnicity_country$parameter, 2),
-            round(tidy_chi_test_result_ethnicity_country$p.value, 3)
-            )
-)
-
-kable(chi_square_ethnicity_country_summary)
-```
 
 |           | Statistic          |  Value |
 |:----------|:-------------------|-------:|
@@ -4033,30 +3342,11 @@ kable(chi_square_ethnicity_country_summary)
 
 # Age and Drug Consumption
 
-``` r
-data_age <- data_one |> group_by(Age, user_status_real) |> summarize(count = n()) |>
-  na.omit(user_status_real)
-```
-
     ## `summarise()` has grouped output by 'Age'. You can override using the `.groups`
     ## argument.
 
-``` r
-data_age_prime <- data_age |> pivot_wider(
-  names_from = user_status_real,
-  values_from = count,
-  values_fill = 0
-)
-
-chi_test_result_age <- chisq.test(data_age_prime[ , -1])
-```
-
     ## Warning in chisq.test(data_age_prime[, -1]): Chi-squared approximation may be
     ## incorrect
-
-``` r
-print(chi_test_result_age)
-```
 
     ## 
     ##  Pearson's Chi-squared test
@@ -4069,10 +3359,6 @@ relationship between a user’s age and their total drug consumption
 level. Below is a distribution of said user’s log consumption and their
 respective age group.
 
-``` r
-data_one_trans |> ggplot(aes(x = Age, y = log_user_consumption_level, fill = Age)) + geom_boxplot()
-```
-
     ## Warning: Removed 8 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
 
@@ -4083,40 +3369,11 @@ regards to having a higher log drug consumption. This motivated us to
 determine if there was any correlation between age groups and other
 variables such as Education.
 
-``` r
-data_age_education <- data_one |> group_by(Age, Education) |> summarize(count = n()) |>
-  na.omit(Education)
-```
-
     ## `summarise()` has grouped output by 'Age'. You can override using the `.groups`
     ## argument.
 
-``` r
-data_age_education_prime <- data_age_education |> pivot_wider(
-  names_from = Education,
-  values_from = count,
-  values_fill = 0
-)
-
-chi_test_result_age_education <- chisq.test(data_age_education_prime[ , -1])
-```
-
     ## Warning in chisq.test(data_age_education_prime[, -1]): Chi-squared
     ## approximation may be incorrect
-
-``` r
-tidy_chi_test_result_age_education <- tidy(chi_test_result_age_education)
-
-chi_square_age_education_summary <- data.frame(
-  Statistic = c("Chi-squared", "Degrees of Freedom", "P-Value"),
-  Value = c(round(tidy_chi_test_result_age_education$statistic, 2),
-            round(tidy_chi_test_result_age_education$parameter, 2),
-            round(tidy_chi_test_result_age_education$p.value, 3)
-            )
-)
-
-kable(chi_square_age_education_summary)
-```
 
 |           | Statistic          |  Value |
 |:----------|:-------------------|-------:|
@@ -4134,51 +3391,11 @@ This suggests that age 18-24 are also most likely attending college or
 university, the education group most at risk. Below are all the
 distributions for age groups among each education level.
 
-``` r
-data_education |> ggplot(aes(x = Age, fill = Age)) + geom_bar() +
-  facet_wrap(~Education) + theme(axis.text.x = element_blank())
-```
-
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
 
 Finally, in regards to age-groups and personality traits, we conducted
 an ANOVA test for each relevant personality trait. The results are
 compiled in the table below.
-
-``` r
-data_Oscore_age <- data_one |> select(Age, Oscore)
-Oscore_aov_age_model <- aov(Oscore~Age, data = data_Oscore_age)
-tidy_anova_Oscore_age <- tidy(Oscore_aov_age_model) |> mutate(model = "O score Age")
-pp1 <- data_Oscore_age |> ggplot(aes(x = Age, y = Oscore, fill = Age)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_Cscore_age <- data_one |> select(Age, Cscore)
-Cscore_aov_age_model <- aov(Cscore~Age, data = data_Cscore_age)
-tidy_anova_Cscore_age <- tidy(Cscore_aov_age_model) |> mutate(model = "C score Age")
-pp2 <- data_Cscore_age |> ggplot(aes(x = Age, y = Cscore, fill = Age)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_Ascore_age <- data_one |> select(Age, AScore)
-Ascore_aov_age_model <- aov(AScore~Age, data = data_Ascore_age)
-tidy_anova_Ascore_age <- tidy(Ascore_aov_age_model) |> mutate(model = "A score Age")
-pp3 <- data_Ascore_age |> ggplot(aes(x = Age, y = AScore, fill = Age)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_Nscore_age <- data_one |> select(Age, Nscore)
-Nscore_aov_age_model <- aov(Nscore~Age, data = data_Nscore_age)
-tidy_anova_Nscore_age <- tidy(Nscore_aov_age_model) |> mutate(model = "N score Age")
-pp4 <- data_Nscore_age |> ggplot(aes(x = Age, y = Nscore, fill = Age)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-data_SS_age <- data_one |> select(Age, SS)
-SS_aov_age_model <- aov(SS~Age, data = data_SS_age)
-tidy_anova_SS_age <- tidy(SS_aov_age_model) |> mutate(model = "SS score Age")
-pp5 <- data_SS_age |> ggplot(aes(x = Age, y = SS, fill = Age)) + geom_boxplot() +
-  theme(axis.text.x = element_blank())
-
-kable(bind_rows(tidy_anova_Oscore_age, tidy_anova_Cscore_age, tidy_anova_Ascore_age,
-                tidy_anova_Nscore_age, tidy_anova_SS_age))
-```
 
 | term      |   df |      sumsq |     meansq | statistic |   p.value | model        |
 |:----------|-----:|-----------:|-----------:|----------:|----------:|:-------------|
@@ -4198,14 +3415,6 @@ among two of the age groups. Thus, the distribution of the O, C, A, N
 score, and sensation-seeking scores in regards to age group were plotted
 out in the graph below.
 
-``` r
-plot_age_patch <- ggarrange(pp1, pp2, pp3,
-                                  pp4, pp5, ncol = 3, 
-                                  nrow = 2, common.legend = TRUE, legend = "bottom")
-
-plot_age_patch
-```
-
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 From the box-plots, we can determine that, in general, a person’s O
@@ -4221,16 +3430,6 @@ highest sensation seeking score compared to other age groups.
 
 # Possibility of Other Interactions
 
-``` r
-model_full <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
-                                 AScore * Nscore * SS) + Country + Education + Age + 
-                   Gender + Ethnicity + Country, data = data_one)
-
-model_full_1 <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
-                                 AScore * Nscore * SS) + Education + Age + 
-                   Gender + Ethnicity*Country, data = data_one)
-```
-
 Throughout our analysis, we observed how variables such as education and
 personality traits were often differentiated distributed among other
 variables such as age group and country of residence. Thus, we decided
@@ -4244,68 +3443,12 @@ the interactions between country of residence and ethnicity. Below is a
 plot that displays the distribution of our root-mean squared error for
 each model.
 
-``` r
-set.seed(123)
-
-data_one_prime_use_no_use_clean <- data_one_prime_use_no_use |> select(
-  Oscore, Cscore, Escore, Ascore, Nscore, Impulsive, SS, Country, Education,
-  Age, Gender, Ethnicity, user_consumption_level
-)
-
-eth_levels <- unique(data_one_prime_use_no_use_clean$Ethnicity)
-
-cv_df =
-  crossv_mc(data_one_prime_use_no_use_clean, 200) |> 
-  mutate(
-    train = map(train, ~ as_tibble(.x) %>%
-                  mutate(Ethnicity = factor(Ethnicity, levels = eth_levels))),
-    test = map(test, ~ as_tibble(.x) %>%
-                  mutate(Ethnicity = factor(Ethnicity, levels = eth_levels))))
-
-cv_df <- cv_df %>%
-  mutate(
-    ok = map_lgl(train, ~ "Mixed-Black/Asian" %in% .$Ethnicity)
-  ) %>%
-  filter(ok)
-
-cv_df = 
-  cv_df |> 
-  mutate(
-    linear_mod  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
-                                 Ascore * Nscore * SS) + Country + Education +
-                   Age + Gender + Ethnicity, data = df)),
-    linear_mod_interaction  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
-                                 Ascore * Nscore * SS) + Country * Education * Age + 
-                   Age * Oscore + Age * Cscore + Age * SS + Age * Nscore +
-                   Gender + Ethnicity, data = df)), 
-    linear_mod_Country_Ethnicity  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
-                                 Ascore * Nscore * SS) + Country + Education +
-                   Age + Gender + Ethnicity*Country, data = df))) |> 
-  mutate(
-    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_linear_interaction    = map2_dbl(linear_mod_interaction, test, \(mod, df) rmse(mod, df)),
-    rmse_linear_interaction_Country_Ethnicity    = map2_dbl(linear_mod_Country_Ethnicity, 
-                                                            test, \(mod, df) rmse(mod, df)))
-```
-
     ## Warning: There were 304 warnings in `mutate()`.
     ## The first warning was:
     ## ℹ In argument: `rmse_linear_interaction = map2_dbl(...)`.
     ## Caused by warning in `predict.lm()`:
     ## ! prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases
     ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 303 remaining warnings.
-
-``` r
-cv_df |> 
-  select(starts_with("rmse")) |> 
-  pivot_longer(
-    everything(),
-    names_to = "model", 
-    values_to = "rmse",
-    names_prefix = "rmse_") |> 
-  mutate(model = fct_inorder(model)) |> 
-  ggplot(aes(x = model, y = rmse, fill = model)) + geom_violin()
-```
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
@@ -4317,18 +3460,6 @@ distribution for the other model has a higher RMSE on average, we will
 limit our investigation into only the interaction between country and
 ethnicity.
 
-``` r
-model_no_other_interactions <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
-                                 AScore * Nscore * SS) + Country + Education + Age + 
-                   Gender + Ethnicity + Country, data = data_one)
-
-model_country_ethnicity <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
-                                 AScore * Nscore * SS) + Country + Education + Age + 
-                   Gender + Ethnicity*Country, data = data_one)
-
-knitr::kable(AIC(model_no_other_interactions, model_country_ethnicity))
-```
-
 |                             |  df |      AIC |
 |:----------------------------|----:|---------:|
 | model_no_other_interactions |  59 | 1179.181 |
@@ -4339,10 +3470,6 @@ interaction between country and ethnicity has a lower AIC score,
 therefore it is the best model between the two.
 
 # Nonlinear vs Linear Regression
-
-``` r
-check_model(model_full_1, check = c("linearity", "outliers", "qq", "normality"))
-```
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
@@ -4361,54 +3488,10 @@ non-linearity in our personality trait scores.
 Below are the table and plot showing the AIC score and RMSE
 distribution, respectively.
 
-``` r
-model_full_nonlinear_no_interaction <- gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
-                                 s(AScore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
-                   Age + Gender + Ethnicity*Country, data = data_one)
-
-knitr::kable(AIC(model_country_ethnicity, model_full_nonlinear_no_interaction))
-```
-
 |                                     |       df |      AIC |
 |:------------------------------------|---------:|---------:|
 | model_country_ethnicity             | 72.00000 | 1173.639 |
 | model_full_nonlinear_no_interaction | 54.59517 | 1167.055 |
-
-``` r
-set.seed(123)
-
-data_one_prime_use_no_use_clean <- data_one_prime_use_no_use |> select(
-  Oscore, Cscore, Escore, Ascore, Nscore, Impulsive, SS, Country, Education,
-  Age, Gender, Ethnicity, user_consumption_level
-)
-
-cv_df_1 =
-  crossv_mc(data_one_prime_use_no_use_clean, 200) |> 
-  mutate(
-    train = map(train, ~ as_tibble(.x) %>%
-                  mutate(Ethnicity = factor(Ethnicity, levels = eth_levels))),
-    test = map(test, ~ as_tibble(.x) %>%
-                  mutate(Ethnicity = factor(Ethnicity, levels = eth_levels))))
-
-cv_df_1 <- cv_df_1 %>%
-  mutate(
-    ok = map_lgl(train, ~ "Mixed-Black/Asian" %in% .$Ethnicity)
-  ) %>%
-  filter(ok)
-
-cv_df_1 = 
-  cv_df_1 |> 
-  mutate(
-    linear_mod  = map(train, \(df) lm(log1p(user_consumption_level) ~ (Oscore + Cscore +
-                                 Ascore + Nscore + Impulsive + SS)^6 + Country + Education +
-                   Age + Gender + Ethnicity*Country, data = df)),
-    non_linear_no_interaction_mod     = map(train, \(df) gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
-                                 s(Ascore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
-                   Age + Gender + Ethnicity*Country, data = df))) |> 
-  mutate(
-    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_non_linear_interaction    = map2_dbl(non_linear_no_interaction_mod, test, \(mod, df) rmse(model = mod, data = df)))
-```
 
     ## Warning: There were 109 warnings in `mutate()`.
     ## The first warning was:
@@ -4416,18 +3499,6 @@ cv_df_1 =
     ## Caused by warning in `predict.lm()`:
     ## ! prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases
     ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 108 remaining warnings.
-
-``` r
-cv_df_1 |> 
-  select(starts_with("rmse")) |> 
-  pivot_longer(
-    everything(),
-    names_to = "model", 
-    values_to = "rmse",
-    names_prefix = "rmse_") |> 
-  mutate(model = fct_inorder(model)) |> 
-  ggplot(aes(x = model, y = rmse, fill = model)) + geom_violin()
-```
 
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
@@ -4443,21 +3514,6 @@ still maintain that the linear model is the most appropriate.
 Below are the tables that summarize all the relevant predictors, their
 estimated parameters, and the key statistics of our best linear model in
 temrs of R squared and p-value.
-
-``` r
-model_full_1 |> summary() |>
-  broom::tidy() |>
-  filter(p.value < 0.05) |>
-  filter(term %in% c("Oscore", "Cscore", "Ascore", "Nscore", "SS",
-                     "CountryCanada", "CountryUK", "EducationLeft school at 18 years",
-                     "EducationLeft school before 16 years",
-                     "Age45-54", "Age55-64", "Age65+", "GenderM")) |>
-  kbl(
-      caption     = "Effect of Psychological Predictors on Drug Consumption Levels", 
-      col.names   = c("Predictor", "Estimate", "SE", "t-statistic", "p-value"), 
-      digits      = c(3, 3, 3, 3, 3)
-  )
-```
 
 <table>
 
@@ -4823,20 +3879,6 @@ CountryUK
 </tbody>
 
 </table>
-
-``` r
-model_full_1 |> summary() |> broom::glance() |>
-  mutate(model = c("Best Model for total drug consumption")) |>
-  relocate(model) |>
-  kbl(
-    caption     = "Key Statistics for Prediction of User Consumption from Psychological Traits"
-    , col.names = c(
-        "Model", "R-squared", "Adj. R-squared"
-      , "Sigma", "F-statistic", "p-value", "df", "Residual df", "N"
-    )
-    , digits    = c(1, 2, 2, 0, 2, 5, 0, 0, 0)
-  )
-```
 
 <table>
 
