@@ -58,6 +58,56 @@
       </p>
     </section>
 
+    <section id="visual-summary">
+  <h2>Summary of Visualization & Modeling Results</h2>
+
+  <p>
+    We first created a total drug consumption score for each participant by summing
+    ordinal use levels across 18 drugs, and defined a binary “user / non-user”
+    indicator for every substance. A chi-squared test comparing legal vs illegal
+    drugs showed a strong association between drug type and consumption level:
+    legal drugs (alcohol, nicotine, caffeine, etc.) are much more likely to be used
+    at higher frequencies, while illegal drugs are concentrated at “never / very
+    rare” levels.
+  </p>
+
+  <p>
+    A linear regression using only the set of drugs a person uses predicts their
+    log-transformed total consumption very well (adjusted R² ≈ 0.88). When we
+    relate total use to personality traits, higher openness, neuroticism,
+    impulsivity, and sensation seeking—and lower conscientiousness and
+    agreeableness—are all associated with heavier drug use, whereas extraversion
+    shows almost no association. Personality alone, however, explains only a
+    modest fraction of the variability in total consumption.
+  </p>
+
+  <p>
+    We then added environmental and demographic factors. Total consumption differs
+    significantly by education, country, gender, ethnicity, and age. Higher risk
+    is seen among people aged 18–24, those with “some college or university, no
+    certificate or degree,” residents of the U.S., men, and several mixed/“other”
+    ethnic groups. In contrast, participants from the U.K. and older age groups
+    generally show lower consumption and more protective personality profiles.
+  </p>
+
+  <p>
+    Our final “best” linear model combines key personality traits (O, C, N, and
+    sensation seeking), education, age, gender, country, and selected
+    interactions (including country–ethnicity). This model explains about half of
+    the variation in total drug consumption (adjusted R² ≈ 0.51). Overall, our
+    visualizations and models suggest that personality is important, but social
+    and demographic context also plays a major role in shaping drug use patterns.
+  </p>
+
+  <p>
+    <em>Full visualization and modeling details:</em>
+    <a href="https://github.com/Simonwang5529/P8105_FinalProject/blob/main/drug_consumption_analysis.md"
+       target="_blank" rel="noopener">
+      Drug_Consumption_Analysis (full report)
+    </a>
+  </p>
+</section>
+
     <section class="glass pad">
       <h2>Trait Distributions</h2>
       <p>Histograms of OCEAN, BIS-11 (impulsivity), and ImpSS (sensation seeking).</p>
