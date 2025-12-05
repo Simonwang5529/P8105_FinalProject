@@ -7,7 +7,41 @@
   <meta name="description" content="Detailed description of the Fehrman et al. Drug Consumption dataset: structure, variables, coding scheme, and project-specific cleaning choices." />
   <link rel="stylesheet" href="style.css?v=1" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.8em' font-size='80'>🧪</text></svg>">
+  <script>
+  // Fade in on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add("is-loaded");
+  });
+
+  // Fade out on page navigation
+  document.addEventListener("click", function (e) {
+    const link = e.target.closest("a");
+
+    if (!link) return;
+
+    const url = link.getAttribute("href");
+
+    // Ignore external links, anchors, and mailto
+    if (
+      !url ||
+      url.startsWith("http") ||
+      url.startsWith("#") ||
+      url.startsWith("mailto:")
+    ) {
+      return;
+    }
+
+    // Smooth fade-out transition
+    e.preventDefault();
+    document.body.classList.add("is-fading-out");
+
+    setTimeout(() => {
+      window.location = url;
+    }, 300); // matches CSS transition 0.35s
+  });
+</script>
 </head>
+  
 <body>
   <header class="site-header">
     <a class="brand" href="index.html">
