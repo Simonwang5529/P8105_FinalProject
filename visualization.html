@@ -8,6 +8,39 @@
   <link rel="stylesheet" href="style.css?v=1" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.8em' font-size='80'>🧪</text></svg>">
 </head>
+  <script>
+  // Fade in on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add("is-loaded");
+  });
+
+  // Fade out on page navigation
+  document.addEventListener("click", function (e) {
+    const link = e.target.closest("a");
+
+    if (!link) return;
+
+    const url = link.getAttribute("href");
+
+    // Ignore external links, anchors, and mailto
+    if (
+      !url ||
+      url.startsWith("http") ||
+      url.startsWith("#") ||
+      url.startsWith("mailto:")
+    ) {
+      return;
+    }
+
+    // Smooth fade-out transition
+    e.preventDefault();
+    document.body.classList.add("is-fading-out");
+
+    setTimeout(() => {
+      window.location = url;
+    }, 300); // matches CSS transition 0.35s
+  });
+</script>
 <body>
   <header class="site-header">
     <a class="brand" href="index.html">
@@ -23,7 +56,7 @@
   </header>
 
   <main class="container doc">
-    <h1>Visualizations</h1>
+    <h1>Visualizations and Analysis</h1>
 
     <!-- EDA summary section -->
     <section class="glass pad">
@@ -57,6 +90,53 @@
         <a href="EDA.html"><strong>Full EDA</strong></a>
       </p>
     </section>
+
+<!-- Visualization & Modeling summary section -->
+<section class="glass pad">
+  <h2>Drug Use Visualization & Modeling</h2>
+  <p>
+    Building on the cleaned Fehrman et&nbsp;al. dataset, we create a <strong>total drug
+    consumption score</strong> for each participant by summing ordinal use levels across
+    18 substances and defining binary <strong>user vs. non-user</strong> indicators for every drug.
+    We also classify drugs as <strong>legal</strong> (e.g., alcohol, nicotine, caffeine, chocolate)
+    or <strong>illegal</strong> (e.g., cannabis, cocaine, heroin, LSD, meth) and examine how
+    usage patterns differ between these categories.
+  </p>
+  <p>
+    Using these derived outcomes and predictors, we:
+  </p>
+  <ul>
+    <li>Compare consumption levels of legal vs. illegal drugs via chi-squared tests and
+        observed vs. expected barplots.</li>
+    <li>Construct histograms of total consumption and show how a log-transformation
+        produces an approximately normal outcome suitable for regression.</li>
+    <li>Fit linear models predicting log total consumption from which specific drugs
+        a person uses, achieving a high adjusted R² (≈ 0.88).</li>
+    <li>Relate total consumption to OCEAN personality scores, impulsivity, and sensation
+        seeking, and display model fits and coefficients across traits.</li>
+    <li>Assess how consumption varies by education, country, age, gender, and ethnicity
+        using chi-squared tests, boxplots, and correlation heatmaps, and compare
+        alternative linear vs. non-linear (GAM) models using AIC and RMSE.</li>
+  </ul>
+  <p>
+    Overall, the visualization and modeling work suggests that heavier total drug
+    consumption is associated with higher <strong>openness</strong>, <strong>neuroticism</strong>,
+    <strong>sensation seeking</strong>, and <strong>impulsivity</strong>, and with lower
+    <strong>conscientiousness</strong> and (to a lesser extent) <strong>agreeableness</strong>.
+    Environmental and demographic factors also matter: riskier profiles are seen among
+    participants aged 18–24, those with “some college or university, no certificate or
+    degree,” U.S.&nbsp;residents, male users, and several mixed/“other” ethnic groups, whereas
+    older adults and participants from the U.K. tend to show lower overall consumption.
+    Our final linear model, combining personality traits with education, age, gender,
+    country, and key interactions, explains just over half of the variation in total
+    drug consumption.
+  </p>
+  <p>
+    👉 For the full R Markdown workflow, including code, diagnostics, model comparison,
+    and all plots, see:
+    <a href="drug_consumption_analysis.html"><strong>Full Visualization &amp; Modeling</strong></a>
+  </p>
+</section>
 
     <section class="glass pad">
       <h2>Trait Distributions</h2>

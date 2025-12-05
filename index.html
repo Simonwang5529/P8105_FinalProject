@@ -16,6 +16,39 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.8em' font-size='80'>🧪</text></svg>">
   <link rel="stylesheet" href="style.css?v=1" />
 </head>
+  <script>
+  // Fade in on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add("is-loaded");
+  });
+
+  // Fade out on page navigation
+  document.addEventListener("click", function (e) {
+    const link = e.target.closest("a");
+
+    if (!link) return;
+
+    const url = link.getAttribute("href");
+
+    // Ignore external links, anchors, and mailto
+    if (
+      !url ||
+      url.startsWith("http") ||
+      url.startsWith("#") ||
+      url.startsWith("mailto:")
+    ) {
+      return;
+    }
+
+    // Smooth fade-out transition
+    e.preventDefault();
+    document.body.classList.add("is-fading-out");
+
+    setTimeout(() => {
+      window.location = url;
+    }, 300); // matches CSS transition 0.35s
+  });
+</script>
 <body>
   <header class="site-header">
     <a class="brand" href="index.html">
@@ -76,13 +109,15 @@
         <h2>Dataset</h2>
         <p>Fehrman et&nbsp;al. (2015) Drug Consumption dataset: structure, variables, and access.</p>
         <span class="chip">Data overview</span>
+        <span class="chip">Data Cleaning</span>
         <span class="arrow">→</span>
       </a>
 
       <a class="card glass linkcard" href="visualization.html">
-        <h2>Visualizations</h2>
+        <h2>Analysis and Visualizations</h2>
         <p>Histograms, boxplots, stacked bars, and trait × usage heatmaps.</p>
         <span class="chip">EDA plots</span>
+        <span class="chip">Full Analysis</span>
         <span class="arrow">→</span>
       </a>
 
