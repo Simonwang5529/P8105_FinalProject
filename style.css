@@ -164,33 +164,32 @@ body.is-fading-out {
 
 /* Shared nav */
 
-.nav{
+.nav {
   display: flex;
   align-items: center;
   gap: .75rem;
 }
 
-.nav-accordion{
+.nav-accordion {
   margin-right: .5rem;
   background: rgba(255,255,255,0.96);
   border: 1px solid rgba(248,250,252,0.9);
   border-radius: 22px;
-  padding: .3rem 1.1rem;          /* smaller, symmetric padding */
+  padding: .3rem 1.1rem;
   box-shadow: 0 6px 18px rgba(148,163,184,0.5);
   display: inline-block;
 }
 
-.nav-accordion summary{
+.nav-accordion summary {
   cursor: pointer;
   list-style: none;
   font-weight: 700;
   color: #111827;
   font-size: 0.9rem;
-  margin: 0;                      /* no extra gap when closed */
+  margin: 0;
 }
 
-/* Restore the ▼ arrow next to "Menu" */
-.nav-accordion summary::after{
+.nav-accordion summary::after {
   content: " ▾";
   font-size: 0.75rem;
   margin-left: 0.25rem;
@@ -198,47 +197,45 @@ body.is-fading-out {
   transition: transform 0.2s ease;
 }
 
-/* Rotate arrow upward when dropdown is open */
-.nav-accordion[open] summary::after{
+.nav-accordion[open] summary::after {
   transform: rotate(180deg);
 }
-
-/* ============ Smooth accordion for mobile nav ============ */
 
 .nav-accordion .submenu {
   max-height: 0;
   overflow: hidden;
   padding-top: 0;
   padding-bottom: 0;
+  margin-top: 0;
   opacity: 0;
   transform: translateY(-4px);
   transition:
     max-height 0.25s ease,
     opacity 0.25s ease,
     transform 0.25s ease,
-    padding 0.25s ease;
+    padding 0.25s ease,
+    margin 0.25s ease;
 }
 
 .nav-accordion[open] .submenu {
-  max-height: 400px;  
+  max-height: 400px;
   opacity: 1;
   transform: translateY(0);
   padding-top: 0.25rem;
   padding-bottom: 0.5rem;
+  margin-top: .15rem;
 }
 
-
-.submenu{
+.submenu {
   list-style: none;
   padding-left: 0;
-  margin: .15rem 0 0;
 }
 
-.submenu li{
+.submenu li {
   margin: .35rem 0;
 }
 
-.submenu a{
+.submenu a {
   font-weight: 600;
   color: #4b5563;
   white-space: nowrap;
