@@ -23,7 +23,7 @@
   </header>
 
   <main class="container doc">
-    <h1>Visualizations</h1>
+    <h1>Visualizations and Analysis</h1>
 
     <!-- EDA summary section -->
     <section class="glass pad">
@@ -58,53 +58,50 @@
       </p>
     </section>
 
-    <section id="visual-summary">
-  <h2>Summary of Visualization & Modeling Results</h2>
-
+<!-- Visualization & Modeling summary section -->
+<section class="glass pad">
+  <h2>Drug Use Visualization & Modeling</h2>
   <p>
-    We first created a total drug consumption score for each participant by summing
-    ordinal use levels across 18 drugs, and defined a binary “user / non-user”
-    indicator for every substance. A chi-squared test comparing legal vs illegal
-    drugs showed a strong association between drug type and consumption level:
-    legal drugs (alcohol, nicotine, caffeine, etc.) are much more likely to be used
-    at higher frequencies, while illegal drugs are concentrated at “never / very
-    rare” levels.
+    Building on the cleaned Fehrman et&nbsp;al. dataset, we create a <strong>total drug
+    consumption score</strong> for each participant by summing ordinal use levels across
+    18 substances and defining binary <strong>user vs. non-user</strong> indicators for every drug.
+    We also classify drugs as <strong>legal</strong> (e.g., alcohol, nicotine, caffeine, chocolate)
+    or <strong>illegal</strong> (e.g., cannabis, cocaine, heroin, LSD, meth) and examine how
+    usage patterns differ between these categories.
   </p>
-
   <p>
-    A linear regression using only the set of drugs a person uses predicts their
-    log-transformed total consumption very well (adjusted R² ≈ 0.88). When we
-    relate total use to personality traits, higher openness, neuroticism,
-    impulsivity, and sensation seeking—and lower conscientiousness and
-    agreeableness—are all associated with heavier drug use, whereas extraversion
-    shows almost no association. Personality alone, however, explains only a
-    modest fraction of the variability in total consumption.
+    Using these derived outcomes and predictors, we:
   </p>
-
+  <ul>
+    <li>Compare consumption levels of legal vs. illegal drugs via chi-squared tests and
+        observed vs. expected barplots.</li>
+    <li>Construct histograms of total consumption and show how a log-transformation
+        produces an approximately normal outcome suitable for regression.</li>
+    <li>Fit linear models predicting log total consumption from which specific drugs
+        a person uses, achieving a high adjusted R² (≈ 0.88).</li>
+    <li>Relate total consumption to OCEAN personality scores, impulsivity, and sensation
+        seeking, and display model fits and coefficients across traits.</li>
+    <li>Assess how consumption varies by education, country, age, gender, and ethnicity
+        using chi-squared tests, boxplots, and correlation heatmaps, and compare
+        alternative linear vs. non-linear (GAM) models using AIC and RMSE.</li>
+  </ul>
   <p>
-    We then added environmental and demographic factors. Total consumption differs
-    significantly by education, country, gender, ethnicity, and age. Higher risk
-    is seen among people aged 18–24, those with “some college or university, no
-    certificate or degree,” residents of the U.S., men, and several mixed/“other”
-    ethnic groups. In contrast, participants from the U.K. and older age groups
-    generally show lower consumption and more protective personality profiles.
+    Overall, the visualization and modeling work suggests that heavier total drug
+    consumption is associated with higher <strong>openness</strong>, <strong>neuroticism</strong>,
+    <strong>sensation seeking</strong>, and <strong>impulsivity</strong>, and with lower
+    <strong>conscientiousness</strong> and (to a lesser extent) <strong>agreeableness</strong>.
+    Environmental and demographic factors also matter: riskier profiles are seen among
+    participants aged 18–24, those with “some college or university, no certificate or
+    degree,” U.S.&nbsp;residents, male users, and several mixed/“other” ethnic groups, whereas
+    older adults and participants from the U.K. tend to show lower overall consumption.
+    Our final linear model, combining personality traits with education, age, gender,
+    country, and key interactions, explains just over half of the variation in total
+    drug consumption.
   </p>
-
   <p>
-    Our final “best” linear model combines key personality traits (O, C, N, and
-    sensation seeking), education, age, gender, country, and selected
-    interactions (including country–ethnicity). This model explains about half of
-    the variation in total drug consumption (adjusted R² ≈ 0.51). Overall, our
-    visualizations and models suggest that personality is important, but social
-    and demographic context also plays a major role in shaping drug use patterns.
-  </p>
-
-  <p>
-    <em>Full visualization and modeling details:</em>
-    <a href="https://github.com/Simonwang5529/P8105_FinalProject/blob/main/drug_consumption_analysis.md"
-       target="_blank" rel="noopener">
-      Drug_Consumption_Analysis (full report)
-    </a>
+    👉 For the full R Markdown workflow, including code, diagnostics, model comparison,
+    and all plots, see:
+    <a href="drug_consumption_analysis.html"><strong>Full Visualization &amp; Modeling</strong></a>
   </p>
 </section>
 
