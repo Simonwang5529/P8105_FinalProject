@@ -194,7 +194,7 @@ body.is-fading-out {
   font-size: 0.75rem;
   margin-left: 0.25rem;
   opacity: 0.7;
-  transition: transform 0.2s ease;
+  transition: transform 0.45s ease;
 }
 
 .nav-accordion[open] summary::after {
@@ -210,11 +210,11 @@ body.is-fading-out {
   opacity: 0;
   transform: translateY(-4px);
   transition:
-    max-height 0.25s ease,
-    opacity 0.25s ease,
-    transform 0.25s ease,
-    padding 0.25s ease,
-    margin 0.25s ease;
+    max-height 0.45s ease,
+    opacity 0.45s ease,
+    transform 0.45s ease,
+    padding 0.45s ease,
+    margin 0.45s ease;
 }
 
 .nav-accordion[open] .submenu {
