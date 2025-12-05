@@ -1792,6 +1792,16 @@ small portion across all personality traits.
 
 # Drug Consumption Risk Assessment
 
+To answer the original research question, we wanted to examine how one
+would be able to predict a person’s total drug consumption based on
+their personality traits. This would fulfill the possible purpose of
+prevention instead of intervention.
+
+We still use the log of the total drug use consumption due to the
+variable’s normal distributions. The plots of the personality traits vs
+the total consumption–along with the linear regression lines–are shown
+below.
+
 ``` r
 data_Escore_1 = data_one |> dplyr::select(user_consumption_level, Escore)
 
