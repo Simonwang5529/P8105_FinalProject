@@ -1,38 +1,51 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Results — Personality × Drug Use</title>
-<link rel="stylesheet" href="style.css?v=1"/>
-<style>
-  .mini-table {
-    border-collapse: collapse;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    width: 100%;
-    max-width: 420px;
-    background: rgba(255,255,255,0.6);
-    backdrop-filter: blur(6px);
-  }
-  .mini-table th, .mini-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  .mini-table th {
-    background: rgba(240,240,240,0.9);
-    font-weight: bold;
-  }
-  img.plot {
-    max-width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-  }
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Results — Personality × Drug Use</title>
+  <meta name="description" content="Statistical findings, drug-group comparisons, personality effects, and chi-square/ANOVA/correlation results." />
+  <link rel="stylesheet" href="style.css?v=1"/>
+
+  <style>
+    /* Mini summary tables */
+    table.mini-table {
+      width: 100%;
+      max-width: 480px;
+      margin: 12px 0 18px 0;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    table.mini-table th {
+      background: rgba(240,240,240,0.9);
+      padding: 8px;
+      font-weight: bold;
+      text-align: left;
+    }
+    table.mini-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    table.mini-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    img.plot {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+  </style>
 </head>
 
 <body>
+
 <header class="site-header">
   <a class="brand" href="./">
     <span class="brand-mark">🧪</span>
@@ -42,273 +55,290 @@
     <a href="proposal.html">Proposal</a>
     <a href="dataset.html">Dataset</a>
     <a href="visualization.html">Visualizations</a>
-    <a href="results_v5_final.html" aria-current="page">Results</a>
+    <a href="results.html" aria-current="page">Results</a>
   </nav>
 </header>
 
 <main class="container doc">
 <h1>Results</h1>
 
+<!-- ===================== -->
+<!-- USAGE SUMMARY -->
+<!-- ===================== -->
 <section class="glass pad">
-<h2>Usage Summary</h2>
-<p>The plot below visualizes the percentage of respondents reporting any lifetime use of each substance. Drugs with higher prevalence afford stronger inferential modeling.</p>
-<img src="figs/usage_barplot.png" class="plot" alt="Usage Barplot">
+  <h2>Usage Summary</h2>
+  <p>The barplot below illustrates the percentage of respondents reporting any lifetime use for each substance. More prevalent drugs (e.g., cannabis, nicotine) allow more stable inferential modeling.</p>
+
+  <img src="figs/usage_barplot.png" class="plot" alt="Drug Usage Rates">
 </section>
 
+<!-- ===================== -->
+<!-- SUMMARY OF ANALYSES -->
+<!-- ===================== -->
 <section class="glass pad">
-<h2>Summary of Analyses</h2>
+  <h2>Summary of Analyses</h2>
 
-<!-- ========================== -->
+<!-- ===================== -->
 <!-- CANNABIS -->
-<!-- ========================== -->
+<!-- ===================== -->
 <details open>
 <summary><strong>Cannabis</strong></summary>
-<h4>Key statistical results</h4>
+
+<h4>Chi-square Tests</h4>
 <table class="mini-table">
-<tr><th>Test</th><th>Result</th></tr>
-<tr><td>Chi-square (Education)</td><td>X² = 112.08, p < 2.2e-16</td></tr>
-<tr><td>Chi-square (Country)</td><td>X² = 241.94, p < 2.2e-16</td></tr>
+<tr><th>Comparison</th><th>Statistic</th></tr>
+<tr><td>Education × Use</td><td>X² = 112.08, p &lt; 2.2e-16</td></tr>
+<tr><td>Country × Use</td><td>X² = 241.94, p &lt; 2.2e-16</td></tr>
 </table>
 
-<h4>ANOVA Effects on Personality</h4>
+<h4>ANOVA (User vs Non-User)</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Direction</th><th>p-value</th></tr>
-<tr><td>Nscore</td><td>Higher</td><td>0.0000181</td></tr>
-<tr><td>Escore</td><td>Lower</td><td>0.0293563</td></tr>
-<tr><td>Oscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>Lower</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>Lower</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>Effect</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>Higher</td><td>1.8e-05</td></tr>
+<tr><td>Extraversion</td><td>Lower</td><td>0.029</td></tr>
+<tr><td>Openness</td><td>Much higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>Lower</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>Lower</td><td>&lt;1e-7</td></tr>
 </table>
 
 <h4>Correlations With Frequency</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Correlation</th><th>p-value</th></tr>
-<tr><td>Neuroticism</td><td>0.095</td><td>0.00004</td></tr>
+<tr><th>Trait</th><th>r</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>0.095</td><td>4.0e-05</td></tr>
 <tr><td>Extraversion</td><td>-0.016</td><td>0.483</td></tr>
-<tr><td>Openness</td><td>0.412</td><td><0.000001</td></tr>
-<tr><td>Agreeableness</td><td>-0.150</td><td><0.000001</td></tr>
-<tr><td>Conscientiousness</td><td>-0.276</td><td><0.000001</td></tr>
+<tr><td>Openness</td><td>0.412</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>-0.150</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>-0.276</td><td>&lt;1e-7</td></tr>
 </table>
 
-<p>Cannabis use strongly varies across education and country, with highest use among university-educated respondents and those from the US/UK. Users scored substantially higher in Openness and lower in Conscientiousness and Agreeableness, suggesting novelty-seeking and reduced behavioral inhibition. Frequency of use showed the same trait profile.</p>
+<p>Cannabis use varies sharply across both education and country, with highest use among university-educated respondents and those from the USA/UK. Cannabis users consistently show high Openness and low Conscientiousness and Agreeableness; frequency of use reinforces this same trait pattern.</p>
 </details>
 
-<!-- ========================== -->
+<!-- ===================== -->
 <!-- NICOTINE -->
-<!-- ========================== -->
+<!-- ===================== -->
 <details>
 <summary><strong>Nicotine</strong></summary>
+
 <h4>Chi-square Tests</h4>
 <table class="mini-table">
-<tr><th>Test</th><th>Result</th></tr>
-<tr><td>Education</td><td>X² = 67.48, p = 1.55e-11</td></tr>
-<tr><td>Country</td><td>X² = 86.67, p < 2.2e-16</td></tr>
+<tr><th>Comparison</th><th>Statistic</th></tr>
+<tr><td>Education × Use</td><td>X² = 67.48, p = 1.55e-11</td></tr>
+<tr><td>Country × Use</td><td>X² = 86.67, p &lt; 2.2e-16</td></tr>
 </table>
 
-<h4>ANOVA Traits</h4>
+<h4>ANOVA</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Direction</th><th>p-value</th></tr>
-<tr><td>Nscore</td><td>Higher</td><td>0.00008</td></tr>
-<tr><td>Escore</td><td>No effect</td><td>0.150</td></tr>
-<tr><td>Oscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>Lower</td><td>0.000001</td></tr>
-<tr><td>Cscore</td><td>Lower</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>Effect</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>Higher</td><td>8e-05</td></tr>
+<tr><td>Extraversion</td><td>No effect</td><td>0.150</td></tr>
+<tr><td>Openness</td><td>Higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>Lower</td><td>1e-6</td></tr>
+<tr><td>Conscientiousness</td><td>Lower</td><td>&lt;1e-7</td></tr>
 </table>
 
 <h4>Correlations</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Correlation</th><th>p</th></tr>
-<tr><td>Nscore</td><td>0.127</td><td><0.000001</td></tr>
-<tr><td>Oscore</td><td>0.193</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>-0.112</td><td>0.000001</td></tr>
-<tr><td>Cscore</td><td>-0.233</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>r</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>0.127</td><td>&lt;1e-7</td></tr>
+<tr><td>Openness</td><td>0.193</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>-0.112</td><td>1e-6</td></tr>
+<tr><td>Conscientiousness</td><td>-0.233</td><td>&lt;1e-7</td></tr>
 </table>
 
-<p>Nicotine users show a distinct personality profile marked by lower Conscientiousness and Agreeableness and higher Neuroticism. Usage patterns were heavily influenced by country and moderately by education. Frequency of smoking correlates most strongly with lower Conscientiousness.</p>
+<p>Nicotine users show elevated Neuroticism and strongly reduced Conscientiousness and Agreeableness. Usage patterns vary by country and, to a lesser extent, education.</p>
 </details>
 
-<!-- ========================== -->
+<!-- ===================== -->
 <!-- AMPHETAMINES -->
-<!-- ========================== -->
+<!-- ===================== -->
 <details>
 <summary><strong>Amphetamines</strong></summary>
 
 <h4>Chi-square</h4>
 <table class="mini-table">
-<tr><th>Test</th><th>Result</th></tr>
-<tr><td>Education</td><td>X² = 51.73, p = 1.895e-08</td></tr>
-<tr><td>Country</td><td>X² = 170.78, p < 2.2e-16</td></tr>
+<tr><th>Comparison</th><th>Statistic</th></tr>
+<tr><td>Education × Use</td><td>X² = 51.73, p = 1.89e-08</td></tr>
+<tr><td>Country × Use</td><td>X² = 170.78, p &lt; 2.2e-16</td></tr>
 </table>
 
-<h4>ANOVA Traits</h4>
+<h4>ANOVA</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Direction</th><th>p</th></tr>
-<tr><td>Nscore</td><td>Higher</td><td>0.000006</td></tr>
-<tr><td>Escore</td><td>No effect</td><td>0.067</td></tr>
-<tr><td>Oscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>Lower</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>Lower</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>Effect</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>Higher</td><td>6e-06</td></tr>
+<tr><td>Extraversion</td><td>No effect</td><td>0.067</td></tr>
+<tr><td>Openness</td><td>Higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>Lower</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>Lower</td><td>&lt;1e-7</td></tr>
 </table>
 
 <h4>Correlations</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Correlation</th><th>p</th></tr>
-<tr><td>Nscore</td><td>0.133</td><td><0.000001</td></tr>
-<tr><td>Oscore</td><td>0.223</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>-0.150</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>-0.239</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>r</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>0.133</td><td>&lt;1e-7</td></tr>
+<tr><td>Openness</td><td>0.223</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>-0.150</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>-0.239</td><td>&lt;1e-7</td></tr>
 </table>
 
-<p>Amphetamine users represent one of the most psychologically distinct groups, displaying high Openness and low Conscientiousness/Agreeableness. Country-level differences were again large.</p>
+<p>Amphetamine users show one of the most distinctive psychological signatures, marked by high Openness and low Agreeableness and Conscientiousness.</p>
 </details>
 
-<!-- ========================== -->
+<!-- ===================== -->
 <!-- BENZODIAZEPINES -->
-<!-- ========================== -->
+<!-- ===================== -->
 <details>
 <summary><strong>Benzodiazepines</strong></summary>
 
 <h4>Chi-square</h4>
 <table class="mini-table">
-<tr><th>Test</th><th>Result</th></tr>
-<tr><td>Education</td><td>X² = 41.59, p = 1.6e-06</td></tr>
-<tr><td>Country</td><td>X² = 214.19, p < 2.2e-16</td></tr>
+<tr><th>Comparison</th><th>Statistic</th></tr>
+<tr><td>Education × Use</td><td>X² = 41.59, p = 1.6e-06</td></tr>
+<tr><td>Country × Use</td><td>X² = 214.19, p &lt; 2.2e-16</td></tr>
 </table>
 
 <h4>ANOVA</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Direction</th><th>p</th></tr>
-<tr><td>Nscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Escore</td><td>Lower</td><td>0.000144</td></tr>
-<tr><td>Oscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>Lower</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>Lower</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>Effect</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>Much higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Extraversion</td><td>Lower</td><td>1.4e-04</td></tr>
+<tr><td>Openness</td><td>Higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>Lower</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>Lower</td><td>&lt;1e-7</td></tr>
 </table>
 
 <h4>Correlations</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Correlation</th><th>p</th></tr>
-<tr><td>Nscore</td><td>0.272</td><td><0.000001</td></tr>
-<tr><td>Escore</td><td>-0.104</td><td>0.000007</td></tr>
-<tr><td>Oscore</td><td>0.201</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>-0.166</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>-0.208</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>r</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>0.272</td><td>&lt;1e-7</td></tr>
+<tr><td>Extraversion</td><td>-0.104</td><td>6.6e-06</td></tr>
+<tr><td>Openness</td><td>0.201</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>-0.166</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>-0.208</td><td>&lt;1e-7</td></tr>
 </table>
 
-<p>Benzodiazepine users show unusually strong personality deviations, especially very high Neuroticism and very low Conscientiousness. This aligns with clinical literature suggesting benzo use often occurs in emotionally dysregulated populations.</p>
+<p>Benzodiazepine users show dramatic increases in Neuroticism along with some of the lowest Agreeableness/Conscientiousness levels observed across all drug groups.</p>
 </details>
 
-<!-- ========================== -->
-<!-- STIMULANTS (Coke + Meth) -->
-<!-- ========================== -->
+<!-- ===================== -->
+<!-- STIMULANTS -->
+<!-- ===================== -->
 <details>
-<summary><strong>Stimulants (Cocaine + Meth)</strong></summary>
+<summary><strong>Stimulants (Cocaine + Methamphetamine)</strong></summary>
 
 <h4>Chi-square</h4>
 <table class="mini-table">
-<tr><th>Test</th><th>Result</th></tr>
-<tr><td>Education</td><td>X² = 63.87, p = 8e-11</td></tr>
-<tr><td>Country</td><td>X² = 252.61, p < 2.2e-16</td></tr>
+<tr><th>Comparison</th><th>Statistic</th></tr>
+<tr><td>Education × Use</td><td>X² = 63.87, p = 8.1e-11</td></tr>
+<tr><td>Country × Use</td><td>X² = 252.61, p &lt; 2.2e-16</td></tr>
 </table>
 
 <h4>ANOVA</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Direction</th><th>p</th></tr>
-<tr><td>Nscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Escore</td><td>Lower</td><td>0.026</td></tr>
-<tr><td>Oscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>Lower</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>Lower</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>Effect</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>Higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Extraversion</td><td>Lower</td><td>0.026</td></tr>
+<tr><td>Openness</td><td>Higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>Lower</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>Lower</td><td>&lt;1e-7</td></tr>
 </table>
 
 <h4>Correlations</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Correlation</th><th>p</th></tr>
-<tr><td>Nscore</td><td>0.199</td><td><0.000001</td></tr>
-<tr><td>Escore</td><td>-0.060</td><td>0.0094</td></tr>
-<tr><td>Oscore</td><td>0.220</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>-0.216</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>-0.236</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>r</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>0.199</td><td>&lt;1e-7</td></tr>
+<tr><td>Extraversion</td><td>-0.060</td><td>0.0094</td></tr>
+<tr><td>Openness</td><td>0.220</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>-0.216</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>-0.236</td><td>&lt;1e-7</td></tr>
 </table>
 
-<p>Stimulants show one of the clearest personality risk profiles: high Neuroticism and Openness and very low Agreeableness and Conscientiousness. Education and country strongly stratify who is likely to use.</p>
+<p>Stimulant users show a strong externalizing-risk profile: very low Agreeableness/Conscientiousness, elevated Neuroticism, and high Openness.</p>
 </details>
 
-<!-- ========================== -->
-<!-- HIGH RISK DRUGS -->
-<!-- ========================== -->
+<!-- ===================== -->
+<!-- HIGH RISK -->
+<!-- ===================== -->
 <details>
 <summary><strong>High-Risk Drugs (Heroin + Crack + VSA)</strong></summary>
 
 <h4>Chi-square</h4>
 <table class="mini-table">
-<tr><thTest></th><th>Result</th></tr>
-<tr><td>Education</td><td>X² = 82.25, p = 1.7e-14</td></tr>
-<tr><td>Country</td><td>X² = 230.13, p < 2.2e-16</td></tr>
+<tr><th>Comparison</th><th>Statistic</th></tr>
+<tr><td>Education × Use</td><td>X² = 82.25, p = 1.7e-14</td></tr>
+<tr><td>Country × Use</td><td>X² = 230.13, p &lt; 2.2e-16</td></tr>
 </table>
 
 <h4>ANOVA</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Direction</th><th>p</th></tr>
-<tr><td>Nscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Escore</td><td>Lower</td><td>0.000078</td></tr>
-<tr><td>Oscore</td><td>Higher</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>Lower</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>Lower</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>Effect</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>Higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Extraversion</td><td>Lower</td><td>7.8e-05</td></tr>
+<tr><td>Openness</td><td>Higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>Lower</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>Lower</td><td>&lt;1e-7</td></tr>
 </table>
 
 <h4>Correlations</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Correlation</th><th>p</th></tr>
-<tr><td>Nscore</td><td>0.181</td><td><0.000001</td></tr>
-<tr><td>Escore</td><td>-0.076</td><td>0.00094</td></tr>
-<tr><td>Oscore</td><td>0.173</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>-0.173</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>-0.202</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>r</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>0.181</td><td>&lt;1e-7</td></tr>
+<tr><td>Extraversion</td><td>-0.076</td><td>0.00094</td></tr>
+<tr><td>Openness</td><td>0.173</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>-0.173</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>-0.202</td><td>&lt;1e-7</td></tr>
 </table>
 
-<p>High-risk drug use is associated with the strongest negative personality profile, with extreme elevations in Neuroticism and extremely low Agreeableness and Conscientiousness.</p>
+<p>High-risk substance users show the most extreme personality differences: extremely elevated Neuroticism and the lowest Agreeableness/Conscientiousness scores across all drug groups.</p>
 </details>
 
-<!-- ========================== -->
+<!-- ===================== -->
 <!-- PSYCHEDELICS -->
-<!-- ========================== -->
+<!-- ===================== -->
 <details>
-<summary><strong>Psychedelics (LSD + Mushrooms + Ketamine + Ecstasy + Legal‑H)</strong></summary>
+<summary><strong>Psychedelics (LSD + Mushrooms + Ketamine + Ecstasy + Legal-H)</strong></summary>
 
 <h4>Chi-square</h4>
 <table class="mini-table">
-<tr><th>Test</th><th>Result</th></tr>
-<tr><td>Education</td><td>X² = 187.32, p < 2.2e-16</td></tr>
-<tr><td>Country</td><td>X² = 410.56, p < 2.2e-16</td></tr>
+<tr><th>Comparison</th><th>Statistic</th></tr>
+<tr><td>Education × Use</td><td>X² = 187.32, p &lt; 2.2e-16</td></tr>
+<tr><td>Country × Use</td><td>X² = 410.56, p &lt; 2.2e-16</td></tr>
 </table>
 
 <h4>ANOVA</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Direction</th><th>p</th></tr>
-<tr><td>Nscore</td><td>Higher</td><td>0.0000015</td></tr>
-<tr><td>Escore</td><td>No effect</td><td>0.065</td></tr>
-<tr><td>Oscore</td><td>Higher+++</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>Lower</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>Lower</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>Effect</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>Higher</td><td>1.5e-06</td></tr>
+<tr><td>Extraversion</td><td>No effect</td><td>0.065</td></tr>
+<tr><td>Openness</td><td>Extremely higher</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>Lower</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>Lower</td><td>&lt;1e-7</td></tr>
 </table>
 
 <h4>Correlations</h4>
 <table class="mini-table">
-<tr><th>Trait</th><th>Correlation</th><th>p</th></tr>
-<tr><td>Nscore</td><td>0.087</td><td>0.00016</td></tr>
-<tr><td>Escore</td><td>0.020</td><td>0.378</td></tr>
-<tr><td>Oscore</td><td>0.397</td><td><0.000001</td></tr>
-<tr><td>Ascore</td><td>-0.150</td><td><0.000001</td></tr>
-<tr><td>Cscore</td><td>-0.258</td><td><0.000001</td></tr>
+<tr><th>Trait</th><th>r</th><th>p</th></tr>
+<tr><td>Neuroticism</td><td>0.087</td><td>0.00016</td></tr>
+<tr><td>Extraversion</td><td>0.020</td><td>0.378</td></tr>
+<tr><td>Openness</td><td>0.397</td><td>&lt;1e-7</td></tr>
+<tr><td>Agreeableness</td><td>-0.150</td><td>&lt;1e-7</td></tr>
+<tr><td>Conscientiousness</td><td>-0.258</td><td>&lt;1e-7</td></tr>
 </table>
 
-<p>Psychedelic users—unlike other groups—show a uniquely strong Openness signature, consistent with curiosity and experiential exploration. Negative conscientiousness effects remain robust. Education and country effects were the strongest of all drug classes.</p>
+<p>Psychedelic users are characterized primarily by high Openness. Education and country strongly influence prevalence.</p>
 </details>
 
-<p><a class="button" href="inferential_analyses.html" target="_blank">View Full Statistical Output</a></p>
+<p><a class="button" href="inferential_analyses.html" target="_blank">View Detailed Statistical Output</a></p>
+
 </section>
 
 </main>
+
+<footer class="site-footer">
+  <p><a href="index.html">← Back to Home</a></p>
+</footer>
+
+<script src="script.js?v=1" defer></script>
+
 </body>
 </html>
