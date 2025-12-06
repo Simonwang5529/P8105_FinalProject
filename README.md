@@ -125,9 +125,9 @@ The project website includes:
 - Full written report  
 
 ## Contributions
-| **Maryam Khalid** | Screencast recording, interpretation, final report analyses & cleanup |
-| **Sijda Ahmed & Ruicheng Yang** | Statistical analysis and data visualization |
-| **Xiling Wang & Haixin Jin** | Webpage development, documentation, and editing the final report |
+| **Maryam Khalid** | Screencast recording, interpretation, final report analyses & cleanup
+| **Sijda Ahmed & Ruicheng Yang** | Statistical analysis and data visualization
+| **Xiling Wang & Haixin Jin** | Webpage development, documentation, and editing the final report
 
 
 ## Notes for Reproducibility
