@@ -23,7 +23,7 @@ Our work combines **data cleaning**, **exploratory visualization**, and **formal
 
 ## Repository Structure
 
-``
+```
 P8105_FinalProject/
 │
 ├── data/                          # Raw dataset and cleaned versions
