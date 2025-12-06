@@ -1,0 +1,82 @@
+---
+title: "Inferential Analysis"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(janitor)
+library(broom)
+library(knitr)
+
+# Load the cleaned dataset
+data <- read_csv("data/cleaned_drug_data.csv")
+
+# Preview
+glimpse(data)
+```
+
+# Chi-Square Analyses
+
+```{r}
+data <- data %>%
+  mutate(user_status = if_else(Cannabis > 0, "User", "Non-User"))
+
+table(data$user_status)
+```
+
+## Education and User Status
+
+```{r}
+tab_edu <- table(data$Education, data$user_status)
+kable(tab_edu, caption="Contingency Table: Education × User Status")
+chisq.test(tab_edu)
+```
+
+## Country and User Status
+```{r}
+tab_country <- table(data$Country, data$user_status)
+kable(tab_country, caption="Contingency Table: Country × User Status")
+chisq.test(tab_country)
+```
+
+# ANOVA: Trait Differences
+```{r}
+traits <- c("Nscore","Escore","Oscore","Ascore","Cscore")
+
+anova_results <- map_df(traits, function(trait) {
+  model <- aov(as.formula(paste0(trait, " ~ user_status")), data = data)
+  tidy(model) %>% filter(term == "user_status") %>% mutate(trait = trait)
+})
+
+kable(anova_results, caption="ANOVA Results: Trait Differences by User Status")
+```
+
+# Correlation Analysis
+
+```{r}
+corr_results <- map_df(traits, function(trait) {
+  cor_test <- cor.test(data[[trait]], data$Cannabis, method="pearson")
+  tibble(trait=trait, correlation=cor_test$estimate, p_value=cor_test$p.value)
+})
+
+kable(corr_results, digits=3, caption="Correlation Between Traits and Cannabis Use")
+```
+
+# Optional Logistic Regression
+```{r}
+data <- data %>%
+  mutate(user_status_num = if_else(user_status == "User", 1, 0))
+
+logit_model <- glm(user_status_num ~ Nscore + Escore + Oscore + Ascore + Cscore,
+                   data = data,
+                   family = binomial)
+
+```
+
+
+# Export Results
+```{r}
+write_csv(anova_results, "anova_results.csv")
+write_csv(corr_results, "correlation_results.csv")
+```
