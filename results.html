@@ -8,105 +8,141 @@
   <link rel="stylesheet" href="style.css?v=1" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.8em' font-size='80'>🧪</text></svg>">
 </head>
-  <script>
-  // Fade in on page load
+
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add("is-loaded");
   });
 
-  // Fade out on page navigation
   document.addEventListener("click", function (e) {
     const link = e.target.closest("a");
-
     if (!link) return;
-
     const url = link.getAttribute("href");
+    if (!url || url.startsWith("http") || url.startsWith("#") || url.startsWith("mailto:")) return;
 
-    // Ignore external links, anchors, and mailto
-    if (
-      !url ||
-      url.startsWith("http") ||
-      url.startsWith("#") ||
-      url.startsWith("mailto:")
-    ) {
-      return;
-    }
-
-    // Smooth fade-out transition
     e.preventDefault();
     document.body.classList.add("is-fading-out");
-
-    setTimeout(() => {
-      window.location = url;
-    }, 300); // matches CSS transition 0.35s
+    setTimeout(() => { window.location = url; }, 300);
   });
 </script>
+
 <body>
-  <header class="site-header">
-    <a class="brand" href="./">
-      <span class="brand-mark">🧪</span>
-      <span class="brand-text">Personality × Drug Use</span>
-    </a>
-    <nav class="nav inline">
-      <a href="proposal.html">Proposal</a>
-      <a href="dataset.html">Dataset</a>
-      <a href="visualization.html">Visualizations</a>
-      <a href="results.html" aria-current="page">Results</a>
-    </nav>
-  </header>
+<header class="site-header">
+  <a class="brand" href="./">
+    <span class="brand-mark">🧪</span>
+    <span class="brand-text">Personality × Drug Use</span>
+  </a>
+  <nav class="nav inline">
+    <a href="proposal.html">Proposal</a>
+    <a href="dataset.html">Dataset</a>
+    <a href="visualization.html">Visualizations</a>
+    <a href="results.html" aria-current="page">Results</a>
+  </nav>
+</header>
 
-  <main class="container doc">
-    <h1>Results</h1>
+<main class="container doc">
+  <h1>Results</h1>
 
-    <section class="glass pad">
-      <h2>Summary of Analyses</h2>
+  <!-- ============================= -->
+  <!-- USAGE SUMMARY SECTION -->
+  <!-- ============================= -->
+  <section class="glass pad">
+    <h2>Usage Summary</h2>
+    <p>The figure below summarizes the percentage of respondents who reported any use of each drug. Higher-prevalence substances (e.g., cannabis, nicotine) allow stronger inferential modeling, while extremely rare or almost universally used substances remain unsuitable for formal statistical comparisons.</p>
 
-      <details open>
-        <summary><strong>Cannabis</strong></summary>
-        <p>Cannabis use showed strong associations with education and country. Higher-education groups (Master’s, University, Professional diploma) had the highest usage, while early school-leavers used least. The USA and UK showed the highest usage rates.</p>
-        <p>Personality differences were substantial: users scored higher in Openness and Neuroticism and lower in Agreeableness and Conscientiousness. Frequency of cannabis use was positively correlated with Openness and negatively with Conscientiousness and Agreeableness.</p>
-      </details>
+    <!-- Placeholder for barplot you will insert -->
+    <p><em>Usage percentage barplot will appear here (rendered from R).</em></p>
+  </section>
 
-      <details>
-        <summary><strong>Nicotine</strong></summary>
-        <p>Nicotine use was highest among respondents with partial college, professional certificates, or lower education, while those with advanced degrees used least. The USA and UK again exhibited strong usage patterns.</p>
-        <p>Nicotine users had lower Conscientiousness and Agreeableness and higher Neuroticism. Frequency of use reflected similar correlations: more frequent smokers showed lower Conscientiousness and Agreeableness and higher Neuroticism.</p>
-      </details>
+  <!-- ============================= -->
+  <!-- SUMMARY OF ANALYSES -->
+  <!-- ============================= -->
+  <section class="glass pad">
+    <h2>Summary of Analyses</h2>
 
-      <details>
-        <summary><strong>Amphetamines</strong></summary>
-        <p>Amphetamine use varied significantly by both education and country, with elevated use in the USA, UK, and Canada. Users tended to have university or partial college backgrounds.</p>
-        <p>Amphetamine users showed the strongest personality separation: much higher Openness and Neuroticism and markedly lower Conscientiousness and Agreeableness. Usage frequency correlated positively with Openness and Neuroticism and negatively with Conscientiousness and Agreeableness.</p>
-      </details>
+    <!-- Cannabis -->
+    <details open>
+      <summary><strong>Cannabis</strong></summary>
+      <p>Cannabis use showed strong associations with education and country. Higher-education groups (Master’s, University, Professional diploma) had the highest usage. The USA and UK showed the highest usage rates.</p>
+      <p>Users scored higher in Openness and Neuroticism and lower in Agreeableness and Conscientiousness. Frequency of cannabis use was positively correlated with Openness and negatively with Conscientiousness and Agreeableness.</p>
+    </details>
 
-      <p><a class="button" href="inferential_analyses.html" target="_blank" rel="noopener noreferrer">
+    <!-- Nicotine -->
+    <details>
+      <summary><strong>Nicotine</strong></summary>
+      <p>Nicotine use was highest among respondents with partial college, professional certificates, or lower education, while those with advanced degrees used least. The USA and UK again exhibited strong usage patterns.</p>
+      <p>Nicotine users had lower Conscientiousness and Agreeableness and higher Neuroticism. Usage frequency showed similar correlations.</p>
+    </details>
+
+    <!-- Amphetamines -->
+    <details>
+      <summary><strong>Amphetamines</strong></summary>
+      <p>Amphetamine use varied significantly by both education and country, with elevated use in the USA, UK, and Canada.</p>
+      <p>Amphetamine users showed the strongest personality separation: much higher Openness and Neuroticism and markedly lower Conscientiousness and Agreeableness.</p>
+    </details>
+
+    <!-- Benzodiazepines -->
+    <details>
+      <summary><strong>Benzodiazepines</strong></summary>
+      <p>Benzodiazepine users tended to have lower Conscientiousness and Agreeableness, and higher Neuroticism. Usage varied by country, with the USA and UK displaying elevated prevalence.</p>
+      <p>Frequency of benzo use correlated negatively with Conscientiousness and Agreeableness, and positively with Neuroticism.</p>
+    </details>
+
+    <!-- Stimulants -->
+    <details>
+      <summary><strong>Stimulants (Cocaine + Methamphetamine)</strong></summary>
+      <p>Stimulant use showed meaningful differences across education and country. Users tended to be less conscientious and less agreeable, with elevated Neuroticism and Openness.</p>
+      <p>Usage frequency correlated strongly with Openness and Neuroticism.</p>
+    </details>
+
+    <!-- High Risk -->
+    <details>
+      <summary><strong>High Risk (Heroin + Crack + VSA)</strong></summary>
+      <p>Though less common overall, high-risk drug use displayed distinct patterns: users showed markedly lower Conscientiousness and Agreeableness, paired with substantially elevated Neuroticism.</p>
+      <p>Usage was geographically clustered, with higher concentrations in the USA and UK.</p>
+    </details>
+
+    <!-- Psychedelics -->
+    <details>
+      <summary><strong>Psychedelics (LSD + Mushrooms + Ketamine + Ecstasy + Legal-H)</strong></summary>
+      <p>Psychedelic users were more likely to have university-level education and reported higher Openness scores than non-users. Usage frequency correlated positively with Openness and Neuroticism and negatively with Conscientiousness.</p>
+      <p>Country-level differences were also significant, with higher prevalence in North America and Europe.</p>
+    </details>
+
+    <p>
+      <a class="button" href="inferential_analyses.html" target="_blank" rel="noopener noreferrer">
         View Detailed Statistical Results
-      </a></p>
-    </section>
+      </a>
+    </p>
+  </section>
 
-    <section class="glass pad">
-      <h2>Interpretation</h2>
-      <p>Across the three most-used substances—cannabis, nicotine, and amphetamines—consistent psychological patterns emerged. Openness was the strongest positive predictor of both likelihood and frequency of use, reflecting novelty-seeking and exploratory tendencies. Conscientiousness showed a robust negative relationship with use across all drugs, highlighting impulsivity or reduced behavioral inhibition.</p>
-      <p>Neuroticism was particularly elevated among nicotine and amphetamine users and positively correlated with their usage frequency, suggesting affective vulnerability or coping-motivated use. Agreeableness showed steady negative associations with use and frequency, while Extraversion played a minimal role.</p>
-      <p>Together, these findings indicate that substance use behaviors are shaped jointly by personality characteristics, educational background, and sociocultural context. While causation cannot be inferred, the consistency of effects across three drug classes highlights stable psychological profiles associated with experimentation and habitual use.</p>
-    </section>
+  <!-- INTERPRETATION -->
+  <section class="glass pad">
+    <h2>Interpretation</h2>
+    <p>Across the analyzed substances—cannabis, nicotine, amphetamines, benzodiazepines, stimulants, psychedelics, and high-risk drugs—consistent psychological themes emerged.</p>
 
-    <section id="full-report" class="glass pad">
-      <h2>Full Written Report</h2>
-      <p>
-        The complete written report will be published at
-        <code>final_report.html</code> in this repository.
-      </p>
-      <p>
-        <a class="button" href="docs/final_report.html">Open Full Report</a>
-      </p>
-    </section>
-  </main>
+    <p><strong>Openness</strong> was a strong positive predictor of both likelihood and frequency of use. <strong>Conscientiousness</strong> showed a robust negative relationship with use across nearly all categories. <strong>Neuroticism</strong> was especially elevated among stimulant, benzodiazepine, and high-risk users.</p>
 
-  <footer class="site-footer">
-    <p><a href="index.html">← Back to Home</a></p>
-  </footer>
+    <p>Sociodemographic context (education level, country) also shaped usage patterns. While no causal claims can be made, the framework of personality × environment provides a coherent explanation for the observed patterns.</p>
+  </section>
 
-  <script src="script.js?v=1" defer></script>
+  <section id="full-report" class="glass pad">
+    <h2>Full Written Report</h2>
+    <p>
+      The complete written report will be published at
+      <code>final_report.html</code> in this repository.
+    </p>
+    <p>
+      <a class="button" href="docs/final_report.html">Open Full Report</a>
+    </p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p><a href="index.html">← Back to Home</a></p>
+</footer>
+
+<script src="script.js?v=1" defer></script>
 </body>
 </html>
