@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,25 +7,7 @@
   <title>Results — Personality × Drug Use</title>
   <meta name="description" content="Findings, statistical tests, interpretation, and link to full report." />
   <link rel="stylesheet" href="style.css?v=1" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.8em' font-size='80'>🧪</text></svg>">
 </head>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    document.body.classList.add("is-loaded");
-  });
-
-  document.addEventListener("click", function (e) {
-    const link = e.target.closest("a");
-    if (!link) return;
-    const url = link.getAttribute("href");
-    if (!url || url.startsWith("http") || url.startsWith("#") || url.startsWith("mailto:")) return;
-
-    e.preventDefault();
-    document.body.classList.add("is-fading-out");
-    setTimeout(() => { window.location = url; }, 300);
-  });
-</script>
 
 <body>
 <header class="site-header">
@@ -41,101 +24,74 @@
 </header>
 
 <main class="container doc">
-  <h1>Results</h1>
+<h1>Results</h1>
 
-  <!-- ============================= -->
-  <!-- USAGE SUMMARY SECTION -->
-  <!-- ============================= -->
-  <section class="glass pad">
-    <h2>Usage Summary</h2>
-    <p>The figure below summarizes the percentage of respondents who reported any use of each drug. Higher-prevalence substances (e.g., cannabis, nicotine) allow stronger inferential modeling, while extremely rare or almost universally used substances remain unsuitable for formal statistical comparisons.</p>
+<section class="glass pad">
+  <h2>Drug Usage Overview</h2>
+  <p>The barplot below summarizes the percentage of respondents who reported ever using each substance.</p>
+  <img src="figs/usage_barplot.png" alt="Drug Usage Rates" style="width:100%; max-width:700px;">
+</section>
 
-    <!-- Placeholder for barplot you will insert -->
-    <p><em>Usage percentage barplot will appear here (rendered from R).</em></p>
-  </section>
+<section class="glass pad">
+  <h2>Summary of Analyses</h2>
 
-  <!-- ============================= -->
-  <!-- SUMMARY OF ANALYSES -->
-  <!-- ============================= -->
-  <section class="glass pad">
-    <h2>Summary of Analyses</h2>
+  <details open>
+    <summary><strong>Cannabis</strong></summary>
+    <p>High usage across USA/UK, strongest personality separation.  
+    <em>Mini-table placeholder</em></p>
+  </details>
 
-    <!-- Cannabis -->
-    <details open>
-      <summary><strong>Cannabis</strong></summary>
-      <p>Cannabis use showed strong associations with education and country. Higher-education groups (Master’s, University, Professional diploma) had the highest usage. The USA and UK showed the highest usage rates.</p>
-      <p>Users scored higher in Openness and Neuroticism and lower in Agreeableness and Conscientiousness. Frequency of cannabis use was positively correlated with Openness and negatively with Conscientiousness and Agreeableness.</p>
-    </details>
+  <details>
+    <summary><strong>Nicotine</strong></summary>
+    <p>Usage concentrated among lower education levels and USA/UK.  
+    <em>Mini-table placeholder</em></p>
+  </details>
 
-    <!-- Nicotine -->
-    <details>
-      <summary><strong>Nicotine</strong></summary>
-      <p>Nicotine use was highest among respondents with partial college, professional certificates, or lower education, while those with advanced degrees used least. The USA and UK again exhibited strong usage patterns.</p>
-      <p>Nicotine users had lower Conscientiousness and Agreeableness and higher Neuroticism. Usage frequency showed similar correlations.</p>
-    </details>
+  <details>
+    <summary><strong>Amphetamines</strong></summary>
+    <p>Strong effects in Openness, Conscientiousness, Neuroticism.  
+    <em>Mini-table placeholder</em></p>
+  </details>
 
-    <!-- Amphetamines -->
-    <details>
-      <summary><strong>Amphetamines</strong></summary>
-      <p>Amphetamine use varied significantly by both education and country, with elevated use in the USA, UK, and Canada.</p>
-      <p>Amphetamine users showed the strongest personality separation: much higher Openness and Neuroticism and markedly lower Conscientiousness and Agreeableness.</p>
-    </details>
+  <details>
+    <summary><strong>Benzodiazepines</strong></summary>
+    <p>Moderate usage, personality differences smaller.  
+    <em>Mini-table placeholder</em></p>
+  </details>
 
-    <!-- Benzodiazepines -->
-    <details>
-      <summary><strong>Benzodiazepines</strong></summary>
-      <p>Benzodiazepine users tended to have lower Conscientiousness and Agreeableness, and higher Neuroticism. Usage varied by country, with the USA and UK displaying elevated prevalence.</p>
-      <p>Frequency of benzo use correlated negatively with Conscientiousness and Agreeableness, and positively with Neuroticism.</p>
-    </details>
+  <details>
+    <summary><strong>Stimulants (Cocaine + Meth)</strong></summary>
+    <p>Clear separation in Neuroticism + Openness.  
+    <em>Mini-table placeholder</em></p>
+  </details>
 
-    <!-- Stimulants -->
-    <details>
-      <summary><strong>Stimulants (Cocaine + Methamphetamine)</strong></summary>
-      <p>Stimulant use showed meaningful differences across education and country. Users tended to be less conscientious and less agreeable, with elevated Neuroticism and Openness.</p>
-      <p>Usage frequency correlated strongly with Openness and Neuroticism.</p>
-    </details>
+  <details>
+    <summary><strong>High-Risk Drugs (Heroin, Crack, VSA)</strong></summary>
+    <p>Rare but strongly patterned by education and country.  
+    <em>Mini-table placeholder</em></p>
+  </details>
 
-    <!-- High Risk -->
-    <details>
-      <summary><strong>High Risk (Heroin + Crack + VSA)</strong></summary>
-      <p>Though less common overall, high-risk drug use displayed distinct patterns: users showed markedly lower Conscientiousness and Agreeableness, paired with substantially elevated Neuroticism.</p>
-      <p>Usage was geographically clustered, with higher concentrations in the USA and UK.</p>
-    </details>
+  <details>
+    <summary><strong>Psychedelics</strong></summary>
+    <p>Usage linked to Openness; USA/UK highest prevalence.  
+    <em>Mini-table placeholder</em></p>
+  </details>
 
-    <!-- Psychedelics -->
-    <details>
-      <summary><strong>Psychedelics (LSD + Mushrooms + Ketamine + Ecstasy + Legal-H)</strong></summary>
-      <p>Psychedelic users were more likely to have university-level education and reported higher Openness scores than non-users. Usage frequency correlated positively with Openness and Neuroticism and negatively with Conscientiousness.</p>
-      <p>Country-level differences were also significant, with higher prevalence in North America and Europe.</p>
-    </details>
+  <p><a class="button" href="inferential_analyses.html" target="_blank" rel="noopener noreferrer">
+    View Detailed Statistical Results
+  </a></p>
+</section>
 
-    <p>
-      <a class="button" href="inferential_analyses.html" target="_blank" rel="noopener noreferrer">
-        View Detailed Statistical Results
-      </a>
-    </p>
-  </section>
+<section class="glass pad">
+  <h2>Interpretation</h2>
+  <p>Across all substance categories, Openness consistently predicted likelihood of experimenting with drugs, while Conscientiousness was a strong negative predictor. 
+     Sociocultural patterns also emerged: the USA and UK reported the highest usage rates for nearly all drugs.</p>
+</section>
 
-  <!-- INTERPRETATION -->
-  <section class="glass pad">
-    <h2>Interpretation</h2>
-    <p>Across the analyzed substances—cannabis, nicotine, amphetamines, benzodiazepines, stimulants, psychedelics, and high-risk drugs—consistent psychological themes emerged.</p>
-
-    <p><strong>Openness</strong> was a strong positive predictor of both likelihood and frequency of use. <strong>Conscientiousness</strong> showed a robust negative relationship with use across nearly all categories. <strong>Neuroticism</strong> was especially elevated among stimulant, benzodiazepine, and high-risk users.</p>
-
-    <p>Sociodemographic context (education level, country) also shaped usage patterns. While no causal claims can be made, the framework of personality × environment provides a coherent explanation for the observed patterns.</p>
-  </section>
-
-  <section id="full-report" class="glass pad">
-    <h2>Full Written Report</h2>
-    <p>
-      The complete written report will be published at
-      <code>final_report.html</code> in this repository.
-    </p>
-    <p>
-      <a class="button" href="docs/final_report.html">Open Full Report</a>
-    </p>
-  </section>
+<section id="full-report" class="glass pad">
+  <h2>Full Written Report</h2>
+  <p>The complete written report will be published at <code>final_report.html</code>.</p>
+</section>
 
 </main>
 
@@ -143,6 +99,5 @@
   <p><a href="index.html">← Back to Home</a></p>
 </footer>
 
-<script src="script.js?v=1" defer></script>
 </body>
 </html>
