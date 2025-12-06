@@ -11,7 +11,7 @@
 
 
 
-<title>Inferential Analysis</title>
+<title>Inferential Analyses</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -348,26 +348,23 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Inferential Analysis</h1>
+<h1 class="title toc-ignore">Inferential Analyses</h1>
 
 </div>
 
 
-<div id="chi-square-analyses" class="section level1">
-<h1>Chi-Square Analyses</h1>
-<pre class="r"><code>data &lt;- data %&gt;%
-  mutate(user_status = if_else(Cannabis &gt; 0, &quot;User&quot;, &quot;Non-User&quot;))
-
-table(data$user_status)</code></pre>
+<p>#1. CANNABIS ANALYSES ## Create cannabis user variable</p>
+<pre class="r"><code>cannabis_data &lt;- classify_user(data, &quot;Cannabis&quot;)
+table(cannabis_data$user_status)</code></pre>
 <pre><code>## 
 ## Non-User     User 
 ##      412     1464</code></pre>
-<div id="education-and-user-status" class="section level2">
-<h2>Education and User Status</h2>
-<pre class="r"><code>tab_edu &lt;- table(data$Education, data$user_status)
-kable(tab_edu, caption=&quot;Contingency Table: Education × User Status&quot;)</code></pre>
+<div id="chi-square-education-x-cannabis-use" class="section level2">
+<h2>Chi-Square: Education x Cannabis Use</h2>
+<pre class="r"><code>tab_edu_c &lt;- table(cannabis_data$Education, cannabis_data$user_status)
+kable(tab_edu_c, caption=&quot;Education × Cannabis Use&quot;)</code></pre>
 <table>
-<caption>Contingency Table: Education × User Status</caption>
+<caption>Education × Cannabis Use</caption>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -424,19 +421,19 @@ degree</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>chisq.test(tab_edu)</code></pre>
+<pre class="r"><code>chisq.test(tab_edu_c)</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s Chi-squared test
 ## 
-## data:  tab_edu
+## data:  tab_edu_c
 ## X-squared = 112.08, df = 8, p-value &lt; 2.2e-16</code></pre>
 </div>
-<div id="country-and-user-status" class="section level2">
-<h2>Country and User Status</h2>
-<pre class="r"><code>tab_country &lt;- table(data$Country, data$user_status)
-kable(tab_country, caption=&quot;Contingency Table: Country × User Status&quot;)</code></pre>
+<div id="chi-square-country-x-cannabis-use" class="section level2">
+<h2>Chi-Square: Country x Cannabis Use</h2>
+<pre class="r"><code>tab_country_c &lt;- table(cannabis_data$Country, cannabis_data$user_status)
+kable(tab_country_c, caption=&quot;Country × Cannabis Use&quot;)</code></pre>
 <table>
-<caption>Contingency Table: Country × User Status</caption>
+<caption>Country × Cannabis Use</caption>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -482,28 +479,25 @@ kable(tab_country, caption=&quot;Contingency Table: Country × User Status&quot;
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>chisq.test(tab_country)</code></pre>
+<pre class="r"><code>chisq.test(tab_country_c)</code></pre>
 <pre><code>## Warning in stats::chisq.test(x, y, ...): Chi-squared approximation may be
 ## incorrect</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s Chi-squared test
 ## 
-## data:  tab_country
+## data:  tab_country_c
 ## X-squared = 241.94, df = 6, p-value &lt; 2.2e-16</code></pre>
 </div>
-</div>
-<div id="anova-trait-differences" class="section level1">
-<h1>ANOVA: Trait Differences</h1>
-<pre class="r"><code>traits &lt;- c(&quot;Nscore&quot;,&quot;Escore&quot;,&quot;Oscore&quot;,&quot;Ascore&quot;,&quot;Cscore&quot;)
-
-anova_results &lt;- map_df(traits, function(trait) {
-  model &lt;- aov(as.formula(paste0(trait, &quot; ~ user_status&quot;)), data = data)
-  tidy(model) %&gt;% filter(term == &quot;user_status&quot;) %&gt;% mutate(trait = trait)
+<div id="anova-traits-vs.-cannabis-user-status" class="section level2">
+<h2>ANOVA: Traits vs. Cannabis User Status</h2>
+<pre class="r"><code>anova_cannabis &lt;- map_df(traits, function(trait){
+  model &lt;- aov(as.formula(paste0(trait, &quot; ~ user_status&quot;)), data=cannabis_data)
+  tidy(model) %&gt;% filter(term==&quot;user_status&quot;) %&gt;% mutate(trait=trait)
 })
 
-kable(anova_results, caption=&quot;ANOVA Results: Trait Differences by User Status&quot;)</code></pre>
+kable(anova_cannabis, caption=&quot;Trait Differences (Cannabis Users vs Non-Users)&quot;)</code></pre>
 <table>
-<caption>ANOVA Results: Trait Differences by User Status</caption>
+<caption>Trait Differences (Cannabis Users vs Non-Users)</caption>
 <colgroup>
 <col width="18%" />
 <col width="4%" />
@@ -573,16 +567,16 @@ kable(anova_results, caption=&quot;ANOVA Results: Trait Differences by User Stat
 </tbody>
 </table>
 </div>
-<div id="correlation-analysis" class="section level1">
-<h1>Correlation Analysis</h1>
-<pre class="r"><code>corr_results &lt;- map_df(traits, function(trait) {
-  cor_test &lt;- cor.test(data[[trait]], data$Cannabis, method=&quot;pearson&quot;)
-  tibble(trait=trait, correlation=cor_test$estimate, p_value=cor_test$p.value)
+<div id="correlation-traits-vs-cannabis-frequency" class="section level2">
+<h2>Correlation: Traits vs Cannabis Frequency</h2>
+<pre class="r"><code>corr_cannabis &lt;- map_df(traits, function(trait){
+  ct &lt;- cor.test(cannabis_data[[trait]], cannabis_data$Cannabis)
+  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
 })
 
-kable(corr_results, digits=3, caption=&quot;Correlation Between Traits and Cannabis Use&quot;)</code></pre>
+kable(corr_cannabis, digits=3, caption=&quot;Trait Correlations With Cannabis Use Frequency&quot;)</code></pre>
 <table>
-<caption>Correlation Between Traits and Cannabis Use</caption>
+<caption>Trait Correlations With Cannabis Use Frequency</caption>
 <thead>
 <tr class="header">
 <th align="left">trait</th>
@@ -619,19 +613,536 @@ kable(corr_results, digits=3, caption=&quot;Correlation Between Traits and Canna
 </tbody>
 </table>
 </div>
-<div id="optional-logistic-regression" class="section level1">
-<h1>Optional Logistic Regression</h1>
-<pre class="r"><code>data &lt;- data %&gt;%
-  mutate(user_status_num = if_else(user_status == &quot;User&quot;, 1, 0))
-
-logit_model &lt;- glm(user_status_num ~ Nscore + Escore + Oscore + Ascore + Cscore,
-                   data = data,
-                   family = binomial)</code></pre>
+<div id="nicotine-analyses" class="section level1">
+<h1>2. NICOTINE ANALYSES</h1>
+<div id="create-nicotine-user-variable" class="section level2">
+<h2>Create Nicotine user variable</h2>
+<pre class="r"><code>nicotine_data &lt;- classify_user(data, &quot;Nicotine&quot;)
+table(nicotine_data$user_status)</code></pre>
+<pre><code>## 
+## Non-User     User 
+##      428     1448</code></pre>
 </div>
-<div id="export-results" class="section level1">
-<h1>Export Results</h1>
-<pre class="r"><code>write_csv(anova_results, &quot;anova_results.csv&quot;)
-write_csv(corr_results, &quot;correlation_results.csv&quot;)</code></pre>
+<div id="chi-square-education-nicotine-use" class="section level2">
+<h2>Chi-Square: Education × Nicotine Use</h2>
+<pre class="r"><code>tab_edu_n &lt;- table(nicotine_data$Education, nicotine_data$user_status)
+kable(tab_edu_n, caption=&quot;Education × Nicotine Use&quot;)</code></pre>
+<table>
+<caption>Education × Nicotine Use</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Non-User</th>
+<th align="right">User</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Doctorate degree</td>
+<td align="right">27</td>
+<td align="right">62</td>
+</tr>
+<tr class="even">
+<td align="left">Left school at 16 years</td>
+<td align="right">22</td>
+<td align="right">76</td>
+</tr>
+<tr class="odd">
+<td align="left">Left school at 17 years</td>
+<td align="right">5</td>
+<td align="right">24</td>
+</tr>
+<tr class="even">
+<td align="left">Left school at 18 years</td>
+<td align="right">11</td>
+<td align="right">88</td>
+</tr>
+<tr class="odd">
+<td align="left">Left school before 16 years</td>
+<td align="right">3</td>
+<td align="right">25</td>
+</tr>
+<tr class="even">
+<td align="left">Masters degree</td>
+<td align="right">90</td>
+<td align="right">193</td>
+</tr>
+<tr class="odd">
+<td align="left">Professional certificate/ diploma</td>
+<td align="right">70</td>
+<td align="right">199</td>
+</tr>
+<tr class="even">
+<td align="left">Some college or university, no certificate or
+degree</td>
+<td align="right">63</td>
+<td align="right">440</td>
+</tr>
+<tr class="odd">
+<td align="left">University degree</td>
+<td align="right">137</td>
+<td align="right">341</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>chisq.test(tab_edu_n)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab_edu_n
+## X-squared = 67.482, df = 8, p-value = 1.555e-11</code></pre>
+</div>
+<div id="chi-square-country-nicotine-use" class="section level2">
+<h2>Chi-Square: Country × Nicotine Use</h2>
+<pre class="r"><code>tab_country_n &lt;- table(nicotine_data$Country, nicotine_data$user_status)
+kable(tab_country_n, caption=&quot;Country × Nicotine Use&quot;)</code></pre>
+<table>
+<caption>Country × Nicotine Use</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Non-User</th>
+<th align="right">User</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Australia</td>
+<td align="right">11</td>
+<td align="right">41</td>
+</tr>
+<tr class="even">
+<td align="left">Canada</td>
+<td align="right">15</td>
+<td align="right">72</td>
+</tr>
+<tr class="odd">
+<td align="left">New Zealand</td>
+<td align="right">1</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">Other</td>
+<td align="right">14</td>
+<td align="right">104</td>
+</tr>
+<tr class="odd">
+<td align="left">Republic of Ireland</td>
+<td align="right">1</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="left">UK</td>
+<td align="right">320</td>
+<td align="right">723</td>
+</tr>
+<tr class="odd">
+<td align="left">USA</td>
+<td align="right">66</td>
+<td align="right">485</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>chisq.test(tab_country_n)</code></pre>
+<pre><code>## Warning in stats::chisq.test(x, y, ...): Chi-squared approximation may be
+## incorrect</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab_country_n
+## X-squared = 86.669, df = 6, p-value &lt; 2.2e-16</code></pre>
+</div>
+<div id="anova-traits-vs-nicotine-user-status" class="section level2">
+<h2>ANOVA: Traits vs Nicotine User Status</h2>
+<pre class="r"><code>anova_nicotine &lt;- map_df(traits, function(trait){
+  model &lt;- aov(as.formula(paste0(trait,&quot; ~ user_status&quot;)), data=nicotine_data)
+  tidy(model) %&gt;% filter(term==&quot;user_status&quot;) %&gt;% mutate(trait=trait)
+})
+
+kable(anova_nicotine, caption=&quot;Trait Differences (Nicotine Users vs Non-Users)&quot;)</code></pre>
+<table>
+<caption>Trait Differences (Nicotine Users vs Non-Users)</caption>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">df</th>
+<th align="right">sumsq</th>
+<th align="right">meansq</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">trait</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">15.448103</td>
+<td align="right">15.448103</td>
+<td align="right">15.609580</td>
+<td align="right">0.0000807</td>
+<td align="left">Nscore</td>
+</tr>
+<tr class="even">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">2.060328</td>
+<td align="right">2.060328</td>
+<td align="right">2.071455</td>
+<td align="right">0.1502453</td>
+<td align="left">Escore</td>
+</tr>
+<tr class="odd">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">50.139162</td>
+<td align="right">50.139162</td>
+<td align="right">51.929500</td>
+<td align="right">0.0000000</td>
+<td align="left">Oscore</td>
+</tr>
+<tr class="even">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">23.523517</td>
+<td align="right">23.523517</td>
+<td align="right">23.968187</td>
+<td align="right">0.0000011</td>
+<td align="left">Ascore</td>
+</tr>
+<tr class="odd">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">46.066105</td>
+<td align="right">46.066105</td>
+<td align="right">47.402858</td>
+<td align="right">0.0000000</td>
+<td align="left">Cscore</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="correlation-traits-vs-nicotine-frequency" class="section level2">
+<h2>Correlation: Traits vs Nicotine Frequency</h2>
+<pre class="r"><code>corr_nicotine &lt;- map_df(traits, function(trait){
+  ct &lt;- cor.test(nicotine_data[[trait]], nicotine_data$Nicotine)
+  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
+})
+
+kable(corr_nicotine, digits=3, caption=&quot;Trait Correlations With Nicotine Use Frequency&quot;)</code></pre>
+<table>
+<caption>Trait Correlations With Nicotine Use Frequency</caption>
+<thead>
+<tr class="header">
+<th align="left">trait</th>
+<th align="right">correlation</th>
+<th align="right">p_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Nscore</td>
+<td align="right">0.127</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">Escore</td>
+<td align="right">-0.020</td>
+<td align="right">0.38</td>
+</tr>
+<tr class="odd">
+<td align="left">Oscore</td>
+<td align="right">0.193</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">Ascore</td>
+<td align="right">-0.112</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Cscore</td>
+<td align="right">-0.233</td>
+<td align="right">0.00</td>
+</tr>
+</tbody>
+</table>
+<ol start="3" style="list-style-type: decimal">
+<li>AMPHETAMINE ANALYSES</li>
+</ol>
+</div>
+<div id="create-amphetamine-user-variable" class="section level2">
+<h2>Create Amphetamine user variable</h2>
+<pre class="r"><code>amphet_data &lt;- classify_user(data, &quot;Amphet&quot;)
+table(amphet_data$user_status)</code></pre>
+<pre><code>## 
+## Non-User     User 
+##      973      903</code></pre>
+</div>
+<div id="chi-square-education-amphetamine-use" class="section level2">
+<h2>Chi-Square: Education × Amphetamine Use</h2>
+<pre class="r"><code>tab_edu_a &lt;- table(amphet_data$Education, amphet_data$user_status)
+kable(tab_edu_a, caption=&quot;Education × Amphetamine Use&quot;)</code></pre>
+<table>
+<caption>Education × Amphetamine Use</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Non-User</th>
+<th align="right">User</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Doctorate degree</td>
+<td align="right">48</td>
+<td align="right">41</td>
+</tr>
+<tr class="even">
+<td align="left">Left school at 16 years</td>
+<td align="right">51</td>
+<td align="right">47</td>
+</tr>
+<tr class="odd">
+<td align="left">Left school at 17 years</td>
+<td align="right">10</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="left">Left school at 18 years</td>
+<td align="right">47</td>
+<td align="right">52</td>
+</tr>
+<tr class="odd">
+<td align="left">Left school before 16 years</td>
+<td align="right">10</td>
+<td align="right">18</td>
+</tr>
+<tr class="even">
+<td align="left">Masters degree</td>
+<td align="right">184</td>
+<td align="right">99</td>
+</tr>
+<tr class="odd">
+<td align="left">Professional certificate/ diploma</td>
+<td align="right">154</td>
+<td align="right">115</td>
+</tr>
+<tr class="even">
+<td align="left">Some college or university, no certificate or
+degree</td>
+<td align="right">210</td>
+<td align="right">293</td>
+</tr>
+<tr class="odd">
+<td align="left">University degree</td>
+<td align="right">259</td>
+<td align="right">219</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>chisq.test(tab_edu_a)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab_edu_a
+## X-squared = 51.733, df = 8, p-value = 1.895e-08</code></pre>
+</div>
+<div id="chi-square-country-amphetamine-use" class="section level2">
+<h2>Chi-Square: Country × Amphetamine Use</h2>
+<pre class="r"><code>tab_country_a &lt;- table(amphet_data$Country, amphet_data$user_status)
+kable(tab_country_a, caption=&quot;Country × Amphetamine Use&quot;)</code></pre>
+<table>
+<caption>Country × Amphetamine Use</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Non-User</th>
+<th align="right">User</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Australia</td>
+<td align="right">13</td>
+<td align="right">39</td>
+</tr>
+<tr class="even">
+<td align="left">Canada</td>
+<td align="right">39</td>
+<td align="right">48</td>
+</tr>
+<tr class="odd">
+<td align="left">New Zealand</td>
+<td align="right">3</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Other</td>
+<td align="right">54</td>
+<td align="right">64</td>
+</tr>
+<tr class="odd">
+<td align="left">Republic of Ireland</td>
+<td align="right">7</td>
+<td align="right">13</td>
+</tr>
+<tr class="even">
+<td align="left">UK</td>
+<td align="right">676</td>
+<td align="right">367</td>
+</tr>
+<tr class="odd">
+<td align="left">USA</td>
+<td align="right">181</td>
+<td align="right">370</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>chisq.test(tab_country_a)</code></pre>
+<pre><code>## Warning in stats::chisq.test(x, y, ...): Chi-squared approximation may be
+## incorrect</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab_country_a
+## X-squared = 170.78, df = 6, p-value &lt; 2.2e-16</code></pre>
+</div>
+<div id="anova-traits-vs-amphetamine-user-status" class="section level2">
+<h2>ANOVA: Traits vs Amphetamine User Status</h2>
+<pre class="r"><code>anova_amphet &lt;- map_df(traits, function(trait){
+  model &lt;- aov(as.formula(paste0(trait,&quot; ~ user_status&quot;)), data=amphet_data)
+  tidy(model) %&gt;% filter(term==&quot;user_status&quot;) %&gt;% mutate(trait=trait)
+})
+
+kable(anova_amphet, caption=&quot;Trait Differences (Amphetamine Users vs Non-Users)&quot;)</code></pre>
+<table>
+<caption>Trait Differences (Amphetamine Users vs Non-Users)</caption>
+<colgroup>
+<col width="18%" />
+<col width="4%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="15%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">df</th>
+<th align="right">sumsq</th>
+<th align="right">meansq</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">trait</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">20.298611</td>
+<td align="right">20.298611</td>
+<td align="right">20.564573</td>
+<td align="right">0.0000061</td>
+<td align="left">Nscore</td>
+</tr>
+<tr class="even">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">3.347427</td>
+<td align="right">3.347427</td>
+<td align="right">3.367831</td>
+<td align="right">0.0666396</td>
+<td align="left">Escore</td>
+</tr>
+<tr class="odd">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">105.167477</td>
+<td align="right">105.167477</td>
+<td align="right">112.339262</td>
+<td align="right">0.0000000</td>
+<td align="left">Oscore</td>
+</tr>
+<tr class="even">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">30.742352</td>
+<td align="right">30.742352</td>
+<td align="right">31.446907</td>
+<td align="right">0.0000000</td>
+<td align="left">Ascore</td>
+</tr>
+<tr class="odd">
+<td align="left">user_status</td>
+<td align="right">1</td>
+<td align="right">78.479942</td>
+<td align="right">78.479942</td>
+<td align="right">82.220693</td>
+<td align="right">0.0000000</td>
+<td align="left">Cscore</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="correlation-traits-vs-amphetamine-frequency" class="section level2">
+<h2>Correlation: Traits vs Amphetamine Frequency</h2>
+<pre class="r"><code>corr_amphet &lt;- map_df(traits, function(trait){
+  ct &lt;- cor.test(amphet_data[[trait]], amphet_data$Amphet)
+  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
+})
+
+kable(corr_amphet, digits=3, caption=&quot;Trait Correlations With Amphetamine Use Frequency&quot;)</code></pre>
+<table>
+<caption>Trait Correlations With Amphetamine Use Frequency</caption>
+<thead>
+<tr class="header">
+<th align="left">trait</th>
+<th align="right">correlation</th>
+<th align="right">p_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Nscore</td>
+<td align="right">0.133</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">Escore</td>
+<td align="right">-0.043</td>
+<td align="right">0.062</td>
+</tr>
+<tr class="odd">
+<td align="left">Oscore</td>
+<td align="right">0.223</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">Ascore</td>
+<td align="right">-0.150</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">Cscore</td>
+<td align="right">-0.239</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="save-outputs" class="section level1">
+<h1>Save outputs</h1>
+<pre class="r"><code>write_csv(anova_cannabis, &quot;anova_cannabis.csv&quot;)
+write_csv(anova_nicotine, &quot;anova_nicotine.csv&quot;)
+write_csv(anova_amphet, &quot;anova_amphet.csv&quot;)
+
+write_csv(corr_cannabis, &quot;corr_cannabis.csv&quot;)
+write_csv(corr_nicotine, &quot;corr_nicotine.csv&quot;)
+write_csv(corr_amphet, &quot;corr_amphet.csv&quot;)</code></pre>
 </div>
 
 

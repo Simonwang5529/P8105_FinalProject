@@ -1,82 +1,167 @@
 ---
-title: "Inferential Analysis"
+title: "Inferential Analyses"
 output: html_document
 ---
 
-```{r setup, include = FALSE}
+```{r setup, include=FALSE}
 library(tidyverse)
 library(janitor)
 library(broom)
 library(knitr)
 
-# Load the cleaned dataset
 data <- read_csv("data/cleaned_drug_data.csv")
-
-# Preview
 glimpse(data)
-```
 
-# Chi-Square Analyses
-
-```{r}
-data <- data %>%
-  mutate(user_status = if_else(Cannabis > 0, "User", "Non-User"))
-
-table(data$user_status)
-```
-
-## Education and User Status
-
-```{r}
-tab_edu <- table(data$Education, data$user_status)
-kable(tab_edu, caption="Contingency Table: Education × User Status")
-chisq.test(tab_edu)
-```
-
-## Country and User Status
-```{r}
-tab_country <- table(data$Country, data$user_status)
-kable(tab_country, caption="Contingency Table: Country × User Status")
-chisq.test(tab_country)
-```
-
-# ANOVA: Trait Differences
-```{r}
 traits <- c("Nscore","Escore","Oscore","Ascore","Cscore")
 
-anova_results <- map_df(traits, function(trait) {
-  model <- aov(as.formula(paste0(trait, " ~ user_status")), data = data)
-  tidy(model) %>% filter(term == "user_status") %>% mutate(trait = trait)
+# Helper: classify user_status for any drug column
+classify_user <- function(df, drug){
+  df %>% mutate(user_status = if_else(.data[[drug]] > 0, "User","Non-User"))
+}
+```
+
+#1. CANNABIS ANALYSES
+## Create cannabis user variable
+```{r}
+cannabis_data <- classify_user(data, "Cannabis")
+table(cannabis_data$user_status)
+```
+
+## Chi-Square: Education x Cannabis Use
+```{r}
+tab_edu_c <- table(cannabis_data$Education, cannabis_data$user_status)
+kable(tab_edu_c, caption="Education × Cannabis Use")
+chisq.test(tab_edu_c)
+```
+
+## Chi-Square: Country x Cannabis Use
+```{r}
+tab_country_c <- table(cannabis_data$Country, cannabis_data$user_status)
+kable(tab_country_c, caption="Country × Cannabis Use")
+chisq.test(tab_country_c)
+```
+
+## ANOVA: Traits vs. Cannabis User Status
+```{r}
+anova_cannabis <- map_df(traits, function(trait){
+  model <- aov(as.formula(paste0(trait, " ~ user_status")), data=cannabis_data)
+  tidy(model) %>% filter(term=="user_status") %>% mutate(trait=trait)
 })
 
-kable(anova_results, caption="ANOVA Results: Trait Differences by User Status")
+kable(anova_cannabis, caption="Trait Differences (Cannabis Users vs Non-Users)")
 ```
 
-# Correlation Analysis
-
+## Correlation: Traits vs Cannabis Frequency
 ```{r}
-corr_results <- map_df(traits, function(trait) {
-  cor_test <- cor.test(data[[trait]], data$Cannabis, method="pearson")
-  tibble(trait=trait, correlation=cor_test$estimate, p_value=cor_test$p.value)
+corr_cannabis <- map_df(traits, function(trait){
+  ct <- cor.test(cannabis_data[[trait]], cannabis_data$Cannabis)
+  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
 })
 
-kable(corr_results, digits=3, caption="Correlation Between Traits and Cannabis Use")
+kable(corr_cannabis, digits=3, caption="Trait Correlations With Cannabis Use Frequency")
 ```
 
-# Optional Logistic Regression
+
+# 2. NICOTINE ANALYSES
+
+## Create Nicotine user variable
 ```{r}
-data <- data %>%
-  mutate(user_status_num = if_else(user_status == "User", 1, 0))
-
-logit_model <- glm(user_status_num ~ Nscore + Escore + Oscore + Ascore + Cscore,
-                   data = data,
-                   family = binomial)
-
+nicotine_data <- classify_user(data, "Nicotine")
+table(nicotine_data$user_status)
 ```
 
-
-# Export Results
+## Chi-Square: Education × Nicotine Use
 ```{r}
-write_csv(anova_results, "anova_results.csv")
-write_csv(corr_results, "correlation_results.csv")
+tab_edu_n <- table(nicotine_data$Education, nicotine_data$user_status)
+kable(tab_edu_n, caption="Education × Nicotine Use")
+chisq.test(tab_edu_n)
 ```
+
+## Chi-Square: Country × Nicotine Use
+```{r}
+tab_country_n <- table(nicotine_data$Country, nicotine_data$user_status)
+kable(tab_country_n, caption="Country × Nicotine Use")
+chisq.test(tab_country_n)
+```
+
+## ANOVA: Traits vs Nicotine User Status
+```{r}
+anova_nicotine <- map_df(traits, function(trait){
+  model <- aov(as.formula(paste0(trait," ~ user_status")), data=nicotine_data)
+  tidy(model) %>% filter(term=="user_status") %>% mutate(trait=trait)
+})
+
+kable(anova_nicotine, caption="Trait Differences (Nicotine Users vs Non-Users)")
+```
+
+
+## Correlation: Traits vs Nicotine Frequency
+```{r}
+corr_nicotine <- map_df(traits, function(trait){
+  ct <- cor.test(nicotine_data[[trait]], nicotine_data$Nicotine)
+  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
+})
+
+kable(corr_nicotine, digits=3, caption="Trait Correlations With Nicotine Use Frequency")
+```
+
+
+3. AMPHETAMINE ANALYSES
+
+## Create Amphetamine user variable
+```{r}
+amphet_data <- classify_user(data, "Amphet")
+table(amphet_data$user_status)
+```
+
+## Chi-Square: Education × Amphetamine Use
+```{r}
+tab_edu_a <- table(amphet_data$Education, amphet_data$user_status)
+kable(tab_edu_a, caption="Education × Amphetamine Use")
+chisq.test(tab_edu_a)
+```
+
+## Chi-Square: Country × Amphetamine Use
+```{r}
+tab_country_a <- table(amphet_data$Country, amphet_data$user_status)
+kable(tab_country_a, caption="Country × Amphetamine Use")
+chisq.test(tab_country_a)
+```
+
+## ANOVA: Traits vs Amphetamine User Status
+```{r}
+anova_amphet <- map_df(traits, function(trait){
+  model <- aov(as.formula(paste0(trait," ~ user_status")), data=amphet_data)
+  tidy(model) %>% filter(term=="user_status") %>% mutate(trait=trait)
+})
+
+kable(anova_amphet, caption="Trait Differences (Amphetamine Users vs Non-Users)")
+```
+
+## Correlation: Traits vs Amphetamine Frequency
+```{r}
+corr_amphet <- map_df(traits, function(trait){
+  ct <- cor.test(amphet_data[[trait]], amphet_data$Amphet)
+  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
+})
+
+kable(corr_amphet, digits=3, caption="Trait Correlations With Amphetamine Use Frequency")
+```
+
+# Save outputs
+```{r}
+write_csv(anova_cannabis, "anova_cannabis.csv")
+write_csv(anova_nicotine, "anova_nicotine.csv")
+write_csv(anova_amphet, "anova_amphet.csv")
+
+write_csv(corr_cannabis, "corr_cannabis.csv")
+write_csv(corr_nicotine, "corr_nicotine.csv")
+write_csv(corr_amphet, "corr_amphet.csv")
+```
+
+
+
+
+
+
+
