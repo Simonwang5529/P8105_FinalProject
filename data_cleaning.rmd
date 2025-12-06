@@ -1,14 +1,16 @@
 ---
-title: "data_cleaning"
-output: github_document
+title: "Data Cleaning"
+output: html_document
 ---
 
+Description: This document contains our data cleaning and processing steps.
+
 ```{r}
-# Data cleaning
+# Data cleaning steps
 
 # Gender will be recode into: male = 0, female = 1
 
-# age band will be recode into ordinal numeric levels
+# Age band will be recode into ordinal numeric levels
 
 # all drug use will be recode into numbers below
 # 0: never used
@@ -19,7 +21,7 @@ output: github_document
 # 5: Used in Last Week
 # 6: Used in Last Day
 
-# since we are not using education, country, and ethnicity, these valuable are unchanged
+# Since we are not using education, country, and ethnicity, these valuable are unchanged
 
 ```
 
