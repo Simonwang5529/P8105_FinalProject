@@ -8,161 +8,148 @@ library(tidyverse)
 library(janitor)
 library(broom)
 library(knitr)
+library(purrr)
 
 data <- read_csv("data/cleaned_drug_data.csv")
-glimpse(data)
 
 traits <- c("Nscore","Escore","Oscore","Ascore","Cscore")
 
-# Helper: classify user_status for any drug column
-classify_user <- function(df, drug){
-  df %>% mutate(user_status = if_else(.data[[drug]] > 0, "User","Non-User"))
+make_status <- function(x) ifelse(x>0,"User","Non-User")
+```
+
+# 1. Define Drug Groups
+
+```{r}
+data <- data %>%
+  mutate(
+    stim_group = Coke + Meth, #stimulants
+    highrisk = Heroin + Crack + VSA, #highly potent & fatal
+    psych = LSD + Mushrooms + Ketamine + Ecstasy + Legalh #psychedelics
+  )
+```
+
+# 2. Function for Chi-square, ANOVA, Correlations
+
+```{r}
+#helper functions
+chi_wrapper <- function(var){
+  tab <- table(data[[var]], data$Education)
+  chi1 <- chisq.test(table(data[[var]]>0, data$Education))
+  chi2 <- chisq.test(table(data[[var]]>0, data$Country))
+  list(edu = chi1, country = chi2)
+}
+
+anova_wrapper <- function(var){
+  data %>% mutate(status = make_status(.data[[var]])) -> d
+  map_df(traits, function(tr){
+    model <- aov(as.formula(paste0(tr," ~ status")), data=d)
+    tidy(model) %>% filter(term=="status") %>% mutate(trait=tr)
+  })
+}
+
+corr_wrapper <- function(var){
+  map_df(traits, function(tr){
+    ct <- cor.test(data[[tr]], data[[var]], method="pearson")
+    tibble(trait=tr, correlation=ct$estimate, p=ct$p.value)
+  })
 }
 ```
 
-#1. CANNABIS ANALYSES
 
-## Create cannabis user variable
+# 3. Run Analyses for Selected Drugs
+
+## 3.1 Cannabis
 ```{r}
-cannabis_data <- classify_user(data, "Cannabis")
-table(cannabis_data$user_status)
+chi_can <- chi_wrapper("Cannabis")
+chi_can$edu
+chi_can$country
+
+anova_can <- anova_wrapper("Cannabis")
+kable(anova_can, caption="ANOVA — Cannabis")
+
+corr_can <- corr_wrapper("Cannabis")
+kable(corr_can, caption="Correlations — Cannabis")
 ```
 
-## Chi-Square: Education x Cannabis Use
+## 3.2 Nicotine
 ```{r}
-tab_edu_c <- table(cannabis_data$Education, cannabis_data$user_status)
-kable(tab_edu_c, caption="Education × Cannabis Use")
-chisq.test(tab_edu_c)
-```
+chi_nic <- chi_wrapper("Nicotine")
+chi_nic$edu
+chi_nic$country
 
-## Chi-Square: Country x Cannabis Use
-```{r}
-tab_country_c <- table(cannabis_data$Country, cannabis_data$user_status)
-kable(tab_country_c, caption="Country × Cannabis Use")
-chisq.test(tab_country_c)
-```
+anova_nic <- anova_wrapper("Nicotine")
+kable(anova_nic, caption="ANOVA — Nicotine")
 
-## ANOVA: Traits vs. Cannabis User Status
-```{r}
-anova_cannabis <- map_df(traits, function(trait){
-  model <- aov(as.formula(paste0(trait, " ~ user_status")), data=cannabis_data)
-  tidy(model) %>% filter(term=="user_status") %>% mutate(trait=trait)
-})
+corr_nic <- corr_wrapper("Nicotine")
+kable(corr_nic, caption="Correlations — Nicotine")
 
-kable(anova_cannabis, caption="Trait Differences (Cannabis Users vs Non-Users)")
-```
-
-## Correlation: Traits vs Cannabis Frequency
-```{r}
-corr_cannabis <- map_df(traits, function(trait){
-  ct <- cor.test(cannabis_data[[trait]], cannabis_data$Cannabis)
-  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
-})
-
-kable(corr_cannabis, digits=3, caption="Trait Correlations With Cannabis Use Frequency")
 ```
 
 
-# 2. NICOTINE ANALYSES
-
-## Create Nicotine user variable
+## 3.3 Amphetamines
 ```{r}
-nicotine_data <- classify_user(data, "Nicotine")
-table(nicotine_data$user_status)
+chi_amp <- chi_wrapper("Amphet")
+chi_amp$edu
+chi_amp$country
+
+anova_amp <- anova_wrapper("Amphet")
+kable(anova_amp, caption="ANOVA — Amphetamines")
+
+corr_amp <- corr_wrapper("Amphet")
+kable(corr_amp, caption="Correlations — Amphetamines")
 ```
 
-## Chi-Square: Education × Nicotine Use
+## 3.4 Benzodiazepines
 ```{r}
-tab_edu_n <- table(nicotine_data$Education, nicotine_data$user_status)
-kable(tab_edu_n, caption="Education × Nicotine Use")
-chisq.test(tab_edu_n)
+chi_ben <- chi_wrapper("Benzos")
+chi_ben$edu
+chi_ben$country
+
+anova_ben <- anova_wrapper("Benzos")
+kable(anova_ben, caption="ANOVA — Benzodiazepines")
+
+corr_ben <- corr_wrapper("Benzos")
+kable(corr_ben, caption="Correlations — Benzodiazepines")
 ```
 
-## Chi-Square: Country × Nicotine Use
+## 3.5 Stimulants (Cocaine + Methamphetamine)
 ```{r}
-tab_country_n <- table(nicotine_data$Country, nicotine_data$user_status)
-kable(tab_country_n, caption="Country × Nicotine Use")
-chisq.test(tab_country_n)
+chi_stim <- chi_wrapper("stim_group")
+chi_stim$edu
+chi_stim$country
+
+anova_stim <- anova_wrapper("stim_group")
+kable(anova_stim, caption="ANOVA — Stimulants")
+
+corr_stim <- corr_wrapper("stim_group")
+kable(corr_stim, caption="Correlations — Stimulants")
 ```
 
-## ANOVA: Traits vs Nicotine User Status
+## 3.6 High Risk (Heroin + Crack + VSA)
 ```{r}
-anova_nicotine <- map_df(traits, function(trait){
-  model <- aov(as.formula(paste0(trait," ~ user_status")), data=nicotine_data)
-  tidy(model) %>% filter(term=="user_status") %>% mutate(trait=trait)
-})
+chi_hr <- chi_wrapper("highrisk")
+chi_hr$edu
+chi_hr$country
 
-kable(anova_nicotine, caption="Trait Differences (Nicotine Users vs Non-Users)")
+anova_hr <- anova_wrapper("highrisk")
+kable(anova_hr, caption="ANOVA — High Risk Drugs")
+
+corr_hr <- corr_wrapper("highrisk")
+kable(corr_hr, caption="Correlations — High Risk Drugs")
 ```
 
-
-## Correlation: Traits vs Nicotine Frequency
+## 3.7 Psychedelics (LSD + Mushrooms + Ketamine + Ecstasy + Legal-H)
 ```{r}
-corr_nicotine <- map_df(traits, function(trait){
-  ct <- cor.test(nicotine_data[[trait]], nicotine_data$Nicotine)
-  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
-})
+chi_psy <- chi_wrapper("psych")
+chi_psy$edu
+chi_psy$country
 
-kable(corr_nicotine, digits=3, caption="Trait Correlations With Nicotine Use Frequency")
+anova_psy <- anova_wrapper("psych")
+kable(anova_psy, caption="ANOVA — Psychedelics")
+
+corr_psy <- corr_wrapper("psych")
+kable(corr_psy, caption="Correlations — Psychedelics")
 ```
-
-
-3. AMPHETAMINE ANALYSES
-
-## Create Amphetamine user variable
-```{r}
-amphet_data <- classify_user(data, "Amphet")
-table(amphet_data$user_status)
-```
-
-## Chi-Square: Education × Amphetamine Use
-```{r}
-tab_edu_a <- table(amphet_data$Education, amphet_data$user_status)
-kable(tab_edu_a, caption="Education × Amphetamine Use")
-chisq.test(tab_edu_a)
-```
-
-## Chi-Square: Country × Amphetamine Use
-```{r}
-tab_country_a <- table(amphet_data$Country, amphet_data$user_status)
-kable(tab_country_a, caption="Country × Amphetamine Use")
-chisq.test(tab_country_a)
-```
-
-## ANOVA: Traits vs Amphetamine User Status
-```{r}
-anova_amphet <- map_df(traits, function(trait){
-  model <- aov(as.formula(paste0(trait," ~ user_status")), data=amphet_data)
-  tidy(model) %>% filter(term=="user_status") %>% mutate(trait=trait)
-})
-
-kable(anova_amphet, caption="Trait Differences (Amphetamine Users vs Non-Users)")
-```
-
-## Correlation: Traits vs Amphetamine Frequency
-```{r}
-corr_amphet <- map_df(traits, function(trait){
-  ct <- cor.test(amphet_data[[trait]], amphet_data$Amphet)
-  tibble(trait=trait, correlation=ct$estimate, p_value=ct$p.value)
-})
-
-kable(corr_amphet, digits=3, caption="Trait Correlations With Amphetamine Use Frequency")
-```
-
-# Save outputs
-```{r}
-write_csv(anova_cannabis, "anova_cannabis.csv")
-write_csv(anova_nicotine, "anova_nicotine.csv")
-write_csv(anova_amphet, "anova_amphet.csv")
-
-write_csv(corr_cannabis, "corr_cannabis.csv")
-write_csv(corr_nicotine, "corr_nicotine.csv")
-write_csv(corr_amphet, "corr_amphet.csv")
-```
-
-
-
-
 
 
 
