@@ -109,9 +109,25 @@ legalusage_ordinal_data = drug_data |>
 dat = drug_data |>
   select(Age, Gender, Education, Country, Ethnicity) |>
   mutate_at(c("Age", "Gender", "Education", "Country", "Ethnicity"), as.factor) |>
-  mutate(Gender = recode(Gender, "0" = "Male", "1" = "Female")) |>
-  mutate(Age = recode(Age, "1" = "18-24", "2" = "25-34", "3" = "35-44", "4" = "45-54", 
-                      "5" = "55-64", "6" = "65+"))
+  mutate(Gender = recode(Gender, "0" = "Male", 
+                         "1" = "Female"), 
+         Age = recode(Age, 
+                      "1" = "18-24", 
+                      "2" = "25-34", 
+                      "3" = "35-44", 
+                      "4" = "45-54", 
+                      "5" = "55-64", 
+                      "6" = "65+"),
+         Education = recode(Education,
+                            "Left school at 18 years" = "Left school at 18 years or less",
+                            "Left school at 17 years" = "Left school at 18 years or less",
+                            "Left school at 16 years" = "Left school at 18 years or less",
+                            "Left school before 16 years" = "Left school at 18 years or less"),
+         Ethnicity = recode(Ethnicity,
+                            "Mixed-White/Black" = "Mixed",
+                            "Mixed-White/Asian" = "Mixed",
+                            "Mixed-Black/Asian" = "Mixed")
+         )
 
 # This is a fast way to compute the percentage of each level for a categorical variable
 tab = dat |>
@@ -133,7 +149,7 @@ tab = dat |>
   gt::tab_source_note(gt::md("*Source: Fehrman et al, 2015*"))
 tab
 ```
-Observations: Most participants are under the age of 45. There are almost the same number of males and females. Most participants completed at least high school. Most participants are from the UK or USA. Most participants are white.
+Interpretation: Most participants are under the age of 45. There are almost the same number of males and females. Most participants completed at least high school. Most participants are from the UK or USA. Most participants are white.
 
 
 # Trait distributions
@@ -188,7 +204,7 @@ OCEAN_hist
 ggsave("figs/hist_ocean.png", OCEAN_hist)
 
 ```
-Observations: All OCEAN scores seem to show a normal distribution.
+Interpretation: All OCEAN scores seem to show a normal distribution.
 
 ## Histogram of impulsivity
 ```{r}
@@ -205,7 +221,7 @@ impulsivity_hist
 ggsave("figs/hist_impulsivity.png", impulsivity_hist)
 
 ```
-Observations: Impulsiveness scores seem to show a right skewed distribution.
+Interpretation: Impulsiveness scores seem to show a right skewed distribution.
 
 ## Histogram of sensation seeking
 ```{r}
@@ -222,7 +238,7 @@ SS_hist
 ggsave("figs/hist_impSS.png", SS_hist)
 
 ```
-Observations: Sensation seeking scores seem to show a left skewed distribution.
+Interpretation: Sensation seeking scores seem to show a left skewed distribution.
 
 
 # Traits by User Status
@@ -253,7 +269,7 @@ OCEAN_boxplot
 ggsave("figs/box_ocean_user.png", OCEAN_boxplot)
 
 ```
-Observations: The distribution of OCEAN scores in drug users vs non-drug users are not significantly different. The median openness to experience and neuroticism scores are lower in non drug users than drug users. The median conscientiousness, extraversion, and agreeableness scores are higher in non drug users than drug users. Drug users have a larger range of OCEAN scores than non-users.
+Interpretation: The distribution of OCEAN scores in drug users vs non-drug users are not significantly different. The median openness to experience and neuroticism scores are lower in non drug users than drug users. The median conscientiousness, extraversion, and agreeableness scores are higher in non drug users than drug users. Drug users have a larger range of OCEAN scores than non-users.
 
 ## Boxplot of impulsivity by user status
 ```{r}
@@ -273,7 +289,7 @@ impulsivity_boxplot
 ggsave("figs/box_impulsivity_user.png", impulsivity_boxplot)
 
 ```
-Observations: The distribution of Impulsiveness scores in drug users vs non-drug users are not significantly different. The median impulsivity score for non-users and users seem to be about the same. The impulsivity scores for drug users is has a larger third quartile than non-users. 
+Interpretation: The distribution of Impulsiveness scores in drug users vs non-drug users are not significantly different. The median impulsivity score for non-users and users seem to be about the same. The impulsivity scores for drug users is has a larger third quartile than non-users. 
 
 
 # Legal vs Illegal Usage
@@ -312,7 +328,7 @@ Imp_SS_stacked
 ggsave("figs/stacked_legal_illegal.png", Imp_SS_stacked)
 
 ```
-Observations: As impulsivity scores increase, the proportion of illegal drug users increase and the proportion of legal drug users decrease. As sensation seeking scores increase, the proportion of illegal drug users increase and the proportion of legal drug users decrease. This indicates that there seems to be a relationship between higher impulsivity and sensation seeking scores and being a illegal drug user.
+Interpretation: As impulsivity scores increase, the proportion of illegal drug users increase and the proportion of legal drug users decrease. As sensation seeking scores increase, the proportion of illegal drug users increase and the proportion of legal drug users decrease. This indicates that there seems to be a relationship between higher impulsivity and sensation seeking scores and being a illegal drug user.
 
 ## Heatmap of correlations
 ```{r}
@@ -330,7 +346,7 @@ corr_heatmap
 ggsave("figs/heatmap_traits_usage.png", corr_heatmap)
 
 ```
-Observations: The variables Alcohol, Caff, and Choc seem to be similar to and more correlated with each other which makes sense because they are legal drugs. An increase in SS scores, Oscore, and Impulsiveness scores seem to be moderately correlated with an increase in Cannabis, Legalh, Ecstasy, LSD, and Mushrooms usage in the past decade (these variables have a positive correlation). This indicates that being more sensation seeking, open to experiences, and impulsive are moderately associated with higher illegal drug usage of Cannabis, legal highs consumption, Ecstasy, LSD, and Mushrooms. An increase in especially cannabis and Legalh usage is associated with lower Cscore which means lower drug usage is weakly associated with lower drug usage of Cannabis and legal highs consumption.
+Interpretation: The variables Alcohol, Caff, and Choc seem to be similar to and more correlated with each other which makes sense because they are legal drugs. An increase in SS scores, Oscore, and Impulsiveness scores seem to be moderately correlated with an increase in Cannabis, Legalh, Ecstasy, LSD, and Mushrooms usage in the past decade (these variables have a positive correlation). This indicates that being more sensation seeking, open to experiences, and impulsive are moderately associated with higher illegal drug usage of Cannabis, legal highs consumption, Ecstasy, LSD, and Mushrooms. An increase in especially cannabis and Legalh usage is associated with lower Cscore which means lower drug usage is weakly associated with lower drug usage of Cannabis and legal highs consumption.
 
 
 
