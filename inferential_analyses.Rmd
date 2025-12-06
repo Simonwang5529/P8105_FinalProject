@@ -21,6 +21,7 @@ classify_user <- function(df, drug){
 ```
 
 #1. CANNABIS ANALYSES
+
 ## Create cannabis user variable
 ```{r}
 cannabis_data <- classify_user(data, "Cannabis")

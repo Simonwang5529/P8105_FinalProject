@@ -353,12 +353,15 @@ display: none;
 </div>
 
 
-<p>#1. CANNABIS ANALYSES ## Create cannabis user variable</p>
+<p>#1. CANNABIS ANALYSES</p>
+<div id="create-cannabis-user-variable" class="section level2">
+<h2>Create cannabis user variable</h2>
 <pre class="r"><code>cannabis_data &lt;- classify_user(data, &quot;Cannabis&quot;)
 table(cannabis_data$user_status)</code></pre>
 <pre><code>## 
 ## Non-User     User 
 ##      412     1464</code></pre>
+</div>
 <div id="chi-square-education-x-cannabis-use" class="section level2">
 <h2>Chi-Square: Education x Cannabis Use</h2>
 <pre class="r"><code>tab_edu_c &lt;- table(cannabis_data$Education, cannabis_data$user_status)
