@@ -1,0 +1,278 @@
+---
+title: "Final Report — Personality × Drug Use"
+author: "Maryam Khalid,Sijda Ahmed, Ruicheng yang, Xiling Wang, Haixin Jin"
+date: "Fall 2025"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(janitor)
+library(broom)
+library(knitr)
+library(purrr)
+
+data <- read_csv("data/cleaned_drug_data.csv")
+
+traits <- c("Nscore","Escore","Oscore","Ascore","Cscore")
+
+make_status <- function(x) ifelse(x > 0, "User", "Non-User")
+
+data <- data %>%
+  mutate(
+    stim_group = Coke + Meth,
+    highrisk = Heroin + Crack + VSA,
+    psych = LSD + Mushrooms + Ketamine + Ecstasy + Legalh
+  )
+```
+
+# 1. Introduction
+
+Substance use behaviors reflect a complex interaction between psychological traits, sociocultural context, and demographic background. Personality psychology provides a valuable lens for understanding why some individuals may be more likely to experiment with, regularly use, or avoid psychoactive substances. This project investigates how the **Big Five personality traits**—Neuroticism, Extraversion, Openness, Agreeableness, and Conscientiousness—relate to both **the likelihood of drug use** and **frequency of use** across multiple classes of substances.
+
+We use the “Drug Consumption (Quantified)” dataset, consisting of 1,876 respondents who reported personality scores, sociodemographic variables (education, country), and frequency-of-use measures for 18 substances. Our goals were to:
+
+- Clean and restructure the dataset into a modern tidy format  
+- Visualize patterns of demographic and personality variation  
+- Conduct inferential analyses linking personality to drug-use behaviors  
+- Examine consistency of findings across drug categories  
+- Interpret results in the context of existing psychological literature  
+
+---
+
+# 2. Dataset Overview
+
+The raw dataset included personality traits (via IPIP inventory), demographic variables, and self-reported usage frequencies for substances including cannabis, nicotine, amphetamines, benzodiazepines, stimulants, psychedelics, and more.
+
+Key steps from data cleaning (see *dataset.html* for full workflow):
+
+- Converted categorical frequency scores into numeric use indicators  
+- Standardized education and country labels  
+- Created grouped drug categories:
+  - **Stimulants:** cocaine + methamphetamine  
+  - **High-risk drugs:** heroin + crack cocaine + volatile substance abuse  
+  - **Psychedelics:** LSD, mushrooms, ketamine, ecstasy, legal highs  
+- Removed unusable or missing entries and validated data structure  
+
+Cleaned N = 1,876.
+
+---
+
+# 3. Exploratory Data Analysis
+
+Visualizations showed:
+
+- **Cannabis and nicotine** were the most commonly used substances.  
+- **Psychedelic use** was strongly associated with higher education.  
+- **High-risk drug use** was rare but showed strong clustering in the US and UK.  
+- Users of nearly all drug classes tended to exhibit:
+  - **Lower Agreeableness**
+  - **Lower Conscientiousness**
+  - **Higher Openness**  
+- Neuroticism was elevated for users of nicotine, benzodiazepines, stimulants, and high-risk drugs.
+
+See *visualization.html* for full graphics.
+
+---
+
+# 4. Inferential Methods
+
+For each drug category, we conducted:
+
+### **4.1. Chi-Squared Tests**
+To evaluate whether drug-user status (User vs Non-User) differs across:
+
+- Education level  
+- Country of residence  
+
+### **4.2. ANOVA Models**
+Testing whether personality traits differ between Users vs Non-Users:
+
+```{r}
+anova_wrapper <- function(var){
+  data %>% mutate(status = make_status(.data[[var]])) -> d
+  map_df(traits, function(tr){
+    model <- aov(as.formula(paste0(tr," ~ status")), data=d)
+    tidy(model) %>% filter(term=="status") %>% mutate(trait=tr)
+  })
+}
+```
+
+### **4.3. Correlation Tests**
+Between *usage frequency* and personality traits:
+
+```{r}
+corr_wrapper <- function(var){
+  map_df(traits, function(tr){
+    ct <- cor.test(data[[tr]], data[[var]], method="pearson")
+    tibble(trait=tr, correlation=ct$estimate, p=ct$p.value)
+  })
+}
+```
+
+---
+
+# 5. Results
+
+Below we summarize the real outputs from your inferential analyses.
+
+---
+
+## 5.1 Cannabis
+
+### Chi-Squared
+- **Education:** X² = 112.08, p < 2.2e-16  
+- **Country:** X² = 241.94, p < 2.2e-16  
+
+### ANOVA
+```{r}
+anova_can <- anova_wrapper("Cannabis")
+kable(anova_can, caption="ANOVA — Cannabis")
+```
+
+### Correlations
+```{r}
+corr_can <- corr_wrapper("Cannabis")
+kable(corr_can, caption="Correlations — Cannabis")
+```
+
+---
+
+## 5.2 Nicotine
+
+### Chi-Squared
+- **Education:** X² = 67.48, p = 1.55e-11  
+- **Country:** X² = 86.67, p < 2.2e-16  
+
+### ANOVA
+```{r}
+anova_nic <- anova_wrapper("Nicotine")
+kable(anova_nic, caption="ANOVA — Nicotine")
+```
+
+### Correlations
+```{r}
+corr_nic <- corr_wrapper("Nicotine")
+kable(corr_nic, caption="Correlations — Nicotine")
+```
+
+---
+
+## 5.3 Amphetamines
+
+```{r}
+anova_amp <- anova_wrapper("Amphet")
+kable(anova_amp, caption="ANOVA — Amphetamines")
+corr_amp <- corr_wrapper("Amphet")
+kable(corr_amp, caption="Correlations — Amphetamines")
+```
+
+---
+
+## 5.4 Benzodiazepines
+
+```{r}
+anova_ben <- anova_wrapper("Benzos")
+kable(anova_ben, caption="ANOVA — Benzodiazepines")
+corr_ben <- corr_wrapper("Benzos")
+kable(corr_ben, caption="Correlations — Benzodiazepines")
+```
+
+---
+
+## 5.5 Stimulants (Cocaine + Methamphetamine)
+
+```{r}
+anova_stim <- anova_wrapper("stim_group")
+kable(anova_stim, caption="ANOVA — Stimulants")
+corr_stim <- corr_wrapper("stim_group")
+kable(corr_stim, caption="Correlations — Stimulants")
+```
+
+---
+
+## 5.6 High-Risk Drugs (Heroin + Crack + VSA)
+
+```{r}
+anova_hr <- anova_wrapper("highrisk")
+kable(anova_hr, caption="ANOVA — High Risk Drugs")
+corr_hr <- corr_wrapper("highrisk")
+kable(corr_hr, caption="Correlations — High Risk Drugs")
+```
+
+---
+
+## 5.7 Psychedelics
+
+```{r}
+anova_psy <- anova_wrapper("psych")
+kable(anova_psy, caption="ANOVA — Psychedelics")
+corr_psy <- corr_wrapper("psych")
+kable(corr_psy, caption="Correlations — Psychedelics")
+```
+
+---
+
+# 6. Discussion
+
+Across all drug categories, several patterns remained remarkably stable:
+
+### **1. Openness was consistently higher among users.**  
+This aligns with literature describing high-Openness individuals as novelty-seeking and more willing to experiment with altered states of consciousness (Terracciano et al., 2008).
+
+### **2. Conscientiousness was consistently lower among users.**  
+Low Conscientiousness relates to impulsivity, weaker behavioral inhibition, and risk-taking tendencies—widely documented predictors of substance use initiation and maintenance.
+
+### **3. Neuroticism was elevated for nicotine, benzodiazepines, stimulants, and high-risk drugs.**  
+This matches frameworks suggesting emotional instability increases susceptibility to using substances for coping or affect regulation.
+
+### **4. Agreeableness was lower among users of almost all drug categories.**  
+Low Agreeableness is associated with defiance of norms, reduced compliance, and antagonistic traits.
+
+### **5. Sociodemographic effects were strong.**  
+Education and country significantly predicted user status for every drug category. North American and UK respondents showed the highest prevalence for nearly all substances.
+
+### **Consistency with Literature**  
+All observed patterns align with major findings in:
+
+- *Terracciano et al. — Personality correlates of drug use*  
+- *The Five Factor Model and Substance Use Disorders*  
+- *Longitudinal personality–substance trajectories*  
+- *Non-medical stimulant and psychedelic motivation studies*
+
+Our results reinforce that personality traits provide a stable psychological structure underlying substance-use behaviors, while sociodemographic context modulates access, norms, and prevalence.
+
+---
+
+# 7. Limitations
+
+- Cross-sectional dataset cannot infer causality  
+- Self-reported drug use prone to recall and social-desirability bias  
+- Frequency scores are ordinal approximations  
+- Cultural factors cannot be fully captured by coarse country categories  
+- No adjustment for multiple testing (large number of ANOVAs)  
+
+---
+
+# 8. Conclusion
+
+The interplay between personality and drug use is systematic, robust, and highly replicable. Openness strongly predicted experimentation across nearly all substances, while Conscientiousness and Agreeableness consistently protected against use. Neuroticism was a key marker for substances associated with coping-motivated behavior.
+
+Together, personality traits and sociodemographic context offer a powerful framework for understanding individual differences in psychoactive substance use.
+
+---
+
+# Appendix: Reproducible Code
+
+Full analysis scripts are available in:
+
+- **dataset.html** — data cleaning  
+- **visualization.html** — exploratory graphics  
+- **inferential_analyses.html** — full statistical results  
+
