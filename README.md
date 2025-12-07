@@ -27,19 +27,20 @@ Our work combines **data cleaning**, **exploratory visualization**, and **formal
 P8105_FinalProject/
 │
 ├── data/                          # Raw dataset and cleaned versions
-├── figs/                          # Generated figures used in visualizations and report
+├── figs/                          # Generated figures used in visualizations tab and report
 ├── index.html                     # Website home page
 ├── proposal.html                  # Project proposal
 ├── data_cleaning.html             # Data import and preprocessing steps
 ├── dataset.html                   # Data page with summaries
 ├── EDA.html                       # Exploratory data analysis
+├── drug_consumption_analysis.html # Formal analysis (statistical tests and modeling)
 ├── visualization.html             # Additional plots
 ├── results.html                   # Results page (statistical tests + interpretation)
 │
 ├── FP_Proposal.Rmd                # Original proposal R markdown source file
 ├── data_cleaning.Rmd              # Data import and preprocessing steps R markdown
 ├── eda.Rmd                        # Exploratory analysis R Markdown
-├── Drug_consumption_analysis.Rmd  # Formal analysis (statistical tests) R markdown
+├── Drug_consumption_analysis.Rmd  # Formal analysis (statistical tests and modeling) R markdown
 │
 ├── README.md                      # Project documentation
 ├── P8105_FinalProject.Rproj       # RStudio project file
