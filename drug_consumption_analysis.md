@@ -1,6 +1,5 @@
 Drug_Consumption_Analysis
 ================
-2025-12-02
 
 # Data Processing
 
@@ -75,7 +74,8 @@ used or didn’t use said drug.
 
 <caption>
 
-Key Statistics for Prediction of OCEAN Scores from User Consumption
+Key Statistics for Prediction of User Consumption from Types of Drugs
+Used
 </caption>
 
 <thead>
@@ -1597,8 +1597,7 @@ below.
 
 <caption>
 
-Key Statistics for Prediction of Impulsivity and SS Scores from User
-Consumption
+Key Statistics for Prediction of OCEAN Scores from User Consumption
 </caption>
 
 <thead>
@@ -2054,7 +2053,8 @@ compared to the model with no interaction.
 
 <caption>
 
-Effect of Psychological Predictors on Drug Consumption Levels
+Effect of All Psychological Predictors on Drug Consumption Levels, No
+Interaction
 </caption>
 
 <thead>
@@ -2309,7 +2309,7 @@ SS
 <caption>
 
 Key Statistics for Prediction of User Consumption from Psychological
-Traits
+Traits, Non-Interaction vs Interaction
 </caption>
 
 <thead>
@@ -2473,7 +2473,8 @@ Psychology Model with Interaction
 
 <caption>
 
-Effect of Psychological Predictors on Drug Consumption Levels
+Effect of Psychological Predictors on Drug Consumption Levels, With
+Interaction
 </caption>
 
 <thead>
@@ -3474,11 +3475,11 @@ therefore it is the best model between the two.
 ![](drug_consumption_analysis_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
 From a simple diagnostic of our linear regression model, our residuals
-are averaged around 0 and generally independent from our fitted values.
-There also doesn’t seem to be any outliers that are too influential to
-the variation in total drug consumption. Finally, the residuals are
-approximately normally distributed along 0. This suggests that our
-linear model is appropriate for the approximation of total drug
+are averaged around 0 and generally have a weak correlation with our
+fitted values. There also doesn’t seem to be any outliers that are too
+influential to the variation in total drug consumption. Finally, the
+residuals are approximately normally distributed along 0. This suggests
+that our linear model is appropriate for the approximation of total drug
 consumption.
 
 However, as a final check, we compared the AIC and RMSE distribution of
@@ -3519,7 +3520,7 @@ temrs of R squared and p-value.
 
 <caption>
 
-Effect of Psychological Predictors on Drug Consumption Levels
+Effect of All Relevant Predictors on Drug Consumption Levels
 </caption>
 
 <thead>
@@ -3884,8 +3885,8 @@ CountryUK
 
 <caption>
 
-Key Statistics for Prediction of User Consumption from Psychological
-Traits
+Key Statistics for Prediction of User Consumption from All Significant
+Personality Traits and Environmental Factors
 </caption>
 
 <thead>
