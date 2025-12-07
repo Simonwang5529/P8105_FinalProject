@@ -1,10 +1,17 @@
 ---
+<<<<<<< HEAD
 title: "Drug_Consumption_Analysis"
 output: github_document
 always_allow_html: true
+=======
+title: "Drug Consumption Statistical Analysis"
+output: 
+  html_document:
+    code_folding: hide
+>>>>>>> 930ae75c5b76df76a9295adf301999d7458399a2
 ---
 
-```{r setup, include=FALSE, echo = FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyr)
@@ -28,9 +35,9 @@ library(reshape2)
 
 ```
 
-# Data Processing
+# Additional Data Processing
 
-```{r, echo = FALSE}
+```{r}
 data_one <- read.csv("data/Drug_consumption.csv")
 data_one <- data_one |> select(-Semer)
 
@@ -96,7 +103,7 @@ data_one_prime_use_no_use <-
 To analyze drug consumption for each user, we converted all ordinal measures for each drug into numeric variables. Then, they were added together to calculate the total drug consumption level. A binary variable was also created for each drug to detail whether each participant was a user of that drug or not. For example, if a participant had an 0 or 1 level of consumption for alcohol, that person would be classified as a non-user of alcohol. However, for consumption levels of 2 or higher, that participant would be classified as a user. Finally, a variable of user-status was created to measure how many drugs a participant was using, legal and illegal.
 
 
-```{r pressure, echo=FALSE}
+```{r pressure}
 data_four <- data_two |> group_by(consumption_legal, consumption_level) |> summarize(count = n()) |>
   na.omit(consumption_legal)
 
@@ -156,7 +163,7 @@ By contrast, for legal drugs, the observed counts for consumption levels 0, 1, 2
 
 These results indicate that consumption levels are generally higher for legal drugs compared to illegal drugs.
 
-```{r, echo=FALSE}
+```{r}
 
 plot_histogram_1 <- data_one |>
   ggplot(aes(x = as.numeric(user_consumption_level))) +
@@ -179,7 +186,7 @@ To predict this model, we first examined the distribution of the drug consumptio
 
 Predictors were the binary variables that detail whether a participant used or didn't use said drug. 
 
-```{r, echo=FALSE}
+```{r}
 model_user_binary_consumption <- lm(log1p(user_consumption_level) ~ Alcohol_binary + Amphet_binary + Amyl_binary +
                                       Benzos_binary + Caff_binary + Cannabis_binary + Choc_binary + Coke_binary + 
                                       Crack_binary + Ecstasy_binary + Heroin_binary + Ketamine_binary +
@@ -200,7 +207,7 @@ model_user_binary_consumption |> summary() |> broom::glance() |>
 
 From the summary of our model, the adjusted R-squared value is equal to 0.882. This suggests a good fit and that the total drug consumption level can be approximately modeled from which drugs a person uses. The estimated parameters of this fit are also shown in the following table.
 
-```{r, echo=FALSE}
+```{r}
 model_user_binary_consumption |> summary() |>
   broom::tidy() |>
   kbl(
@@ -218,7 +225,7 @@ After obtaining user drug consumption level, it is important to analyze possible
 
 From the histograms fo OCEAN scores, impulsivity and sensation-seeking, we see that all distributions are approximately normal as to not requiring any further variable transformation. The plots that demonstrate total user consumption vs OCEAN scores--and its fit--are displayed below. A table showing each model's key statistics--including R-squared and p-values--are also shown below.
 
-```{r, echo=FALSE}
+```{r}
 model_user_Oscore <- lm(Oscore~user_consumption_level, data = data_one_prime_use_no_use)
 plot_1 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Oscore)) +
   geom_point(color = "red") +
@@ -284,7 +291,7 @@ We also attempted to examine if there is a significant association between the t
 Unlike OCEAN scores, by examining our p-values, we can conclude that total user drug consumption has a significant association with both impulsivity and sensation-seeking.
 
 
-```{r, echo=FALSE}
+```{r}
 model_user_Impulsivity <- lm(Impulsive~user_consumption_level, data = data_one_prime_use_no_use)
 plot_6 <- ggplot(data_one_prime_use_no_use, aes(user_consumption_level, Impulsive)) +
   geom_point(color = "cyan") +
@@ -318,7 +325,7 @@ model_user_Impulsivity |> summary() |> broom::glance() |>
 
 Finally, all parametric estimates for all significant models are shown in the table below.
 
-```{r, echo=FALSE}
+```{r}
 
 model_user_Oscore |> summary() |> broom::tidy() |> filter(term %in% c("user_consumption_level")) |>
   bind_rows(summary(model_user_Cscore) |> broom::tidy() |> filter(term %in% c("user_consumption_level"))) |>
@@ -347,7 +354,7 @@ To answer the original research question, we wanted to examine how one would be 
 We still use the log of the total drug use consumption due to the variable's normal distributions. The plots of the personality traits vs the total consumption--along with the linear regression lines--are shown below.
 
 
-```{r, echo=FALSE}
+```{r}
 
 data_Escore_1 = data_one |> dplyr::select(user_consumption_level, Escore)
 
@@ -428,7 +435,7 @@ plot_patch_3
 
 Again, across all the OCEAN personality traits, the significant associations suggest that people who are more curious and entertain new ideas (O score), less self-disciplined and diligent (C score), less likely to be cooperative or kind (A score), and more likely to experience emotions like anxiety or sadness (N score) may be more at risk in regards to total drug consumption, both legal and illegal.
 
-```{r, echo=FALSE}
+```{r}
 data_Impulsivity_1 = data_one |> dplyr::select(user_consumption_level, Impulsive)
 
 plot_impulsivity <- ggplot(data_Impulsivity_1, aes(Impulsive, log1p(user_consumption_level))) + 
@@ -477,7 +484,7 @@ The second table is the results of comparing our two models through the AIC test
 
 For further testing, we compared key statistics such as R-squared between the two models. Indeed, we observe that the interaction model accounts for more of the variation in total drug consumption level compared to the model with no interaction.
 
-```{r, echo=FALSE}
+```{r}
 
 model_no_interaction_psychology <- lm(log1p(user_consumption_level) ~ Oscore + Cscore +
                                  AScore + Nscore + Impulsive + SS, data = data_one)
@@ -526,7 +533,7 @@ To answer the original research question, while there is a significant associati
 
 To summarize the direction of the correlation between all of our relevant variables--including OCEAN score, impulsivity, sensation-seeking, and log of user drug consumption level-- is displayed in the following correlation heatmap.
 
-```{r, echo=FALSE}
+```{r}
 
 data_one_transformed <- data_one |> mutate(log_user_consumption_level = log1p(user_consumption_level))
 
@@ -557,7 +564,7 @@ p
 
 To test whether there is a significant relationship between a person's education status and their consumption of drugs, we decided to create a variable in the data that counted how many drugs a person uses. We classified this as an ordinal variable in terms of severity. Thus, this relationship's significance is shown in the following chi-squared test.
 
-```{r, echo=FALSE}
+```{r}
 data_five <- data_one |> group_by(Education, user_status) |> summarize(count = n()) |>
   na.omit(Education)
 
@@ -589,7 +596,7 @@ Since our chi-squared test resulted in a p-value of near 0, we can conclude that
 
 To examine the direction of this relationship, we decided to plot out the distribution of total drug consumption level for each level of education in box-plots. This plot can be seen below.
 
-```{r, echo=FALSE}
+```{r}
 data_education <- data_one |> mutate(Education = factor(Education, levels = c("Left school before 16 years", "Left school at 16 years", "Left school at 17 years", "Left school at 18 years",
                                                   "Some college or university, no certificate or degree",
                                                   "University degree", "Masters degree",
@@ -612,7 +619,7 @@ It is notable that as a person's education goes up from "left school before 16 y
 
 Furthermore, to analyze the relationship between education status and our relevant personality traits, we conducted ANOVA test to see if the mean traits of O score, C score, A score, N score, and Sensation-Seeking differed among at least 2 of our education groups. The results of the ANOVA tests are summarized below.
 
-```{r, echo=FALSE}
+```{r}
 
 data_Oscore_Education_prime <- data_education |> select(Education, Oscore)
 Oscore_aov_education_model <- aov(Oscore~Education, data = data_Oscore_Education_prime)
@@ -641,7 +648,7 @@ kable(bind_rows(tidy_anova_Oscore, tidy_anova_Cscore, tidy_anova_Ascore, tidy_an
 
 From our ANOVA table, it is observed that all the tests yielded p-values of near 0. Thus, we can conclude that the O trait, C trait, A trait, N trait, and sensation-seeking traits differ significantly between at least 2 education groups for each trait. To further examine the specific differences, we plotted the distribution of all trait scores for each education status below.
 
-```{r fig.width=12, fig.height=7, echo=FALSE}
+```{r fig.width=12, fig.height=7}
 
 plot_Education_Oscore <- data_Oscore_Education_prime |> ggplot(aes(x = Education, 
                               y = Oscore, fill = Education)) + geom_boxplot() + 
@@ -670,7 +677,7 @@ By examining the O-score distribution, it seems that the group most at-risk of a
 
 To test a relationship between drug consumption and a user's country of residence, a similar procedure to the chi-squared test for education was used. The results of the chi-squared test are shown below.
 
-```{r, echo=FALSE}
+```{r}
 
 data_country <- data_one |> group_by(Country, user_status_real) |> summarize(count = n()) |>
   na.omit(user_status_real)
@@ -701,7 +708,7 @@ After determining a significant relationship, we examined the distribution of th
 
 The most notable result from our analysis is that if a user resides in the country of UK, they are likely to have a lower level of total drug consumption compared to other countries. Meanwhile, the users with the highest level of drug consumption on average are those that reside in the U.S.A.
 
-```{r, echo=FALSE}
+```{r}
 data_one_trans <- data_one |> mutate(log_user_consumption_level = log1p(user_consumption_level))
 
 data_one_trans |> ggplot(aes(x = Country, y = log_user_consumption_level, fill = Country)) + geom_boxplot() +
@@ -714,7 +721,7 @@ For traits that negatively impact a user's drug consumption, the U.S.A. was ofte
 
 In contrast, the U.K. often ranks the highest in positive traits and the lowest in negative traits. The difference in extraversion for these countries were not considered strongly, since there isn't a significant association between said trait and total drug consumption.
 
-```{r, echo=FALSE}
+```{r}
 data_Oscore_country <- data_one |> select(Country, Oscore)
 Oscore_aov_country_model <- aov(Oscore~Country, data = data_Oscore_country)
 tidy_anova_Oscore_country <- tidy(Oscore_aov_country_model) |> mutate(model = "O score country")
@@ -780,7 +787,7 @@ To examine if there was also a relationship between the country of residence and
 Specifically, the UK has a distribution for education that is skewed toward the lower levels, meaning a person is more likely to have a university degree or above. Meanwhile, the education level in the U.S.A. is heavily concentrated in those who have some college or university experience but no degree. This is the education level that was identified as a possible population at risk due to its average OCEAN, impulsivity and sensation-seeking trait scores.
 
 
-```{r, echo=FALSE}
+```{r}
 data_education |> ggplot(aes(x = Education, fill = Education)) + geom_bar() +
   facet_wrap(~Country) + theme(axis.text.x = element_blank()) +
   labs(title = "Distribution of Education Based on Country of Residence")
@@ -789,7 +796,7 @@ data_education |> ggplot(aes(x = Education, fill = Education)) + geom_bar() +
 # Model with Psychological Traits, Education, and Residence
 
 
-```{r, echo=FALSE}
+```{r}
 model_no_interaction_education_residence <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
                                  AScore * Nscore * SS) + Country + Education, data = data_one)
 
@@ -831,7 +838,7 @@ knitr::kable(AIC(model_interaction_psychology, model_no_interaction_education_re
 
 We also explore other variables that could contribute to a person's drug consumption. To analyze if the true user drug consumption was the same or different between the two genders, we conducted a two-sample t-test.
 
-```{r, echo=FALSE}
+```{r}
 t_test_result <- t.test(user_consumption_level~Gender, data = data_one, var.equaql = FALSE, alternative = "two.sided")
 print(t_test_result)
 
@@ -848,7 +855,7 @@ To examine this difference, we plotted their respective distributions in the box
 
 A similar procedure to the chi-squared tests for ethnicity and country of residence was carried out to examine if there is a relationship between drug consumption and a user's ethnicity.
 
-```{r, echo=FALSE}
+```{r}
 data_ethnicity <- data_one |> group_by(Ethnicity, user_status_real) |> summarize(count = n()) |>
   na.omit(user_status_real)
 
@@ -878,17 +885,22 @@ After determining a significant relationship due to the p-value of near 0, we th
 
 On average, we determined that Mixed-Black/Asian, Mixed-White/Asian, and "Other" ethnicity have the highest log total drug consumption on average compared to other ethnicity. It is also notable that White also has a fairly higher log total drug consumption when compared to the Black and Asian ethnicity.
 
+<<<<<<< HEAD
 ```{r, echo=FALSE}
 data_one_trans |> ggplot(aes(x = Ethnicity, y = log_user_consumption_level, fill = Ethnicity)) + geom_boxplot() +
   theme(axis.text.x = element_blank()) +
   labs(y = "Log Total Drug Consumption Level",
          title = "Distribution of Total Drug Consumption Based on Ethnicity")
+=======
+```{r}
+data_one_trans |> ggplot(aes(x = Ethnicity, y = log_user_consumption_level, fill = Ethnicity)) + geom_boxplot()
+>>>>>>> 930ae75c5b76df76a9295adf301999d7458399a2
 
 ```
 
 To this end, we also examined if there is a significant relationship between a user's ethnicity and a user's country of residence using a chi-squared statistical test. Because the p-value is near 0, we determined that there is a significant association between the two variables, which influenced our decision to take their interaction into account later in our linear model building.
 
-```{r, echo=FALSE}
+```{r}
 data_ethnicity_country <- data_one |> group_by(Country, Ethnicity) |> summarize(count = n())
 
 data_ethnicity_country_prime <- data_ethnicity_country |> pivot_wider(
@@ -914,7 +926,7 @@ kable(chi_square_ethnicity_country_summary)
 
 # Age and Drug Consumption
 
-```{r, echo=FALSE}
+```{r}
 
 data_age <- data_one |> group_by(Age, user_status_real) |> summarize(count = n()) |>
   na.omit(user_status_real)
@@ -932,7 +944,7 @@ print(chi_test_result_age)
 
 After conducting a chi-squared test, we determined a significant relationship between a user's age and their total drug consumption level. Below is a distribution of said user's log consumption and their respective age group.
 
-```{r, echo=FALSE}
+```{r}
 
 data_one_trans |> ggplot(aes(x = Age, y = log_user_consumption_level, fill = Age)) + geom_boxplot() +
   labs(y = "Log Total Drug Consumption Level",
@@ -942,7 +954,7 @@ data_one_trans |> ggplot(aes(x = Age, y = log_user_consumption_level, fill = Age
 
 We see that those who are aged 18 to 24 are generally more at risk in regards to having a higher log drug consumption. This motivated us to determine if there was any correlation between age groups and other variables such as Education.
 
-```{r, echo=FALSE}
+```{r}
 data_age_education <- data_one |> group_by(Age, Education) |> summarize(count = n()) |>
   na.omit(Education)
 
@@ -971,7 +983,7 @@ After determining a significant association between age group and education from
 
 This suggests that age 18-24 are also most likely attending college or university, the education group most at risk. Below are all the distributions for age groups among each education level.
 
-```{r fig.width=12, fig.height=7, echo=FALSE}
+```{r fig.width=12, fig.height=7}
 
 data_education |> ggplot(aes(x = Age, fill = Age)) + geom_bar() +
   facet_wrap(~Education) + theme(axis.text.x = element_blank()) +
@@ -981,7 +993,7 @@ data_education |> ggplot(aes(x = Age, fill = Age)) + geom_bar() +
 
 Finally, in regards to age-groups and personality traits, we conducted an ANOVA test for each relevant personality trait. The results are compiled in the table below.
 
-```{r, echo=FALSE}
+```{r}
 
 data_Oscore_age <- data_one |> select(Age, Oscore)
 Oscore_aov_age_model <- aov(Oscore~Age, data = data_Oscore_age)
@@ -1020,7 +1032,7 @@ kable(bind_rows(tidy_anova_Oscore_age, tidy_anova_Cscore_age, tidy_anova_Ascore_
 
 For each trait, we see that their distribution and mean at least differs among two of the age groups. Thus, the distribution of the O, C, A, N score, and sensation-seeking scores in regards to age group were plotted out in the graph below.
 
-```{r fig.width=12, fig.height=7, echo=FALSE}
+```{r fig.width=12, fig.height=7}
 
 plot_age_patch <- ggarrange(pp1, pp2, pp3,
                                   pp4, pp5, ncol = 3, 
@@ -1034,7 +1046,7 @@ From the box-plots, we can determine that, in general, a person's O score tends 
 
 # Possibility of Other Interactions
 
-```{r, echo=FALSE}
+```{r}
 
 model_full <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
                                  AScore * Nscore * SS) + Country + Education + Age + 
@@ -1051,7 +1063,7 @@ Throughout our analysis, we observed how variables such as education and persona
 
 After developing one such model accounting for interaction between age groups and personality trait scores, we compared it to our model for no interactions. Another model was developed that only took into account the interactions between country of residence and ethnicity. Below is a plot that displays the distribution of our root-mean squared error for each model.
 
-```{r, echo=FALSE}
+```{r}
 
 set.seed(123)
 
@@ -1110,7 +1122,7 @@ cv_df |>
 
 We see that the distribution of the root mean squared error is roughly the same for both a linear model that takes into account no interactions beyond personality traits and one that takes into account the effect that country and ethnicity has on one another. However, as the error distribution for the other model has a higher RMSE on average, we will limit our investigation into only the interaction between country and ethnicity. 
 
-```{r, echo=FALSE}
+```{r}
 model_no_other_interactions <- lm(log1p(user_consumption_level) ~ (Oscore * Cscore *
                                  AScore * Nscore * SS) + Country + Education + Age + 
                    Gender + Ethnicity + Country, data = data_one)
@@ -1127,8 +1139,13 @@ By conducting an AIC test, we see the model that takes into account the interact
 
 # Nonlinear vs Linear Regression
 
+<<<<<<< HEAD
 ```{r, echo=FALSE}
 check_model(model_full_1, check = c("linearity", "outliers", "normality"))
+=======
+```{r}
+check_model(model_full_1, check = c("linearity", "outliers", "qq", "normality"))
+>>>>>>> 930ae75c5b76df76a9295adf301999d7458399a2
 ```
 
 From a simple diagnostic of our linear regression model, our residuals are averaged around 0 and generally have a weak correlation with our fitted values. There also doesn't seem to be any outliers that are too influential to the variation in total drug consumption. Finally, the residuals are approximately normally distributed along 0. This suggests that our linear model is appropriate for the approximation of total drug consumption.
@@ -1137,7 +1154,7 @@ However, as a final check, we compared the AIC and RMSE distribution of our line
 
 Below are the table and plot showing the AIC score and RMSE distribution, respectively.
 
-```{r, echo=FALSE}
+```{r}
 model_full_nonlinear_no_interaction <- gam(log1p(user_consumption_level) ~ s(Oscore) + s(Cscore) +
                                  s(AScore) + s(Nscore) + s(Impulsive) + s(SS) + Country + Education +
                    Age + Gender + Ethnicity*Country, data = data_one)
@@ -1146,7 +1163,7 @@ knitr::kable(AIC(model_country_ethnicity, model_full_nonlinear_no_interaction))
 
 ```
 
-```{r, echo=FALSE}
+```{r}
 
 set.seed(123)
 
@@ -1203,7 +1220,7 @@ Thus, for the purposes of predicting total drug use consumption, we still mainta
 
 Below are the tables that summarize all the relevant predictors, their estimated parameters, and the key statistics of our best linear model in temrs of R squared and p-value.
 
-```{r, echo=FALSE}
+```{r}
 model_full_1 |> summary() |>
   broom::tidy() |>
   filter(p.value < 0.05) |>

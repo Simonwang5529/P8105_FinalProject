@@ -1,7 +1,7 @@
 P8105 Final Project Proposal
 ================
 Xiling WangHaixin JinSijda AhmedRuicheng YangMaryam Khalid
-2025-11-07
+2025-12-05
 
 # Project Title
 
@@ -34,9 +34,10 @@ behind substance use behavior.
 
 # Data Sources
 
-We will use the **Drug Consumption** dataset from *Fehrman et al.,
-2015*, available via Kaggle:  
-[https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci](https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci?resource=download)
+We will use the **Drug Consumption** dataset from [*Fehrman et al.,
+2015*](https://arxiv.org/abs/1506.06297), available via Kaggle:  
+[Kaggle – Drug consumption
+(UCI)](https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci)
 
 This dataset includes **1,885 participants** with 12 quantified
 attributes: - **Demographics:** age, gender, education, country, and
@@ -111,8 +112,8 @@ traits relate to different types of substance use.
 
 | Member | Responsibilities |
 |----|----|
-| **Maryam Khalid** | Data cleaning, screencast recording, and first draft of final report |
-| **Sijda Ahmed & Ruicheng Yang** | Statistical analysis, data visualization, and interpretation |
+| **Maryam Khalid** | Screencast recording,interpretation and first draft of final report |
+| **Sijda Ahmed & Ruicheng Yang** | Statistical analysis and data visualization |
 | **Xiling Wang & Haixin Jin** | Webpage development, documentation, and editing the final report |
 
 ------------------------------------------------------------------------
