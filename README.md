@@ -33,14 +33,14 @@ P8105_FinalProject/
 ├── data_cleaning.html             # Data import and preprocessing steps
 ├── dataset.html                   # Data page with summaries
 ├── EDA.html                       # Exploratory data analysis
-├── drug_consumption_analysis.html # Formal analysis (statistical tests and modeling)
+├── Drug_consumption_analysis.html # Formal analysis (statistical tests and modeling)
 ├── visualization.html             # Additional plots
 ├── results.html                   # Results page (statistical tests + interpretation)
 │
 ├── FP_Proposal.Rmd                # Original proposal R markdown source file
 ├── data_cleaning.Rmd              # Data import and preprocessing steps R markdown
 ├── eda.Rmd                        # Exploratory analysis R Markdown
-├── Drug_consumption_analysis.Rmd  # Formal analysis (statistical tests and modeling) R markdown
+├── drug_consumption_analysis.Rmd  # Formal analysis (statistical tests and modeling) R markdown
 │
 ├── README.md                      # Project documentation
 ├── P8105_FinalProject.Rproj       # RStudio project file
