@@ -299,6 +299,6 @@ Together, personality traits and sociodemographic context offer a powerful frame
 Full analysis scripts are available in:
 
 - **dataset.html** — data cleaning  
-- **visualization.html** — exploratory graphics  
-- **inferential_analyses.html** — full statistical results  
+- **visualization.html** — exploratory graphics, statistical analysis, and predictive modeling
+- **results.html** — full statistical results  
 
