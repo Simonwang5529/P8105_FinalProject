@@ -4,6 +4,7 @@ author: "Maryam Khalid (mk4992), Sijda Ahmed (sa4007), Ruicheng Yang (ry2539), X
 date: "Fall 2025"
 output:
   html_document:
+    code_folding: hide
     toc: true
     toc_depth: 3
     toc_float: true
