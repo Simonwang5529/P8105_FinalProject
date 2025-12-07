@@ -38,7 +38,7 @@ P8105_FinalProject/
 ├── results.html                   # Results page (statistical tests + interpretation)
 │
 ├── FP_Proposal.Rmd                # Original proposal R markdown source file
-├── data_cleaning.Rmd              # Data import and preprocessing steps R markdown
+├── data_cleaning.rmd              # Data import and preprocessing steps R markdown
 ├── eda.Rmd                        # Exploratory analysis R Markdown
 ├── drug_consumption_analysis.Rmd  # Formal analysis (statistical tests and modeling) R markdown
 │
