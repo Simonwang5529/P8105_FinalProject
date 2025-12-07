@@ -1,9 +1,11 @@
 ---
 title: "Inferential Analyses"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
 library(tidyverse)
 library(janitor)
 library(broom)
