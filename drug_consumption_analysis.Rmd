@@ -1,14 +1,8 @@
 ---
-<<<<<<< HEAD
-title: "Drug_Consumption_Analysis"
-output: github_document
-always_allow_html: true
-=======
 title: "Drug Consumption Statistical Analysis"
 output: 
   html_document:
     code_folding: hide
->>>>>>> 930ae75c5b76df76a9295adf301999d7458399a2
 ---
 
 ```{r setup, include=FALSE}
@@ -885,16 +879,11 @@ After determining a significant relationship due to the p-value of near 0, we th
 
 On average, we determined that Mixed-Black/Asian, Mixed-White/Asian, and "Other" ethnicity have the highest log total drug consumption on average compared to other ethnicity. It is also notable that White also has a fairly higher log total drug consumption when compared to the Black and Asian ethnicity.
 
-<<<<<<< HEAD
-```{r, echo=FALSE}
+```{r}
 data_one_trans |> ggplot(aes(x = Ethnicity, y = log_user_consumption_level, fill = Ethnicity)) + geom_boxplot() +
   theme(axis.text.x = element_blank()) +
   labs(y = "Log Total Drug Consumption Level",
          title = "Distribution of Total Drug Consumption Based on Ethnicity")
-=======
-```{r}
-data_one_trans |> ggplot(aes(x = Ethnicity, y = log_user_consumption_level, fill = Ethnicity)) + geom_boxplot()
->>>>>>> 930ae75c5b76df76a9295adf301999d7458399a2
 
 ```
 
@@ -1139,13 +1128,9 @@ By conducting an AIC test, we see the model that takes into account the interact
 
 # Nonlinear vs Linear Regression
 
-<<<<<<< HEAD
 ```{r, echo=FALSE}
 check_model(model_full_1, check = c("linearity", "outliers", "normality"))
-=======
-```{r}
-check_model(model_full_1, check = c("linearity", "outliers", "qq", "normality"))
->>>>>>> 930ae75c5b76df76a9295adf301999d7458399a2
+
 ```
 
 From a simple diagnostic of our linear regression model, our residuals are averaged around 0 and generally have a weak correlation with our fitted values. There also doesn't seem to be any outliers that are too influential to the variation in total drug consumption. Finally, the residuals are approximately normally distributed along 0. This suggests that our linear model is appropriate for the approximation of total drug consumption.
