@@ -1,6 +1,6 @@
 ---
 title: "Final Report — Personality × Drug Use"
-author: "Maryam Khalid, Sijda Ahmed, Ruicheng yang, Xiling Wang, Haixin Jin"
+author: "Maryam Khalid (mk4992), Sijda Ahmed (sa4007), Ruicheng Yang (ry2539), Xiling Wang (xw3107), Haixin Jin (hj2735)"
 date: "Fall 2025"
 output:
   html_document:
