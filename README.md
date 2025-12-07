@@ -26,27 +26,40 @@ Our work combines **data cleaning**, **exploratory visualization**, and **formal
 ```
 P8105_FinalProject/
 │
-├── data/                          # Raw dataset and cleaned versions
-├── figs/                          # Generated figures used in visualizations tab and report
-├── index.html                     # Website home page
-├── proposal.html                  # Project proposal
-├── data_cleaning.html             # Data import and preprocessing steps
-├── dataset.html                   # Data page with summaries
-├── EDA.html                       # Exploratory data analysis
-├── Drug_consumption_analysis.html # Formal analysis (statistical tests and modeling)
-├── visualization.html             # Additional plots
-├── results.html                   # Results page (statistical tests + interpretation)
+├── data/                         # Raw dataset and (if provided) cleaned data
+├── figs/                         # Figures used in visualizations & report
 │
-├── FP_Proposal.Rmd                # Original proposal R markdown source file
-├── data_cleaning.rmd              # Data import and preprocessing steps R markdown
-├── eda.Rmd                        # Exploratory analysis R Markdown
-├── drug_consumption_analysis.Rmd  # Formal analysis (statistical tests and modeling) R markdown
+├── .gitignore
+├── P8105_FinalProject.Rproj      # RStudio project file
+├── README.md                     # Project documentation
+├── README.html                   # Rendered README
 │
-├── README.md                      # Project documentation
-├── P8105_FinalProject.Rproj       # RStudio project file
-├── style.css                      # Website styling
-├── script.js                      # JavaScript for UI enhancements
-└── .gitignore                     # Git ignore file
+├── FP_Proposal.Rmd               # Project proposal (source)
+├── FP_Proposal.md                # Project proposal (rendered)
+│
+├── data_cleaning.rmd             # Data import & preprocessing (source)
+├── data_cleaning.html            # Data cleaning output / report
+│
+├── eda.Rmd                       # Exploratory data analysis (source)
+├── EDA.html                      # Exploratory data analysis (rendered)
+│
+├── drug_consumption_analysis.Rmd # Formal statistical analysis (source)
+├── drug_consumption_analysis.md  # Rendered analysis (markdown)
+│
+├── inferential_analyses.Rmd      # Additional analyses (source)
+├── inferential_analyses.html     # Additional analyses (rendered)
+│
+├── final_report.Rmd              # Full project report (source)
+├── final_report.html             # Final report (rendered)
+│
+├── dataset.html                  # Dataset summary page
+├── visualization.html            # Visualizations page (plots, graphs, etc.)
+├── results.html                  # Results & interpretation page
+├── proposal.html                 # Project proposal (HTML version)
+├── index.html                    # Website home page
+│
+├── style.css                     # Website styling (CSS)
+└── script.js                     # Website interactivity (JS)
 ```
 
 ---

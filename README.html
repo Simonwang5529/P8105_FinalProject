@@ -379,26 +379,50 @@ and is presented as a fully reproducible R Markdown website.</p>
 </div>
 <div id="repository-structure" class="section level2">
 <h2>Repository Structure</h2>
-<p>`` P8105_FinalProject/ │ ├── data/ # Raw dataset and cleaned versions
-├── figs/ # Generated figures used in visualizations and report ├──
-index.html # Website home page ├── proposal.html # Project proposal ├──
-dataset.html # Data page with summaries ├── EDA.html # Exploratory data
-analysis ├── visualization.html # Additional plots ├── results.html #
-Results page (statistical tests + interpretation) │ ├── FP_Proposal.Rmd
-# Original proposal source file ├── data_cleaning.rmd # Data import and
-preprocessing steps ├── eda.Rmd # Exploratory analysis R Markdown ├──
-drug_consumption_analysis.Rmd # Formal analysis (statistical tests) │
-├── README.md # Project documentation ├── P8105_FinalProject.Rproj #
-RStudio project file ├── style.css # Website styling ├── script.js #
-JavaScript for UI enhancements └── .gitignore # Git ignore file</p>
-<pre><code>
----
-
-## How to Reproduce Our Website
-
-1. **Clone the repository:**
-```bash
-git clone https://github.com/&lt;TEAM&gt;/P8105_FinalProject.git</code></pre>
+<pre><code>P8105_FinalProject/
+│
+├── data/                         # Raw dataset and (if provided) cleaned data
+├── figs/                         # Figures used in visualizations &amp; report
+│
+├── .gitignore
+├── P8105_FinalProject.Rproj      # RStudio project file
+├── README.md                     # Project documentation
+├── README.html                   # Rendered README
+│
+├── FP_Proposal.Rmd               # Project proposal (source)
+├── FP_Proposal.md                # Project proposal (rendered)
+│
+├── data_cleaning.rmd             # Data import &amp; preprocessing (source)
+├── data_cleaning.html            # Data cleaning output / report
+│
+├── eda.Rmd                       # Exploratory data analysis (source)
+├── EDA.html                      # Exploratory data analysis (rendered)
+│
+├── drug_consumption_analysis.Rmd # Formal statistical analysis (source)
+├── drug_consumption_analysis.md  # Rendered analysis (markdown)
+│
+├── inferential_analyses.Rmd      # Additional analyses (source)
+├── inferential_analyses.html     # Additional analyses (rendered)
+│
+├── final_report.Rmd              # Full project report (source)
+├── final_report.html             # Final report (rendered)
+│
+├── dataset.html                  # Dataset summary page
+├── visualization.html            # Visualizations page (plots, graphs, etc.)
+├── results.html                  # Results &amp; interpretation page
+├── proposal.html                 # Project proposal (HTML version)
+├── index.html                    # Website home page
+│
+├── style.css                     # Website styling (CSS)
+└── script.js                     # Website interactivity (JS)</code></pre>
+<hr />
+</div>
+<div id="how-to-reproduce-our-website" class="section level2">
+<h2>How to Reproduce Our Website</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Clone the repository:</strong></li>
+</ol>
+<pre class="bash"><code>git clone https://github.com/&lt;TEAM&gt;/P8105_FinalProject.git</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li><strong>Open the R Project in RStudio:</strong></li>
 </ol>
@@ -494,6 +518,14 @@ integrates:</p>
 </div>
 <div id="contributions" class="section level2">
 <h2>Contributions</h2>
+<ul>
+<li><strong>Maryam Khalid</strong> | Screencast recording,
+interpretation, final report analyses &amp; cleanup</li>
+<li><strong>Sijda Ahmed &amp; Ruicheng Yang</strong> | Statistical
+analysis and data visualization</li>
+<li><strong>Xiling Wang &amp; Haixin Jin</strong> | Webpage development,
+documentation, and editing the final report</li>
+</ul>
 </div>
 <div id="notes-for-reproducibility" class="section level2">
 <h2>Notes for Reproducibility</h2>
