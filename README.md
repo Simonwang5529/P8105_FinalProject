@@ -30,15 +30,16 @@ P8105_FinalProject/
 ├── figs/                          # Generated figures used in visualizations and report
 ├── index.html                     # Website home page
 ├── proposal.html                  # Project proposal
+├── data_cleaning.html             # Data import and preprocessing steps
 ├── dataset.html                   # Data page with summaries
 ├── EDA.html                       # Exploratory data analysis
 ├── visualization.html             # Additional plots
 ├── results.html                   # Results page (statistical tests + interpretation)
 │
-├── FP_Proposal.Rmd                # Original proposal source file
-├── data_cleaning.rmd              # Data import and preprocessing steps
+├── FP_Proposal.Rmd                # Original proposal R markdown source file
+├── data_cleaning.Rmd              # Data import and preprocessing steps R markdown
 ├── eda.Rmd                        # Exploratory analysis R Markdown
-├── drug_consumption_analysis.Rmd  # Formal analysis (statistical tests)
+├── Drug_consumption_analysis.Rmd  # Formal analysis (statistical tests) R markdown
 │
 ├── README.md                      # Project documentation
 ├── P8105_FinalProject.Rproj       # RStudio project file
